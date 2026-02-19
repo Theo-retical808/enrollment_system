@@ -6,6 +6,7 @@ use App\Models\Student;
 use App\Models\Course;
 use App\Models\Enrollment;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
 
 class ScheduleValidationService
@@ -13,6 +14,7 @@ class ScheduleValidationService
     const MAX_UNIT_LOAD = 21;
     const RECOMMENDED_MIN_UNITS = 12;
     const RECOMMENDED_MAX_UNITS = 18;
+    const CACHE_TTL = 3600; // 1 hour cache for student data
 
     /**
      * Validate a complete schedule for a student.
@@ -87,16 +89,20 @@ class ScheduleValidationService
      * Validate prerequisites for all courses against student's completed courses.
      * This is the core prerequisite validation logic that checks if a student
      * has completed all required prerequisite courses with passing grades.
+     * Uses caching to improve performance for repeated validations.
      */
     public function validatePrerequisites(Student $student, Collection $courses): array
     {
         $violations = [];
         
-        // Get all completed courses with passing grades
-        $completedCourseIds = $student->completedCourses()
-            ->wherePivot('passed', true)
-            ->pluck('courses.id')
-            ->toArray();
+        // Cache student's completed courses to avoid repeated database queries
+        $cacheKey = "student_completed_courses_{$student->id}";
+        $completedCourseIds = Cache::remember($cacheKey, self::CACHE_TTL, function () use ($student) {
+            return $student->completedCourses()
+                ->wherePivot('passed', true)
+                ->pluck('courses.id')
+                ->toArray();
+        });
 
         foreach ($courses as $course) {
             // Skip courses without proper structure
@@ -104,7 +110,11 @@ class ScheduleValidationService
                 continue;
             }
 
-            $prerequisites = $course->prerequisites ?? collect();
+            // Cache course prerequisites to avoid repeated queries
+            $prereqCacheKey = "course_prerequisites_{$course->id}";
+            $prerequisites = Cache::remember($prereqCacheKey, self::CACHE_TTL, function () use ($course) {
+                return $course->prerequisites ?? collect();
+            });
             
             foreach ($prerequisites as $prerequisite) {
                 if (!in_array($prerequisite->id, $completedCourseIds)) {

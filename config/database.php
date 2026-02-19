@@ -60,7 +60,14 @@ return [
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 (PHP_VERSION_ID >= 80500 ? \Pdo\Mysql::ATTR_SSL_CA : \PDO::MYSQL_ATTR_SSL_CA) => env('MYSQL_ATTR_SSL_CA'),
+                PDO::ATTR_PERSISTENT => env('DB_PERSISTENT', false), // Connection pooling
+                PDO::ATTR_TIMEOUT => env('DB_TIMEOUT', 5), // Connection timeout
+                PDO::ATTR_EMULATE_PREPARES => false, // Use native prepared statements
             ]) : [],
+            'pool' => [
+                'min_connections' => env('DB_POOL_MIN', 2),
+                'max_connections' => env('DB_POOL_MAX', 10),
+            ],
         ],
 
         'mariadb' => [

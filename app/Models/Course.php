@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Cache;
 
 class Course extends Model
 {
@@ -25,6 +26,29 @@ class Course extends Model
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    /**
+     * Eager load relationships for better query performance.
+     */
+    protected $with = [];
+
+    /**
+     * Boot method to clear cache when course data changes.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saved(function ($course) {
+            Cache::forget("course_prerequisites_{$course->id}");
+            Cache::forget("active_courses_by_school_{$course->school_id}");
+        });
+
+        static::deleted(function ($course) {
+            Cache::forget("course_prerequisites_{$course->id}");
+            Cache::forget("active_courses_by_school_{$course->school_id}");
+        });
+    }
 
     /**
      * Get the school that owns the course.
@@ -82,27 +106,60 @@ class Course extends Model
 
     /**
      * Check if prerequisites are satisfied by a student.
+     * Uses caching for improved performance.
      */
     public function hasPrerequisitesSatisfiedBy(Student $student): bool
     {
-        $prerequisites = $this->prerequisites;
+        $cacheKey = "course_{$this->id}_prereq_check_student_{$student->id}";
         
-        if ($prerequisites->isEmpty()) {
-            return true;
-        }
-
-        $completedCourseIds = $student->completedCourses()
-            ->wherePivot('passed', true)
-            ->pluck('courses.id')
-            ->toArray();
-
-        foreach ($prerequisites as $prerequisite) {
-            if (!in_array($prerequisite->id, $completedCourseIds)) {
-                return false;
+        return Cache::remember($cacheKey, 3600, function () use ($student) {
+            $prerequisites = $this->prerequisites;
+            
+            if ($prerequisites->isEmpty()) {
+                return true;
             }
-        }
 
-        return true;
+            $completedCourseIds = $student->completedCourses()
+                ->wherePivot('passed', true)
+                ->pluck('courses.id')
+                ->toArray();
+
+            foreach ($prerequisites as $prerequisite) {
+                if (!in_array($prerequisite->id, $completedCourseIds)) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
+    }
+
+    /**
+     * Scope to get active courses with optimized queries.
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    /**
+     * Scope to get courses by school with eager loading.
+     */
+    public function scopeBySchool($query, $schoolId)
+    {
+        return $query->where('school_id', $schoolId)
+            ->with(['prerequisites', 'school']);
+    }
+
+    /**
+     * Scope to search courses by title or code.
+     */
+    public function scopeSearch($query, $searchTerm)
+    {
+        return $query->where(function ($q) use ($searchTerm) {
+            $q->where('title', 'like', "%{$searchTerm}%")
+              ->orWhere('course_code', 'like', "%{$searchTerm}%");
+        });
     }
 
     /**

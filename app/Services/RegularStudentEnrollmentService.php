@@ -125,7 +125,7 @@ class RegularStudentEnrollmentService
                     ['course_code' => 'ECON101', 'schedule_day' => 'Tuesday', 'start_time' => '14:00', 'end_time' => '16:00', 'room' => 'ECON-101', 'instructor' => 'Prof. Clark'],
                     ['course_code' => 'ACCT101', 'schedule_day' => 'Wednesday', 'start_time' => '08:00', 'end_time' => '10:00', 'room' => 'ACCT-101', 'instructor' => 'Prof. Lewis'],
                     ['course_code' => 'STAT101', 'schedule_day' => 'Thursday', 'start_time' => '10:00', 'end_time' => '12:00', 'room' => 'STAT-101', 'instructor' => 'Prof. Hall'],
-                    ['course_code' => 'ENG101', 'schedule_day' => 'Friday', 'start_time' => '14:00', 'end_time' => '16:00', 'room' => 'ENG-201', 'instructor' => 'Prof. Young'],
+                    ['course_code' => 'BENGL101', 'schedule_day' => 'Friday', 'start_time' => '14:00', 'end_time' => '16:00', 'room' => 'ENG-201', 'instructor' => 'Prof. Young'],
                 ],
             ],
         ];

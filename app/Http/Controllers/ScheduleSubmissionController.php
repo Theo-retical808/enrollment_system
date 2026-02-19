@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Student;
 use App\Models\Professor;
 use App\Models\Enrollment;
+use App\Models\EnrollmentAuditLog;
 use App\Services\ScheduleValidationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -168,7 +169,23 @@ class ScheduleSubmissionController extends Controller
      */
     private function logSubmissionActivity(Enrollment $enrollment, array $validation): void
     {
-        // In a real system, this would log to an audit table
+        // Create audit log entry
+        EnrollmentAuditLog::logAction(
+            enrollment: $enrollment,
+            action: 'submitted',
+            userId: $enrollment->student_id,
+            userType: 'student',
+            oldStatus: 'draft',
+            newStatus: 'submitted',
+            comments: null,
+            metadata: [
+                'total_units' => $validation['unit_load'],
+                'course_count' => $enrollment->courses->count(),
+                'validation_passed' => $validation['is_valid'],
+                'warnings' => $validation['warnings'] ?? [],
+            ]
+        );
+
         \Log::info('Schedule submitted for review', [
             'enrollment_id' => $enrollment->id,
             'student_id' => $enrollment->student_id,

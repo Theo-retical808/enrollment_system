@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Cache;
 
 class Student extends Authenticatable
 {
@@ -33,6 +34,26 @@ class Student extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Boot method to clear cache when student data changes.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saved(function ($student) {
+            Cache::forget("student_completed_courses_{$student->id}");
+            Cache::forget("student_is_regular_{$student->id}");
+            Cache::forget("student_has_failed_courses_{$student->id}");
+        });
+
+        static::deleted(function ($student) {
+            Cache::forget("student_completed_courses_{$student->id}");
+            Cache::forget("student_is_regular_{$student->id}");
+            Cache::forget("student_has_failed_courses_{$student->id}");
+        });
+    }
 
     /**
      * Get the school that owns the student.
@@ -86,20 +107,38 @@ class Student extends Authenticatable
 
     /**
      * Check if the student is regular (no failed courses).
+     * Uses caching for improved performance.
      */
     public function isRegular(): bool
     {
-        return !$this->hasFailedCourses();
+        $cacheKey = "student_is_regular_{$this->id}";
+        
+        return Cache::remember($cacheKey, 3600, function () {
+            return !$this->hasFailedCourses();
+        });
+    }
+
+    /**
+     * Check if the student is irregular (has failed courses).
+     */
+    public function isIrregular(): bool
+    {
+        return !$this->isRegular();
     }
 
     /**
      * Check if the student has failed courses.
+     * Uses caching for improved performance.
      */
     public function hasFailedCourses(): bool
     {
-        return $this->completedCourses()
-            ->wherePivot('passed', false)
-            ->exists();
+        $cacheKey = "student_has_failed_courses_{$this->id}";
+        
+        return Cache::remember($cacheKey, 3600, function () {
+            return $this->completedCourses()
+                ->wherePivot('passed', false)
+                ->exists();
+        });
     }
 
     /**

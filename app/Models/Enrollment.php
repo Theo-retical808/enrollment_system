@@ -58,6 +58,14 @@ class Enrollment extends Model
     }
 
     /**
+     * Get the audit logs for the enrollment.
+     */
+    public function auditLogs()
+    {
+        return $this->hasMany(EnrollmentAuditLog::class);
+    }
+
+    /**
      * Get the total units for the enrollment.
      */
     public function getTotalUnits(): int
@@ -147,5 +155,51 @@ class Enrollment extends Model
         ]);
 
         return true;
+    }
+
+    /**
+     * Finalize the enrollment after approval.
+     * This locks the schedule and prevents further modifications.
+     */
+    public function finalize(): void
+    {
+        // Mark as finalized in validation_data
+        $validationData = $this->validation_data ?? [];
+        $validationData['finalized_at'] = now()->toIso8601String();
+        $validationData['is_locked'] = true;
+        
+        $this->update([
+            'validation_data' => $validationData,
+        ]);
+    }
+
+    /**
+     * Enable resubmission after rejection.
+     * This allows the student to return to planning and resubmit.
+     */
+    public function enableResubmission(): void
+    {
+        // Reset to draft status to allow modifications
+        $this->update([
+            'status' => 'draft',
+            'submitted_at' => null,
+        ]);
+    }
+
+    /**
+     * Check if the enrollment is finalized and locked.
+     */
+    public function isFinalized(): bool
+    {
+        $validationData = $this->validation_data ?? [];
+        return isset($validationData['is_locked']) && $validationData['is_locked'] === true;
+    }
+
+    /**
+     * Check if the enrollment can be resubmitted.
+     */
+    public function canResubmit(): bool
+    {
+        return $this->status === 'draft' && $this->reviewed_at !== null;
     }
 }

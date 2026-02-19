@@ -23,14 +23,47 @@
         </h1>
         
         <!-- Enrollment Status Banner -->
-        <div style="margin-bottom: 2rem; padding: 1rem; background: {{ $currentEnrollment->status === 'approved' ? '#f0fdf4' : ($currentEnrollment->status === 'submitted' ? '#fef3c7' : '#f3f4f6') }}; border: 1px solid {{ $currentEnrollment->status === 'approved' ? '#bbf7d0' : ($currentEnrollment->status === 'submitted' ? '#fcd34d' : '#d1d5db') }}; border-radius: 0.5rem;">
+        <div style="margin-bottom: 2rem; padding: 1rem; background: {{ $currentEnrollment->status === 'approved' ? '#f0fdf4' : ($currentEnrollment->status === 'submitted' ? '#fef3c7' : ($currentEnrollment->status === 'rejected' ? '#fef2f2' : '#f3f4f6')) }}; border: 1px solid {{ $currentEnrollment->status === 'approved' ? '#bbf7d0' : ($currentEnrollment->status === 'submitted' ? '#fcd34d' : ($currentEnrollment->status === 'rejected' ? '#fecaca' : '#d1d5db')) }}; border-radius: 0.5rem;">
             @if($currentEnrollment->status === 'approved')
                 <p style="color: #16a34a; margin: 0; font-weight: 600;">
                     ✓ Your enrollment has been approved! This is your official schedule for {{ $currentEnrollment->semester }} {{ $currentEnrollment->academic_year }}.
                 </p>
+                @if($currentEnrollment->review_comments)
+                    <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #bbf7d0;">
+                        <p style="color: #16a34a; margin: 0; font-size: 0.875rem;">
+                            <strong>Professor's Comments:</strong><br>
+                            {{ $currentEnrollment->review_comments }}
+                        </p>
+                    </div>
+                @endif
+                @if($currentEnrollment->professor)
+                    <p style="color: #16a34a; margin-top: 0.5rem; font-size: 0.875rem;">
+                        <strong>Reviewed by:</strong> {{ $currentEnrollment->professor->full_name }}
+                    </p>
+                @endif
+            @elseif($currentEnrollment->status === 'rejected')
+                <p style="color: #dc2626; margin: 0; font-weight: 600;">
+                    ❌ Your schedule has been rejected. Please review the comments below and resubmit.
+                </p>
+                @if($currentEnrollment->review_comments)
+                    <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #fecaca;">
+                        <p style="color: #dc2626; margin: 0; font-size: 0.875rem;">
+                            <strong>Professor's Comments:</strong><br>
+                            {{ $currentEnrollment->review_comments }}
+                        </p>
+                    </div>
+                @endif
+                @if($currentEnrollment->professor)
+                    <p style="color: #dc2626; margin-top: 0.5rem; font-size: 0.875rem;">
+                        <strong>Reviewed by:</strong> {{ $currentEnrollment->professor->full_name }}
+                    </p>
+                @endif
             @elseif($currentEnrollment->status === 'submitted')
                 <p style="color: #d97706; margin: 0; font-weight: 600;">
                     ⏳ Your schedule has been submitted and is currently under review by your professor.
+                </p>
+                <p style="color: #d97706; margin-top: 0.5rem; font-size: 0.875rem;">
+                    <strong>Submitted on:</strong> {{ $currentEnrollment->submitted_at->format('M d, Y g:i A') }}
                 </p>
             @else
                 <p style="color: #6b7280; margin: 0; font-weight: 600;">
@@ -192,9 +225,36 @@
             <!-- Action Buttons -->
             <div style="margin-top: 2rem; text-align: center;">
                 @if($currentEnrollment->status === 'approved')
-                    <button onclick="window.print()" class="btn btn-primary" style="margin-right: 1rem;">
-                        🖨️ Print Schedule
-                    </button>
+                    <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
+                        <button onclick="window.print()" class="btn btn-primary">
+                            🖨️ Print Schedule
+                        </button>
+                        <a href="{{ route('student.schedule.export.pdf') }}" class="btn btn-primary" target="_blank">
+                            📄 Export as PDF
+                        </a>
+                        <a href="{{ route('student.schedule.export.csv') }}" class="btn btn-primary">
+                            📊 Export as CSV
+                        </a>
+                        <form method="POST" action="{{ route('student.schedule.email') }}" style="display: inline;">
+                            @csrf
+                            <button type="submit" class="btn btn-primary">
+                                📧 Email Schedule
+                            </button>
+                        </form>
+                        <a href="{{ route('student.dashboard') }}" class="btn btn-secondary">
+                            Back to Dashboard
+                        </a>
+                    </div>
+                @elseif($currentEnrollment->status === 'rejected')
+                    @if($student->isRegular())
+                        <a href="{{ route('student.enrollment.regular') }}" class="btn btn-primary" style="margin-right: 1rem;">
+                            Revise and Resubmit
+                        </a>
+                    @else
+                        <a href="{{ route('student.enrollment.irregular') }}" class="btn btn-primary" style="margin-right: 1rem;">
+                            Revise and Resubmit
+                        </a>
+                    @endif
                     <a href="{{ route('student.dashboard') }}" class="btn btn-secondary">
                         Back to Dashboard
                     </a>
