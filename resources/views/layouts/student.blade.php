@@ -5,266 +5,158 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Student Portal') - Enrollment System</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --sidebar-width: 260px;
+            --primary-bg: #f8fafc;
+            --accent-blue: #eff6ff; /* UdD Soft Blue */
+            --accent-blue-text: #2563eb; /* UdD Primary Blue */
         }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #f8fafc;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--primary-bg);
             color: #1e293b;
-            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
         }
 
-        .header {
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
             background: white;
-            border-bottom: 1px solid #e2e8f0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            border-right: 1px solid #e2e8f0;
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+        }
+        
+        /* Updated Logo Section */
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 3rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            color: #64748b;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s;
+        }
+        
+        /* Updated Active State to UdD Blue */
+        .nav-link.active {
+            background: var(--accent-blue);
+            color: var(--accent-blue-text);
+        }
+        
+        .nav-link:hover:not(.active) {
+            background: #f1f5f9;
+            color: #0f172a;
         }
 
-        .header-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 1rem 2rem;
+        /* Main Content Area */
+        .main-wrapper {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .top-nav {
+            padding: 1.5rem 2rem;
+            background: rgba(248, 250, 252, 0.9);
+            backdrop-filter: blur(8px);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            border-bottom: 1px solid #f1f5f9; /* Added subtle border for cleaner header separation */
         }
+        
+        .content-body { padding: 2rem; }
 
-        .logo {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #2563eb;
+        /* Modern Card Styles */
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 4px 15px -1px rgba(0, 0, 0, 0.03);
         }
-
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .user-name {
-            font-weight: 500;
-            color: #475569;
-        }
-
+        
         .btn {
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            border: none;
-            font-weight: 500;
+            padding: 0.6rem 1.2rem;
+            border-radius: 10px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
             text-decoration: none;
-            display: inline-block;
+            border: none;
+            font-size: 0.9rem;
         }
-
-        .btn-primary {
-            background: #2563eb;
-            color: white;
+        
+        .btn-logout { 
+            color: #ef4444; 
+            margin-top: auto; 
         }
-
-        .btn-primary:hover {
-            background: #1d4ed8;
-        }
-
-        .btn-secondary {
-            background: #f1f5f9;
-            color: #475569;
-        }
-
-        .btn-secondary:hover {
-            background: #e2e8f0;
-        }
-
-        .main-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .page-header {
-            margin-bottom: 2rem;
-        }
-
-        .page-title {
-            font-size: 1.875rem;
-            font-weight: 700;
-            color: #0f172a;
-            margin-bottom: 0.5rem;
-        }
-
-        .page-subtitle {
-            color: #64748b;
-            font-size: 1rem;
-        }
-
-        .card {
-            background: white;
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            margin-bottom: 1.5rem;
-        }
-
-        .card-title {
-            font-size: 1.125rem;
-            font-weight: 600;
-            color: #0f172a;
-            margin-bottom: 1rem;
-        }
-
-        .grid {
-            display: grid;
-            gap: 1.5rem;
-        }
-
-        .grid-2 {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .grid-3 {
-            grid-template-columns: repeat(3, 1fr);
-        }
-
-        @media (max-width: 1024px) {
-            .grid-2, .grid-3 {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-            color: white;
-            padding: 1.5rem;
-            border-radius: 0.75rem;
-        }
-
-        .stat-label {
-            font-size: 0.875rem;
-            opacity: 0.9;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-        }
-
-        .alert {
-            padding: 1rem;
-            border-radius: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .alert-success {
-            background: #f0fdf4;
-            color: #166534;
-            border: 1px solid #bbf7d0;
-        }
-
-        .alert-error {
-            background: #fef2f2;
-            color: #991b1b;
-            border: 1px solid #fecaca;
-        }
-
-        .alert-warning {
-            background: #fefce8;
-            color: #854d0e;
-            border: 1px solid #fef08a;
-        }
-
-        .alert-info {
-            background: #eff6ff;
-            color: #1e40af;
-            border: 1px solid #bfdbfe;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        thead {
-            background: #f8fafc;
-        }
-
-        th {
-            padding: 0.75rem 1rem;
-            text-align: left;
-            font-weight: 600;
-            font-size: 0.875rem;
-            color: #475569;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        td {
-            padding: 0.75rem 1rem;
-            border-bottom: 1px solid #f1f5f9;
-        }
-
-        tbody tr:hover {
-            background: #f8fafc;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
-
-        .badge-success {
-            background: #dcfce7;
-            color: #166534;
-        }
-
-        .badge-warning {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        .badge-error {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        .badge-info {
-            background: #dbeafe;
-            color: #1e40af;
+        
+        .btn-logout:hover {
+            background: #fef2f2 !important;
+            color: #dc2626 !important;
         }
     </style>
     @yield('styles')
 </head>
 <body>
-    <header class="header">
-        <div class="header-content">
-            <div class="logo">Enrollment System</div>
-            <div class="user-menu">
-                <span class="user-name">{{ Auth::guard('student')->user()->full_name ?? 'Student' }}</span>
-                <a href="{{ route('student.dashboard') }}" class="btn btn-secondary">Dashboard</a>
-                <form method="POST" action="{{ route('student.logout') }}" style="display: inline;">
-                    @csrf
-                    <button type="submit" class="btn btn-secondary">Logout</button>
-                </form>
-            </div>
+    <aside class="sidebar">
+        <div class="logo">
+            <img src="{{ asset('images/udd_logo.PNG') }}" alt="Universidad de Dagupan Logo" style="height: 40px; width: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));">
+            <span>Student Portal</span>
         </div>
-    </header>
+        
+        <nav style="display:flex; flex-direction:column; height: 100%;">
+            <a href="{{ route('student.dashboard') }}" class="nav-link {{ request()->routeIs('student.dashboard') ? 'active' : '' }}">Dashboard</a>
+            <a href="#" class="nav-link">Courses</a>
+            <a href="{{ route('student.schedule') }}" class="nav-link {{ request()->routeIs('student.schedule') ? 'active' : '' }}">Schedule</a>
+            <a href="#" class="nav-link">Finances</a>
+            
+            <form method="POST" action="{{ route('student.logout') }}" style="margin-top: auto;">
+                @csrf
+                <button type="submit" class="nav-link btn-logout" style="width:100%; border:none; background:none; cursor:pointer; text-align: left;">
+                    Logout
+                </button>
+            </form>
+        </nav>
+    </aside>
 
-    <main class="main-content">
-        @yield('content')
-    </main>
+    <div class="main-wrapper">
+        <header class="top-nav">
+            <h1 style="font-size: 1.25rem; font-weight: 800; color: #0f172a;">@yield('title')</h1>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <span style="font-weight: 700; font-size: 0.9rem; color: #475569;">{{ Auth::guard('student')->user()->full_name ?? 'Student' }}</span>
+                <div style="width:38px; height:38px; background:#e2e8f0; border-radius:50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.05);"></div>
+            </div>
+        </header>
 
-    @yield('scripts')
+        <main class="content-body">
+            @yield('content')
+        </main>
+    </div>
 </body>
 </html>

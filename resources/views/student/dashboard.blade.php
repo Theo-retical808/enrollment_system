@@ -3,178 +3,101 @@
 @section('title', 'Dashboard')
 
 @section('content')
-<div class="page-header">
-    <h1 class="page-title">Student Dashboard</h1>
-    <p class="page-subtitle">Welcome back, {{ $student->full_name }}</p>
+<div style="margin-bottom: 2rem;">
+    <p style="color: #64748b; font-weight: 500;">Welcome back, {{ $student->full_name }}</p>
 </div>
 
-<div class="grid grid-3">
-    <div class="stat-card">
-        <div class="stat-label">Student ID</div>
-        <div class="stat-value">{{ $student->student_id }}</div>
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem;">
+    <div style="background: #fff4e5; padding: 1.5rem; border-radius: 20px; border: 1px solid #ffe8cc;">
+        <span style="color: #c2780e; font-weight: 700; font-size: 0.8rem; text-transform: uppercase;">Student ID</span>
+        <h2 style="color: #c2780e; font-size: 1.8rem; margin-top: 5px;">{{ $student->student_id }}</h2>
     </div>
-    <div class="stat-card" style="background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);">
-        <div class="stat-label">Year Level</div>
-        <div class="stat-value">{{ $student->year_level }}</div>
+    
+    <div style="background: #f3f0ff; padding: 1.5rem; border-radius: 20px; border: 1px solid #ebe5ff;">
+        <span style="color: #6b21a8; font-weight: 700; font-size: 0.8rem; text-transform: uppercase;">Year Level</span>
+        <h2 style="color: #6b21a8; font-size: 1.8rem; margin-top: 5px;">{{ $student->year_level }}</h2>
     </div>
-    <div class="stat-card" style="background: linear-gradient(135deg, {{ $student->isRegular() ? '#10b981' : '#f59e0b' }} 0%, {{ $student->isRegular() ? '#059669' : '#d97706' }} 100%);">
-        <div class="stat-label">Status</div>
-        <div class="stat-value">{{ $student->isRegular() ? 'Regular' : 'Irregular' }}</div>
+
+    <div style="background: {{ $student->isRegular() ? '#eff6ff' : '#fff7ed' }}; padding: 1.5rem; border-radius: 20px; border: 1px solid {{ $student->isRegular() ? '#bfdbfe' : '#ffedd5' }};">
+        <span style="color: {{ $student->isRegular() ? '#1d4ed8' : '#9a3412' }}; font-weight: 700; font-size: 0.8rem; text-transform: uppercase;">Status</span>
+        <h2 style="color: {{ $student->isRegular() ? '#1d4ed8' : '#9a3412' }}; font-size: 1.8rem; margin-top: 5px;">{{ $student->isRegular() ? 'Regular' : 'Irregular' }}</h2>
     </div>
 </div>
 
-@if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
-@endif
-
-@if(session('error'))
-    <div class="alert alert-error">{{ session('error') }}</div>
-@endif
-
-<div class="grid grid-2">
+<div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 1.5rem;">
     <div class="card">
-        <h2 class="card-title">Student Information</h2>
-        <table>
-            <tbody>
-                <tr>
-                    <td style="font-weight: 500;">Email</td>
-                    <td>{{ $student->email }}</td>
-                </tr>
-                <tr>
-                    <td style="font-weight: 500;">School</td>
-                    <td>{{ $student->school->name ?? 'N/A' }}</td>
-                </tr>
-                <tr>
-                    <td style="font-weight: 500;">Classification</td>
-                    <td>
-                        <span class="badge {{ $student->isRegular() ? 'badge-success' : 'badge-warning' }}">
-                            {{ $classificationInfo['message'] }}
-                        </span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <h3 style="margin-bottom: 1.5rem;">Student Information</h3>
+        <div style="display:flex; flex-direction:column; gap: 1rem;">
+            <div style="display:flex; justify-content:space-between; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.5rem;">
+                <span style="color:#64748b;">Email</span>
+                <span style="font-weight:600;">{{ $student->email }}</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.5rem;">
+                <span style="color:#64748b;">School</span>
+                <span style="font-weight:600;">{{ $student->school->name ?? 'N/A' }}</span>
+            </div>
+            <div style="background: #eff6ff; color: #1d4ed8; padding: 0.8rem; border-radius: 10px; font-size: 0.85rem; font-weight: 600;">
+                {{ $classificationInfo['message'] }}
+            </div>
+        </div>
     </div>
 
-    <div class="card">
-        <h2 class="card-title">Payment Status</h2>
+    <div class="card" style="display:flex; flex-direction:column; justify-content:center;">
+        <h3 style="margin-bottom: 1rem;">Payment Status</h3>
         @if($paymentStatus['status'] === 'paid')
-            <div class="alert alert-success">
-                <strong>✓ Payment Completed</strong><br>
-                Amount: ₱{{ number_format($paymentStatus['amount_paid'], 2) }}<br>
-                Paid on: {{ $paymentStatus['paid_at']->format('M d, Y g:i A') }}
+            <div style="background:#eff6ff; border-radius:12px; padding: 1.2rem; border-left: 4px solid #2563eb;">
+                <p style="color:#1d4ed8; font-weight:700;">✓ Payment Completed</p>
+                <p style="font-size:0.9rem; color:#1d4ed8;">Amount: ₱{{ number_format($paymentStatus['amount_paid'], 2) }}</p>
             </div>
         @else
-            <div class="alert alert-error">
-                <strong>Payment Required</strong><br>
-                {{ $paymentStatus['message'] }}
-                @if(isset($paymentStatus['amount_due']))
-                    <br>Amount Due: ₱{{ number_format($paymentStatus['amount_due'], 2) }}
-                @endif
+            <div style="background:#fef2f2; border-radius:12px; padding: 1.2rem; border-left: 4px solid #ef4444; margin-bottom:1rem;">
+                <p style="color:#991b1b; font-weight:700;">Payment Required</p>
+                <p style="font-size:0.85rem;">{{ $paymentStatus['message'] }}</p>
             </div>
-            <a href="{{ route('student.payment.required') }}" class="btn btn-primary">Pay Now</a>
+            <a href="{{ route('student.payment.required') }}" style="background:#0f172a; color:white; text-align:center; border-radius: 12px; padding: 0.8rem; text-decoration: none; font-weight: 700; display: block;" class="btn">Pay Now</a>
         @endif
     </div>
 </div>
 
-<div class="card">
-    <h2 class="card-title">Enrollment Status</h2>
-    
+<div class="card" style="margin-top: 1.5rem;">
+    <h3 style="margin-bottom: 1.5rem;">Enrollment Status</h3>
     @if($currentEnrollment)
-        <div class="alert alert-{{ $currentEnrollment->status === 'approved' ? 'success' : ($currentEnrollment->status === 'submitted' ? 'warning' : 'info') }}">
-            <strong>
-                @if($currentEnrollment->status === 'approved')
-                    ✓ Enrollment Approved
-                @elseif($currentEnrollment->status === 'submitted')
-                    ⏳ Under Review
-                @elseif($currentEnrollment->status === 'rejected')
-                    ✗ Enrollment Rejected
-                @else
-                    📝 Draft
-                @endif
-            </strong><br>
-            Semester: {{ $currentEnrollment->semester }} {{ $currentEnrollment->academic_year }}<br>
-            Total Units: {{ $currentEnrollment->total_units }}
+        <div style="background: #f8fafc; border-radius: 12px; padding: 1.5rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1rem;">
+                <div>
+                    <span style="font-weight:700; color: #1e293b;">{{ $currentEnrollment->semester }} {{ $currentEnrollment->academic_year }}</span>
+                    <p style="font-size: 0.85rem; color: #64748b;">Total Units: {{ $currentEnrollment->total_units }}</p>
+                </div>
+                <span style="padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; background: #e2e8f0; color: #475569;">
+                    {{ $currentEnrollment->status }}
+                </span>
+            </div>
             
-            @if($currentEnrollment->review_comments)
-                <br><strong>Professor's Comments:</strong> {{ $currentEnrollment->review_comments }}
-            @endif
-        </div>
-
-        @if($currentEnrollment->courses->count() > 0)
-            <table style="margin-top: 1rem;">
-                <thead>
-                    <tr>
-                        <th>Course Code</th>
-                        <th>Course Title</th>
-                        <th>Units</th>
-                        <th>Schedule</th>
-                        <th>Room</th>
+            @if($currentEnrollment->courses->count() > 0)
+                <table style="width:100%; text-align:left; border-collapse:collapse;">
+                    <tr style="color:#64748b; font-size:0.8rem; text-transform:uppercase;">
+                        <th style="padding-bottom:10px; border-bottom: 1px solid #e2e8f0;">Course</th>
+                        <th style="padding-bottom:10px; border-bottom: 1px solid #e2e8f0;">Schedule</th>
                     </tr>
-                </thead>
-                <tbody>
                     @foreach($currentEnrollment->courses as $course)
-                    <tr>
-                        <td><strong style="color: #2563eb;">{{ $course->course_code }}</strong></td>
-                        <td>{{ $course->title }}</td>
-                        <td>{{ $course->units }}</td>
-                        <td>
-                            @if($course->pivot->schedule_day && $course->pivot->start_time && $course->pivot->end_time)
-                                {{ $course->pivot->schedule_day }} 
-                                {{ date('g:i A', strtotime($course->pivot->start_time)) }} - 
-                                {{ date('g:i A', strtotime($course->pivot->end_time)) }}
-                            @else
-                                TBA
-                            @endif
+                    <tr style="border-bottom:1px solid #f1f5f9;">
+                        <td style="padding: 12px 0;">
+                            <span style="font-weight:700; color:#2563eb;">{{ $course->course_code }}</span><br>
+                            <span style="font-size:0.85rem; color:#64748b;">{{ $course->title }}</span>
                         </td>
-                        <td>{{ $course->pivot->room ?? 'TBA' }}</td>
+                        <td style="font-size:0.85rem; padding: 12px 0;">
+                            <span style="font-weight: 600; color: #1e293b;">{{ $course->pivot->schedule_day ?? 'TBA' }}</span><br>
+                            <span style="color:#64748b;">{{ $course->pivot->room ?? 'No Room' }}</span>
+                        </td>
                     </tr>
                     @endforeach
-                </tbody>
-            </table>
-        @endif
-
-        <div style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
-            @if($currentEnrollment->status === 'approved')
-                <a href="{{ route('student.schedule') }}" class="btn btn-primary">View Full Schedule</a>
-                <a href="{{ route('student.schedule.export.pdf') }}" class="btn btn-secondary" target="_blank">Export PDF</a>
-                <a href="{{ route('student.schedule.export.csv') }}" class="btn btn-secondary">Export CSV</a>
-            @elseif($currentEnrollment->status === 'rejected')
-                @if($student->isRegular())
-                    <a href="{{ route('student.enrollment.regular') }}" class="btn btn-primary">Revise and Resubmit</a>
-                @else
-                    <a href="{{ route('student.enrollment.irregular') }}" class="btn btn-primary">Revise and Resubmit</a>
-                @endif
-            @elseif($currentEnrollment->status === 'submitted')
-                <a href="{{ route('student.schedule') }}" class="btn btn-secondary">View Submitted Schedule</a>
-            @elseif($currentEnrollment->status === 'draft')
-                <a href="{{ route('student.schedule') }}" class="btn btn-secondary">View Draft Schedule</a>
-                @if($student->isRegular())
-                    <a href="{{ route('student.enrollment.regular') }}" class="btn btn-primary">Continue Enrollment</a>
-                @else
-                    <a href="{{ route('student.enrollment.irregular') }}" class="btn btn-primary">Continue Enrollment</a>
-                @endif
+                </table>
             @endif
         </div>
     @else
-        <div class="alert alert-info">
-            <strong>No Current Enrollment</strong><br>
-            Start your enrollment process to register for courses.
-        </div>
-        
-        <div style="margin-top: 1rem;">
-            @if($canAccessEnrollment['can_access'])
-                @if($student->isRegular())
-                    <a href="{{ route('student.enrollment.regular') }}" class="btn btn-primary">Get Assigned Schedule</a>
-                @else
-                    <a href="{{ route('student.enrollment.irregular') }}" class="btn btn-primary">Select Courses</a>
-                @endif
-            @else
-                <div class="alert alert-error" style="margin-bottom: 1rem;">
-                    <strong>Enrollment Locked:</strong> {{ $canAccessEnrollment['reason'] }}
-                </div>
-                <a href="{{ route('student.payment.required') }}" class="btn btn-primary">Complete Payment to Enroll</a>
-            @endif
+        <div style="text-align:center; padding: 2.5rem; background: #f8fafc; border-radius: 12px; border: 1px dashed #cbd5e1;">
+            <p style="color:#64748b; margin-bottom:1.5rem; font-weight: 500;">No Current Enrollment Found</p>
+            <a href="#" style="background:#2563eb; color:white; padding: 0.8rem 2rem; border-radius: 12px; text-decoration: none; font-weight: 700; display: inline-block; transition: background 0.3s;" class="btn">Start Enrollment</a>
         </div>
     @endif
 </div>

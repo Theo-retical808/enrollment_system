@@ -8,7 +8,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         * {
@@ -18,7 +18,8 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            /* Updated font family */
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: #f8fafc;
             color: #1e293b;
             -webkit-font-smoothing: antialiased;
@@ -50,22 +51,16 @@
             gap: 12px;
         }
 
-        .header-logo {
-            width: 40px;
+        /* Replaced old purple gradient box CSS with an image class */
+        .header-logo-img {
             height: 40px;
-            background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 700;
-            font-size: 18px;
+            width: auto;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));
         }
 
         .header-title {
-            font-size: 18px;
-            font-weight: 600;
+            font-size: 1.1rem;
+            font-weight: 800;
             color: #0f172a;
         }
 
@@ -81,30 +76,31 @@
 
         .user-name {
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 700;
             color: #0f172a;
         }
 
         .user-role {
             font-size: 13px;
+            font-weight: 500;
             color: #64748b;
         }
 
         .btn-logout {
             padding: 8px 16px;
             background: #f1f5f9;
-            color: #475569;
+            color: #ef4444; /* Changed to red to match student logout */
             border: none;
             border-radius: 8px;
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
         }
 
         .btn-logout:hover {
-            background: #e2e8f0;
-            color: #1e293b;
+            background: #fef2f2;
+            color: #dc2626;
         }
 
         /* Main Container */
@@ -121,7 +117,7 @@
 
         .page-title {
             font-size: 32px;
-            font-weight: 700;
+            font-weight: 800;
             color: #0f172a;
             margin-bottom: 8px;
             letter-spacing: -0.02em;
@@ -135,9 +131,9 @@
         /* Cards */
         .card {
             background: white;
-            border-radius: 12px;
+            border-radius: 16px;
             border: 1px solid #e2e8f0;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
         }
 
         .card-header {
@@ -150,7 +146,7 @@
 
         .card-title {
             font-size: 18px;
-            font-weight: 600;
+            font-weight: 700;
             color: #0f172a;
             display: flex;
             align-items: center;
@@ -169,7 +165,7 @@
             padding: 4px 12px;
             border-radius: 12px;
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 700;
             line-height: 1;
         }
 
@@ -184,13 +180,13 @@
         }
 
         .badge-warning {
-            background: #fef3c7;
-            color: #92400e;
+            background: #fff7ed;
+            color: #ea580c;
         }
 
         .badge-info {
-            background: #dbeafe;
-            color: #1e40af;
+            background: #eff6ff;
+            color: #2563eb;
         }
 
         /* Table */
@@ -211,7 +207,7 @@
             padding: 12px 16px;
             text-align: left;
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 700;
             color: #64748b;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -241,8 +237,8 @@
             gap: 8px;
             padding: 10px 20px;
             font-size: 14px;
-            font-weight: 500;
-            border-radius: 8px;
+            font-weight: 600;
+            border-radius: 10px;
             border: none;
             cursor: pointer;
             transition: all 0.2s;
@@ -250,24 +246,25 @@
             font-family: inherit;
         }
 
+        /* Changed from Purple to UdD Blue */
         .btn-primary {
-            background: #7c3aed;
+            background: #2563eb;
             color: white;
         }
 
         .btn-primary:hover {
-            background: #6d28d9;
+            background: #1d4ed8;
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
         }
 
         .btn-success {
-            background: #10b981;
+            background: #16a34a;
             color: white;
         }
 
         .btn-success:hover {
-            background: #059669;
+            background: #15803d;
         }
 
         .btn-danger {
@@ -291,7 +288,7 @@
         /* Alert */
         .alert {
             padding: 16px;
-            border-radius: 8px;
+            border-radius: 12px;
             margin-bottom: 24px;
             display: flex;
             align-items: flex-start;
@@ -299,13 +296,13 @@
         }
 
         .alert-success {
-            background: #dcfce7;
-            border: 1px solid #bbf7d0;
+            background: #f0fdf4;
+            border: 1px solid #dcfce7;
             color: #166534;
         }
 
         .alert-error {
-            background: #fee2e2;
+            background: #fef2f2;
             border: 1px solid #fecaca;
             color: #991b1b;
         }
@@ -331,14 +328,14 @@
 
         .empty-state-title {
             font-size: 16px;
-            font-weight: 600;
-            color: #475569;
+            font-weight: 700;
+            color: #0f172a;
             margin-bottom: 8px;
         }
 
         .empty-state-text {
             font-size: 14px;
-            color: #94a3b8;
+            color: #64748b;
         }
 
         /* Stats Grid */
@@ -352,7 +349,7 @@
         .stat-card {
             background: white;
             border: 1px solid #e2e8f0;
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 24px;
             transition: all 0.2s;
         }
@@ -364,7 +361,7 @@
 
         .stat-label {
             font-size: 13px;
-            font-weight: 500;
+            font-weight: 600;
             color: #64748b;
             margin-bottom: 8px;
             text-transform: uppercase;
@@ -373,7 +370,7 @@
 
         .stat-value {
             font-size: 32px;
-            font-weight: 700;
+            font-weight: 800;
             color: #0f172a;
             line-height: 1;
         }
@@ -381,7 +378,7 @@
         .stat-icon {
             width: 48px;
             height: 48px;
-            border-radius: 10px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -404,30 +401,18 @@
         .text-gray-900 { color: #0f172a; }
 
         @media (max-width: 768px) {
-            .header-container {
-                padding: 0 16px;
-            }
-
-            .main-container {
-                padding: 24px 16px;
-            }
-
-            .page-title {
-                font-size: 24px;
-            }
-
-            .user-info {
-                display: none;
-            }
+            .header-container { padding: 0 16px; }
+            .main-container { padding: 24px 16px; }
+            .page-title { font-size: 24px; }
+            .user-info { display: none; }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
         <div class="header-container">
             <div class="header-brand">
-                <div class="header-logo">P</div>
+                <img src="{{ asset('images/udd_logo.PNG') }}" alt="Universidad de Dagupan Logo" class="header-logo-img">
                 <div>
                     <div class="header-title">Professor Portal</div>
                 </div>
@@ -446,7 +431,6 @@
         </div>
     </header>
 
-    <!-- Main Content -->
     <main class="main-container">
         @yield('content')
     </main>
