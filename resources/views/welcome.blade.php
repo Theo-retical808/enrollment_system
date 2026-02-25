@@ -88,30 +88,48 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            border: 2px solid transparent; /* Keeps both buttons the exact same size to prevent layout jumping */
         }
 
+        /* Default Student Button (Blue) */
         .btn-student {
             background: #2563eb; 
             color: white;
+            border-color: #2563eb;
             box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
         }
 
-        .btn-student:hover {
+        /* Normal hover for Student (Gets slightly darker blue) */
+        .button-group:not(:has(.btn-professor:hover)) .btn-student:hover {
             background: #1d4ed8;
+            border-color: #1d4ed8;
             transform: translateY(-5px);
             box-shadow: 0 15px 30px rgba(37, 99, 235, 0.3);
         }
 
+        /* Default Professor Button (White/Outlined) */
         .btn-professor {
             background: white;
             color: #0f172a;
-            border: 2px solid #e2e8f0;
+            border-color: #e2e8f0;
         }
 
+        /* The Swap Effect: Student turns white/outline when Professor is hovered */
+        .button-group:has(.btn-professor:hover) .btn-student {
+            background: white;
+            color: #0f172a;
+            border-color: #e2e8f0;
+            box-shadow: none;
+            transform: translateY(0);
+        }
+
+        /* The Swap Effect: Professor turns blue when hovered */
         .btn-professor:hover {
-            background: #f1f5f9;
-            border-color: #cbd5e1;
+            background: #2563eb;
+            color: white;
+            border-color: #2563eb;
             transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(37, 99, 235, 0.3);
         }
 
         .blob {
