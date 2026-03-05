@@ -223,8 +223,22 @@ class IrregularStudentEnrollmentService
             return false;
         }
 
-        // Assign professor for review
+        // Assign professor for review (simple assignment based on school)
         $professor = $enrollment->student->school->professors()->where('status', 'active')->first();
+        
+        // If no professor found in the school, get any active professor
+        if (!$professor) {
+            $professor = \App\Models\Professor::where('status', 'active')->first();
+        }
+        
+        // Log for debugging
+        \Log::info('Submitting irregular enrollment for approval', [
+            'enrollment_id' => $enrollment->id,
+            'student_id' => $enrollment->student_id,
+            'professor_id' => $professor?->id,
+            'school_id' => $enrollment->student->school_id,
+            'courses_count' => $enrollment->courses()->count(),
+        ]);
         
         $enrollment->update([
             'status' => 'submitted',
