@@ -10,51 +10,75 @@
         :root {
             --sidebar-width: 260px;
             --primary-bg: #f8fafc;
-            --accent-blue: #eff6ff; /* UdD Soft Blue */
-            --accent-blue-text: #2563eb; /* UdD Primary Blue */
+            --accent-blue: #eff6ff;
+            --accent-blue-text: #2563eb;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --bg-white: #ffffff;
+            --border-color: #e2e8f0;
+            --border-light: #f1f5f9;
+            --hover-bg: #f1f5f9;
+            --card-shadow: 0 4px 15px -1px rgba(0, 0, 0, 0.03);
         }
+        
+        [data-theme="dark"] {
+            --primary-bg: #0f172a;
+            --accent-blue: #1e3a8a;
+            --accent-blue-text: #60a5fa;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --bg-white: #1e293b;
+            --border-color: #334155;
+            --border-light: #293548;
+            --hover-bg: #334155;
+            --card-shadow: 0 4px 15px -1px rgba(0, 0, 0, 0.3);
+        }
+        
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background: var(--primary-bg);
-            color: #1e293b;
+            color: var(--text-primary);
             display: flex;
             min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         /* Sidebar Styles */
         .sidebar {
             width: var(--sidebar-width);
-            background: white;
-            border-right: 1px solid #e2e8f0;
+            background: var(--bg-white);
+            border-right: 1px solid var(--border-color);
             padding: 2rem 1.5rem;
             display: flex;
             flex-direction: column;
             position: fixed;
             height: 100vh;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
         
         /* Updated Logo Section */
         .logo {
             font-size: 1.25rem;
             font-weight: 800;
-            color: #0f172a;
+            color: var(--text-primary);
             margin-bottom: 3rem;
             display: flex;
             align-items: center;
             gap: 12px;
+            transition: color 0.3s ease;
         }
         
         .nav-link {
             display: flex;
             align-items: center;
             padding: 0.8rem 1rem;
-            color: #64748b;
+            color: var(--text-secondary);
             text-decoration: none;
             font-weight: 600;
             border-radius: 12px;
             margin-bottom: 0.5rem;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
         }
         
         /* Updated Active State to UdD Blue */
@@ -64,8 +88,8 @@
         }
         
         .nav-link:hover:not(.active) {
-            background: #f1f5f9;
-            color: #0f172a;
+            background: var(--hover-bg);
+            color: var(--text-primary);
         }
 
         /* Main Content Area */
@@ -78,7 +102,7 @@
         
         .top-nav {
             padding: 1.5rem 2rem;
-            background: rgba(248, 250, 252, 0.9);
+            background: var(--bg-white);
             backdrop-filter: blur(8px);
             display: flex;
             justify-content: space-between;
@@ -86,18 +110,20 @@
             position: sticky;
             top: 0;
             z-index: 50;
-            border-bottom: 1px solid #f1f5f9; /* Added subtle border for cleaner header separation */
+            border-bottom: 1px solid var(--border-light);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
         
         .content-body { padding: 2rem; }
 
         /* Modern Card Styles */
         .card {
-            background: white;
+            background: var(--bg-white);
             border-radius: 16px;
             padding: 1.5rem;
-            border: 1px solid #f1f5f9;
-            box-shadow: 0 4px 15px -1px rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--border-light);
+            box-shadow: var(--card-shadow);
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
         
         .btn {
@@ -105,7 +131,7 @@
             border-radius: 10px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
             text-decoration: none;
             border: none;
             font-size: 0.9rem;
@@ -120,8 +146,63 @@
             background: #fef2f2 !important;
             color: #dc2626 !important;
         }
+        
+        /* Theme Toggle Switch */
+        .theme-toggle {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: var(--border-color);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            padding: 3px;
+        }
+        
+        .theme-toggle-slider {
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        [data-theme="dark"] .theme-toggle {
+            background: var(--accent-blue-text);
+        }
+        
+        [data-theme="dark"] .theme-toggle-slider {
+            transform: translateX(30px);
+        }
     </style>
     @yield('styles')
+    <script>
+        // Theme toggle functionality
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Update icon
+            document.getElementById('theme-icon').textContent = newTheme === 'dark' ? '🌙' : '☀️';
+        }
+        
+        // Load saved theme on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            document.getElementById('theme-icon').textContent = savedTheme === 'dark' ? '🌙' : '☀️';
+        });
+    </script>
 </head>
 <body>
     <aside class="sidebar">
@@ -132,9 +213,9 @@
         
         <nav style="display:flex; flex-direction:column; height: 100%;">
             <a href="{{ route('student.dashboard') }}" class="nav-link {{ request()->routeIs('student.dashboard') ? 'active' : '' }}">Dashboard</a>
-            <a href="#" class="nav-link">Courses</a>
+            <a href="{{ route('student.courses') }}" class="nav-link {{ request()->routeIs('student.courses') ? 'active' : '' }}">My Courses</a>
             <a href="{{ route('student.schedule') }}" class="nav-link {{ request()->routeIs('student.schedule') ? 'active' : '' }}">Schedule</a>
-            <a href="#" class="nav-link">Finances</a>
+            <a href="{{ route('student.finances') }}" class="nav-link {{ request()->routeIs('student.finances') ? 'active' : '' }}">Finances</a>
             
             <form method="POST" action="{{ route('student.logout') }}" style="margin-top: auto;">
                 @csrf
@@ -147,10 +228,15 @@
 
     <div class="main-wrapper">
         <header class="top-nav">
-            <h1 style="font-size: 1.25rem; font-weight: 800; color: #0f172a;">@yield('title')</h1>
-            <div style="display:flex; align-items:center; gap:12px;">
-                <span style="font-weight: 700; font-size: 0.9rem; color: #475569;">{{ Auth::guard('student')->user()->full_name ?? 'Student' }}</span>
-                <div style="width:38px; height:38px; background:#e2e8f0; border-radius:50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.05);"></div>
+            <h1 style="font-size: 1.25rem; font-weight: 800; color: var(--text-primary); transition: color 0.3s ease;">@yield('title')</h1>
+            <div style="display:flex; align-items:center; gap:16px;">
+                <div class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">
+                    <div class="theme-toggle-slider">
+                        <span id="theme-icon">☀️</span>
+                    </div>
+                </div>
+                <span style="font-weight: 700; font-size: 0.9rem; color: var(--text-secondary); transition: color 0.3s ease;">{{ Auth::guard('student')->user()->full_name ?? 'Student' }}</span>
+                <div style="width:38px; height:38px; background:var(--border-color); border-radius:50%; border: 2px solid var(--bg-white); box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: all 0.3s ease;"></div>
             </div>
         </header>
 

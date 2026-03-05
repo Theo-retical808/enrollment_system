@@ -12,10 +12,17 @@ use App\Http\Controllers\RegularEnrollmentController;
 use App\Http\Controllers\IrregularEnrollmentController;
 use App\Http\Controllers\ScheduleSubmissionController;
 use App\Http\Controllers\AuditReportController;
+use App\Http\Controllers\CourseManagementController;
+use App\Http\Controllers\FinanceController;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Public Course and Finance Routes
+Route::get('/courses', [CourseManagementController::class, 'index'])->name('courses.index');
+Route::get('/courses/{id}', [CourseManagementController::class, 'show'])->name('courses.show');
+Route::get('/finances', [FinanceController::class, 'index'])->name('finance.index');
 
 // Fallback login route for Laravel's default auth redirects
 Route::get('/login', function () {
@@ -31,7 +38,9 @@ Route::prefix('student')->name('student.')->group(function () {
     // Protected student routes
     Route::middleware('student.auth')->group(function () {
         Route::get('dashboard', [StudentDashboardController::class, 'index'])->name('dashboard');
+        Route::get('courses', [StudentDashboardController::class, 'viewCourses'])->name('courses');
         Route::get('schedule', [StudentDashboardController::class, 'viewSchedule'])->name('schedule');
+        Route::get('finances', [FinanceController::class, 'studentFinances'])->name('finances');
         
         // Schedule export routes
         Route::get('schedule/export/pdf', [StudentDashboardController::class, 'exportPdf'])->name('schedule.export.pdf');
