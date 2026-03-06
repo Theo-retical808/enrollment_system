@@ -12,159 +12,22 @@ use App\Http\Controllers\RegularEnrollmentController;
 use App\Http\Controllers\IrregularEnrollmentController;
 use App\Http\Controllers\ScheduleSubmissionController;
 use App\Http\Controllers\AuditReportController;
+use App\Http\Controllers\CourseManagementController;
+use App\Http\Controllers\FinanceController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
+// Public Course and Finance Routes
+Route::get('/courses', [CourseManagementController::class, 'index'])->name('courses.index');
+Route::get('/courses/{id}', [CourseManagementController::class, 'show'])->name('courses.show');
+Route::get('/finances', [FinanceController::class, 'index'])->name('finance.index');
+
 // Fallback login route for Laravel's default auth redirects
 Route::get('/login', function () {
-    // Redirect to student login by default, or you could show a choice page
     return redirect()->route('student.login');
 })->name('login');
-
-// Test route to check authentication
-Route::get('/test-auth', function () {
-    return [
-        'message' => 'Authentication system is working!',
-        'student_guard' => Auth::guard('student')->check() ? 'Authenticated' : 'Not authenticated',
-        'professor_guard' => Auth::guard('professor')->check() ? 'Authenticated' : 'Not authenticated',
-    ];
-});
-
-// Debug route for irregular enrollment
-Route::get('/debug-irregular', function () {
-    $student = Auth::guard('student')->user();
-    if (!$student) {
-        return ['error' => 'Not authenticated'];
-    }
-    
-    $enrollmentService = new \App\Services\IrregularStudentEnrollmentService(
-        new \App\Services\PaymentVerificationService()
-    );
-    
-    $availableCourses = $enrollmentService->getAvailableCourses($student);
-    $enrollment = $enrollmentService->getStudentEnrollment($student);
-    
-    return [
-        'student' => [
-            'id' => $student->id,
-            'name' => $student->full_name,
-            'is_regular' => $student->isRegular(),
-            'has_failed_courses' => $student->hasFailedCourses(),
-            'school' => $student->school->name ?? 'No school',
-        ],
-        'enrollment' => $enrollment ? [
-            'id' => $enrollment->id,
-            'status' => $enrollment->status,
-            'total_units' => $enrollment->total_units,
-            'courses_count' => $enrollment->courses()->count(),
-        ] : null,
-        'available_courses_count' => $availableCourses->count(),
-        'available_courses' => $availableCourses->take(5)->map(function($course) {
-            return [
-                'id' => $course->id,
-                'code' => $course->course_code,
-                'title' => $course->title,
-                'units' => $course->units,
-                'is_active' => $course->is_active,
-            ];
-        }),
-        'failed_courses' => $student->completedCourses()
-            ->wherePivot('passed', false)
-            ->get()
-            ->map(function($course) {
-                return [
-                    'code' => $course->course_code,
-                    'title' => $course->title,
-                    'grade' => $course->pivot->grade,
-                ];
-            }),
-    ];
-})->middleware('student.auth');
-
-Route::get('/info', function () {
-    return [
-        'app_name' => config('app.name'),
-        'environment' => config('app.env'),
-        'database' => config('database.default'),
-        'php_version' => PHP_VERSION,
-        'laravel_version' => app()->version(),
-        'status' => 'Enrollment System is ready!',
-        'routes' => [
-            'student_login' => route('student.login'),
-            'professor_login' => route('professor.login'),
-        ]
-    ];
-});
-
-// Test route to verify login credentials
-Route::get('/test-login-debug', function () {
-    $student = \App\Models\Student::where('student_id', '2024-001')->first();
-    
-    if (!$student) {
-        return response()->json([
-            'error' => 'Student not found',
-            'student_id' => '2024-001'
-        ]);
-    }
-    
-    $testPassword = 'password';
-    $passwordCheck = \Illuminate\Support\Facades\Hash::check($testPassword, $student->password);
-    
-    return response()->json([
-        'student_found' => true,
-        'student_id' => $student->student_id,
-        'email' => $student->email,
-        'status' => $student->status,
-        'password_hash_exists' => !empty($student->password),
-        'password_check_result' => $passwordCheck,
-        'test_password' => $testPassword,
-        'message' => $passwordCheck ? 'Password is correct!' : 'Password does NOT match!',
-    ]);
-});
-
-// Test auto-login route (for debugging only - remove in production)
-Route::get('/test-auto-login/{student_id}', function ($student_id) {
-    $student = \App\Models\Student::where('student_id', $student_id)->first();
-    
-    if (!$student) {
-        return response()->json(['error' => 'Student not found']);
-    }
-    
-    \Illuminate\Support\Facades\Auth::guard('student')->login($student);
-    request()->session()->regenerate();
-    
-    return redirect()->route('student.dashboard');
-})->name('test.auto.login');
-
-// Test to verify session after login
-Route::get('/test-session-check', function () {
-    $student = \Illuminate\Support\Facades\Auth::guard('student')->user();
-    
-    return response()->json([
-        'authenticated' => \Illuminate\Support\Facades\Auth::guard('student')->check(),
-        'student' => $student ? [
-            'id' => $student->id,
-            'student_id' => $student->student_id,
-            'name' => $student->full_name,
-            'email' => $student->email,
-        ] : null,
-        'session_id' => session()->getId(),
-        'session_driver' => config('session.driver'),
-    ]);
-});
-
-// Test form submission (shows what data is being received)
-Route::post('/test-form-submit', function (\Illuminate\Http\Request $request) {
-    return response()->json([
-        'received_data' => $request->all(),
-        'has_csrf' => $request->has('_token'),
-        'csrf_token' => $request->input('_token'),
-        'session_token' => session()->token(),
-        'tokens_match' => $request->input('_token') === session()->token(),
-    ]);
-});
 
 // Student Authentication Routes
 Route::prefix('student')->name('student.')->group(function () {
@@ -175,7 +38,9 @@ Route::prefix('student')->name('student.')->group(function () {
     // Protected student routes
     Route::middleware('student.auth')->group(function () {
         Route::get('dashboard', [StudentDashboardController::class, 'index'])->name('dashboard');
+        Route::get('courses', [StudentDashboardController::class, 'viewCourses'])->name('courses');
         Route::get('schedule', [StudentDashboardController::class, 'viewSchedule'])->name('schedule');
+        Route::get('finances', [FinanceController::class, 'studentFinances'])->name('finances');
         
         // Schedule export routes
         Route::get('schedule/export/pdf', [StudentDashboardController::class, 'exportPdf'])->name('schedule.export.pdf');

@@ -19,6 +19,8 @@ class Course extends Model
         'title',
         'description',
         'units',
+        'year_level',
+        'semester',
         'school_id',
         'is_active',
     ];
