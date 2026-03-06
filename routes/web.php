@@ -243,3 +243,4 @@ Route::prefix('professor')->name('professor.')->group(function () {
         Route::get('audit/export', [AuditReportController::class, 'exportAuditReport'])->name('audit.export');
     });
 });
+
