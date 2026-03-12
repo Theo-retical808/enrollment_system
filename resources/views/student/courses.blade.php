@@ -9,9 +9,8 @@
         <p style="color: #64748b; font-size: 0.95rem;">View your curriculum and track your academic progress</p>
     </div>
 
-    <!-- Statistics Cards -->
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
-        <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 16px; padding: 1.5rem; color: white;">
+        <div style="background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%); border-radius: 16px; padding: 1.5rem; color: white;">
             <div style="display: flex; align-items: center; gap: 1rem;">
                 <div style="background: rgba(255,255,255,0.2); padding: 0.75rem; border-radius: 12px;">
                     <svg width="24" height="24" fill="currentColor" viewBox="0 0 20 20">
@@ -58,7 +57,7 @@
         @if($currentCourses->count() > 0)
         <div style="background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem;">
             <div style="display: flex; align-items: center; gap: 1rem;">
-                <div style="background: #fef3c7; color: #f59e0b; padding: 0.75rem; border-radius: 12px;">
+                <div style="background: #e0f2fe; color: #0284c7; padding: 0.75rem; border-radius: 12px;">
                     <svg width="24" height="24" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
                     </svg>
@@ -72,11 +71,10 @@
         @endif
     </div>
 
-    <!-- Currently Enrolled Courses -->
     @if($currentCourses->count() > 0)
     <div style="background: white; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; margin-bottom: 2rem;">
-        <div style="padding: 1.5rem; border-bottom: 1px solid #f1f5f9; background: #fef3c7;">
-            <h2 style="font-size: 1.125rem; font-weight: 700; color: #92400e; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+        <div style="padding: 1.5rem; border-bottom: 1px solid #e0f2fe; background: #f0f9ff;">
+            <h2 style="font-size: 1.125rem; font-weight: 700; color: #075985; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
                 <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
                 </svg>
@@ -86,14 +84,14 @@
         <div style="padding: 1.5rem;">
             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem;">
                 @foreach($currentCourses as $course)
-                    <div style="background: #fffbeb; border: 1px solid #fef3c7; border-radius: 12px; padding: 1rem;">
-                        <div style="font-weight: 700; color: #92400e; margin-bottom: 0.25rem;">{{ $course->course_code }}</div>
-                        <div style="color: #78350f; font-size: 0.875rem; margin-bottom: 0.5rem;">{{ $course->title }}</div>
+                    <div style="background: #f8fafc; border: 1px solid #e0f2fe; border-radius: 12px; padding: 1rem;">
+                        <div style="font-weight: 700; color: #075985; margin-bottom: 0.25rem;">{{ $course->course_code }}</div>
+                        <div style="color: #0c4a6e; font-size: 0.875rem; margin-bottom: 0.5rem;">{{ $course->title }}</div>
                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="background: #fef3c7; color: #92400e; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
+                            <span style="background: #e0f2fe; color: #0369a1; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
                                 {{ $course->units }} units
                             </span>
-                            <span style="color: #78350f; font-size: 0.75rem;">Year {{ $course->year_level }}</span>
+                            <span style="color: #0c4a6e; font-size: 0.75rem;">Year {{ $course->year_level }}</span>
                         </div>
                     </div>
                 @endforeach
@@ -102,7 +100,6 @@
     </div>
     @endif
 
-    <!-- Completed Courses -->
     @if($completedCourses->count() > 0)
     <div style="background: white; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; margin-bottom: 2rem;">
         <div style="padding: 1.5rem; border-bottom: 1px solid #f1f5f9;">
@@ -153,7 +150,6 @@
     </div>
     @endif
 
-    <!-- Curriculum by Year Level -->
     <div style="background: white; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden;">
         <div style="padding: 1.5rem; border-bottom: 1px solid #f1f5f9;">
             <h2 style="font-size: 1.125rem; font-weight: 700; color: #0f172a; margin: 0;">
@@ -173,8 +169,8 @@
                                 $isFailed = $completedCourses->where('id', $course->id)->where('pivot.passed', false)->isNotEmpty();
                                 $isEnrolled = $currentCourses->where('id', $course->id)->isNotEmpty();
                             @endphp
-                            <div style="background: {{ $isCompleted ? '#f0fdf4' : ($isFailed ? '#fef2f2' : ($isEnrolled ? '#fffbeb' : '#f8fafc')) }}; 
-                                        border: 1px solid {{ $isCompleted ? '#dcfce7' : ($isFailed ? '#fee2e2' : ($isEnrolled ? '#fef3c7' : '#f1f5f9')) }}; 
+                            <div style="background: {{ $isCompleted ? '#f0fdf4' : ($isFailed ? '#fef2f2' : ($isEnrolled ? '#f0f9ff' : '#f8fafc')) }}; 
+                                        border: 1px solid {{ $isCompleted ? '#dcfce7' : ($isFailed ? '#fee2e2' : ($isEnrolled ? '#bae6fd' : '#f1f5f9')) }}; 
                                         border-radius: 12px; padding: 1rem; position: relative;">
                                 @if($isCompleted)
                                     <div style="position: absolute; top: 0.5rem; right: 0.5rem; background: #dcfce7; color: #166534; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
@@ -189,20 +185,20 @@
                                         </svg>
                                     </div>
                                 @elseif($isEnrolled)
-                                    <div style="position: absolute; top: 0.5rem; right: 0.5rem; background: #fef3c7; color: #92400e; padding: 0.25rem 0.5rem; border-radius: 8px; font-size: 0.625rem; font-weight: 700;">
+                                    <div style="position: absolute; top: 0.5rem; right: 0.5rem; background: #e0f2fe; color: #0369a1; padding: 0.25rem 0.5rem; border-radius: 8px; font-size: 0.625rem; font-weight: 700;">
                                         ENROLLED
                                     </div>
                                 @endif
                                 
-                                <div style="font-weight: 700; color: {{ $isCompleted ? '#166534' : ($isFailed ? '#991b1b' : ($isEnrolled ? '#92400e' : '#0f172a')) }}; margin-bottom: 0.25rem;">
+                                <div style="font-weight: 700; color: {{ $isCompleted ? '#166534' : ($isFailed ? '#991b1b' : ($isEnrolled ? '#075985' : '#0f172a')) }}; margin-bottom: 0.25rem;">
                                     {{ $course->course_code }}
                                 </div>
-                                <div style="color: {{ $isCompleted ? '#15803d' : ($isFailed ? '#b91c1c' : ($isEnrolled ? '#78350f' : '#475569')) }}; font-size: 0.875rem; margin-bottom: 0.5rem; line-height: 1.4;">
+                                <div style="color: {{ $isCompleted ? '#15803d' : ($isFailed ? '#b91c1c' : ($isEnrolled ? '#0c4a6e' : '#475569')) }}; font-size: 0.875rem; margin-bottom: 0.5rem; line-height: 1.4;">
                                     {{ $course->title }}
                                 </div>
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <span style="background: {{ $isCompleted ? '#dcfce7' : ($isFailed ? '#fee2e2' : ($isEnrolled ? '#fef3c7' : '#e2e8f0')) }}; 
-                                                color: {{ $isCompleted ? '#166534' : ($isFailed ? '#991b1b' : ($isEnrolled ? '#92400e' : '#475569')) }}; 
+                                    <span style="background: {{ $isCompleted ? '#dcfce7' : ($isFailed ? '#fee2e2' : ($isEnrolled ? '#e0f2fe' : '#e2e8f0')) }}; 
+                                                color: {{ $isCompleted ? '#166534' : ($isFailed ? '#991b1b' : ($isEnrolled ? '#0369a1' : '#475569')) }}; 
                                                 padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
                                         {{ $course->units }} units
                                     </span>

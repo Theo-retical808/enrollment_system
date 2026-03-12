@@ -9,7 +9,8 @@
     <style>
         :root {
             --sidebar-width: 260px;
-            --primary-bg: #f8fafc;
+            /* The perfect cream background! */
+            --primary-bg: #fdfbf5; 
             --accent-blue: #eff6ff;
             --accent-blue-text: #2563eb;
             --text-primary: #1e293b;
@@ -22,15 +23,16 @@
         }
         
         [data-theme="dark"] {
-            --primary-bg: #0f172a;
+            /* True neutral grays - no more blue paint! */
+            --primary-bg: #121212; 
             --accent-blue: #1e3a8a;
             --accent-blue-text: #60a5fa;
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --bg-white: #1e293b;
-            --border-color: #334155;
-            --border-light: #293548;
-            --hover-bg: #334155;
+            --text-primary: #f5f5f5; 
+            --text-secondary: #a3a3a3; 
+            --bg-white: #1e1e1e; 
+            --border-color: #333333; 
+            --border-light: #262626; 
+            --hover-bg: #262626; 
             --card-shadow: 0 4px 15px -1px rgba(0, 0, 0, 0.3);
         }
         
