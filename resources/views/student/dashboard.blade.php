@@ -86,19 +86,19 @@
 </div>
 
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem;">
-    <div style="background: var(--sky-bg); padding: 1.5rem; border-radius: 20px; border: 1px solid var(--sky-border);">
-        <span style="color: var(--sky-text); font-weight: 700; font-size: 0.8rem; text-transform: uppercase;">Student ID</span>
-        <h2 style="color: var(--sky-text); font-size: 1.8rem; margin-top: 5px;">{{ $student->student_id }}</h2>
-    </div>
-    
-    <div style="background: var(--blue-bg); padding: 1.5rem; border-radius: 20px; border: 1px solid var(--blue-border);">
-        <span style="color: var(--blue-text); font-weight: 700; font-size: 0.8rem; text-transform: uppercase;">Year Level</span>
-        <h2 style="color: var(--blue-text); font-size: 1.8rem; margin-top: 5px;">{{ $student->year_level }}</h2>
+    <div class="stat-card sky">
+        <span class="label">Student ID</span>
+        <h2 class="value">{{ $student->student_id }}</h2>
     </div>
 
-    <div style="background: {{ $student->isRegular() ? 'var(--reg-bg)' : 'var(--irreg-bg)' }}; padding: 1.5rem; border-radius: 20px; border: 1px solid {{ $student->isRegular() ? 'var(--reg-border)' : 'var(--irreg-border)' }};">
-        <span style="color: {{ $student->isRegular() ? 'var(--reg-text)' : 'var(--irreg-text)' }}; font-weight: 700; font-size: 0.8rem; text-transform: uppercase;">Status</span>
-        <h2 style="color: {{ $student->isRegular() ? 'var(--reg-text)' : 'var(--irreg-text)' }}; font-size: 1.8rem; margin-top: 5px;">{{ $student->isRegular() ? 'Regular' : 'Irregular' }}</h2>
+    <div class="stat-card blue">
+        <span class="label">Year Level</span>
+        <h2 class="value">{{ $student->year_level }}</h2>
+    </div>
+
+    <div class="stat-card {{ $student->isRegular() ? 'reg' : 'irreg' }}">
+        <span class="label">Status</span>
+        <h2 class="value">{{ $student->isRegular() ? 'Regular' : 'Irregular' }}</h2>
     </div>
 </div>
 

@@ -6,60 +6,53 @@
 
 <style>
     :root {
-        /* General Colors */
-        --text-main: #0f172a;
-        --text-muted: #64748b;
-        --text-light: #475569;
-        --bg-main: #ffffff;
-        --border-light: #f1f5f9;
-        
-        --card-bg: #ffffff;
-        --card-border: #e2e8f0;
-        --table-header-bg: #f8fafc;
-        
-        /* Gradient Colors */
-        --grad-start: #1e3a8a;
-        --grad-end: #2563eb;
-        
-        /* Blue Theme */
-        --blue-bg: #dbeafe;
-        --blue-text: #2563eb;
-        
-        /* Sky Theme */
-        --sky-bg: #e0f2fe;
-        --sky-border: #bae6fd;
-        --sky-text: #0369a1;
-        --sky-text-dark: #075985;
-        --sky-text-muted: #0c4a6e;
-        
-        /* Success Theme (Approved) */
-        --success-bg-light: #f0fdf4;
-        --success-bg: #dcfce7;
-        --success-border: #dcfce7;
-        --success-text: #166534;
-        --success-text-muted: #15803d;
-        --success-grade: #059669;
-        
-        /* Danger Theme (Rejected) */
-        --danger-bg-light: #fef2f2;
-        --danger-bg: #fee2e2;
-        --danger-border: #fee2e2;
-        --danger-text: #991b1b;
-        --danger-text-muted: #b91c1c;
-        --danger-grade: #dc2626;
-        --danger-icon: #ef4444;
+        /* Map page variables to global layout theme variables */
+        --text-main: var(--text-primary);
+        --text-muted: var(--text-secondary);
+        --text-light: var(--text-secondary);
+        --bg-main: var(--primary-bg);
+        --border-light: var(--border-light);
 
-        /* Warning Theme (Submitted) - Added for Schedule Status */
-        --warning-bg-light: #fffbeb;
-        --warning-bg: #fef3c7;
-        --warning-border: #fef3c7;
-        --warning-text: #b45309;
-        --warning-text-muted: #d97706;
+        --card-bg: var(--bg-white);
+        --card-border: var(--border-light);
+        --table-header-bg: var(--bg-white);
 
-        /* Draft Theme - Added for Schedule Status */
-        --draft-bg-light: #f8fafc;
-        --draft-bg: #e2e8f0;
-        --draft-text: #334155;
+        --grad-start: var(--accent-blue);
+        --grad-end: var(--accent-blue-text);
+
+        --blue-bg: var(--accent-blue);
+        --blue-text: var(--accent-blue-text);
+
+        --sky-bg: var(--accent-blue);
+        --sky-border: var(--border-light);
+        --sky-text: var(--accent-blue-text);
+        --sky-text-dark: var(--accent-blue-text);
+        --sky-text-muted: var(--text-secondary);
+
+        --success-bg-light: var(--card-bg);
+        --success-bg: var(--card-bg);
+        --success-border: var(--card-border);
+        --success-text: var(--text-primary);
+        --success-text-muted: var(--text-secondary);
+        --success-grade: var(--text-primary);
+
+        --danger-bg-light: var(--card-bg);
+        --danger-bg: var(--card-bg);
+        --danger-border: var(--card-border);
+        --danger-text: var(--text-primary);
+        --danger-text-muted: var(--text-secondary);
+        --danger-grade: var(--text-primary);
+        --danger-icon: var(--accent-blue-text);
+
+        --warning-bg-light: var(--card-bg);
+        --warning-bg: var(--card-bg);
+        --warning-border: var(--card-border);
+        --warning-text: var(--text-primary);
+        --warning-text-muted: var(--text-secondary);
+
+        --draft-bg-light: var(--card-bg);
+        --draft-bg: var(--card-bg);
+        --draft-text: var(--text-primary);
     }
 
     /* Dark Mode Colors */

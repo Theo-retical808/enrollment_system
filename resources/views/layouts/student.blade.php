@@ -20,20 +20,34 @@
             --border-light: #f1f5f9;
             --hover-bg: #f1f5f9;
             --card-shadow: 0 4px 15px -1px rgba(0, 0, 0, 0.03);
+            /* Stat card gradients (light) */
+            --sky-gradient: linear-gradient(135deg,#93c5fd 0%,#3b82f6 100%);
+            --blue-gradient: linear-gradient(135deg,#bfdbfe 0%,#60a5fa 100%);
+            --reg-gradient: linear-gradient(135deg,#dbeafe 0%,#60a5fa 100%);
+            --irreg-gradient: linear-gradient(135deg,#ffedd5 0%,#f97316 100%);
+            --success-gradient: linear-gradient(135deg,#bbf7d0 0%,#34d399 100%);
+            --danger-gradient: linear-gradient(135deg,#fee2e2 0%,#ef4444 100%);
         }
         
         [data-theme="dark"] {
-            /* True neutral grays - no more blue paint! */
-            --primary-bg: #121212; 
-            --accent-blue: #1e3a8a;
+            /* Deep navy background and card tones to match the student UI */
+            --primary-bg: #0b0c0d;
+            --accent-blue: #10283e;
             --accent-blue-text: #60a5fa;
-            --text-primary: #f5f5f5; 
-            --text-secondary: #a3a3a3; 
-            --bg-white: #1e1e1e; 
-            --border-color: #333333; 
-            --border-light: #262626; 
-            --hover-bg: #262626; 
-            --card-shadow: 0 4px 15px -1px rgba(0, 0, 0, 0.3);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --bg-white: #1e293b; /* card background */
+            --border-color: #263645;
+            --border-light: #233342;
+            --hover-bg: #172433;
+            --card-shadow: 0 6px 20px -6px rgba(0, 0, 0, 0.6);
+            /* Stat card gradients (dark) */
+            --sky-gradient: linear-gradient(135deg,#0f172a 0%,#0b3a66 100%);
+            --blue-gradient: linear-gradient(135deg,#0b254a 0%,#122e6a 100%);
+            --reg-gradient: linear-gradient(135deg,#0b254a 0%,#1e40af 100%);
+            --irreg-gradient: linear-gradient(135deg,#4c1d00 0%,#7c2d12 100%);
+            --success-gradient: linear-gradient(135deg,#064e3b 0%,#10b981 100%);
+            --danger-gradient: linear-gradient(135deg,#4c0f0f 0%,#991b1b 100%);
         }
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -127,6 +141,28 @@
             box-shadow: var(--card-shadow);
             transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
+
+        /* Reusable stat card used on dashboards */
+        .stat-card {
+            padding: 1.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--border-light);
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .stat-card.sky { background: var(--sky-gradient); }
+        .stat-card.blue { background: var(--blue-gradient); }
+        .stat-card.reg { background: var(--reg-gradient); }
+        .stat-card.irreg { background: var(--irreg-gradient); }
+        .stat-card.success { background: var(--success-gradient); }
+        .stat-card.danger { background: var(--danger-gradient); }
+
+        /* Ensure text is readable on colored gradients */
+        .stat-card h2, .stat-card span { color: rgba(255,255,255,0.95); font-weight: 700; }
         
         .btn {
             padding: 0.6rem 1.2rem;
