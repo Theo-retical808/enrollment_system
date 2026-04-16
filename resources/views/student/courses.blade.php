@@ -37,7 +37,8 @@
                     <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">
                         Total Credits</div>
                     <div style="font-size: 2rem; font-weight: 800; color: var(--text-main); line-height: 1;">
-                        {{ $totalUnitsCompleted }} <span style="font-size: 0.9rem; font-weight: 600;">Units</span></div>
+                        {{ $totalUnitsCompleted }} <span style="font-size: 0.9rem; font-weight: 600;">Units</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -53,7 +54,8 @@
                         <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">
                             Failed Load</div>
                         <div style="font-size: 2rem; font-weight: 800; color: var(--status-danger-text); line-height: 1;">
-                            {{ $failedCount }} <span style="font-size: 0.9rem; font-weight: 600;">Courses</span></div>
+                            {{ $failedCount }} <span style="font-size: 0.9rem; font-weight: 600;">Courses</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -69,7 +71,8 @@
                     <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">
                         In Progress</div>
                     <div style="font-size: 2rem; font-weight: 800; color: var(--text-main); line-height: 1;">
-                        {{ $currentCourses->count() }}</div>
+                        {{ $currentCourses->count() }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -97,7 +100,8 @@
                                 <span class="badge badge-info">{{ $course->units }} Units</span>
                             </div>
                             <p class="text-main font-bold" style="font-size: 0.95rem; margin-bottom: 0.75rem; line-height: 1.4;">
-                                {{ $course->title }}</p>
+                                {{ $course->title }}
+                            </p>
                             <div class="flex items-center gap-2 text-muted" style="font-size: 0.8rem; font-weight: 700;">
                                 <i data-lucide="graduation-cap" style="width: 14px;"></i>
                                 Level {{ $course->year_level }}
