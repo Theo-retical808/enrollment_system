@@ -1,11 +1,150 @@
-@import 'tailwindcss';
+:root {
+    /* Primary Brand - Universidad de Dagupan Blue */
+    --udd-blue: #2563eb;
+    --udd-blue-dark: #1d4ed8;
+    --udd-blue-light: #eff6ff;
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
+    /* Semantic Colors - Light Mode Default */
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --text-inverse: #ffffff;
+    
+    --bg-primary: #f8fafc;
+    --bg-card: #ffffff;
+    --bg-sidebar: #ffffff;
+    
+    --border-main: #e2e8f0;
+    --border-light: #f1f5f9;
+    
+    --status-success-bg: #dcfce7;
+    --status-success-text: #166534;
+    --status-danger-bg: #fef2f2;
+    --status-danger-text: #991b1b;
+    --status-warning-bg: #fff7ed;
+    --status-warning-text: #92400e;
+    --status-info-bg: #eff6ff;
+    --status-info-text: #1e40af;
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    /* Shadows & Radii */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
 }
+
+[data-theme="dark"] {
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --text-inverse: #0f172a;
+    
+    --bg-primary: #0f172a; /* Deep Slate */
+    --bg-card: #1e293b;
+    --bg-sidebar: #1e293b;
+    
+    --border-main: #334155;
+    --border-light: #1e293b;
+
+    --status-success-bg: #064e3b;
+    --status-success-text: #a7f3d0;
+    --status-danger-bg: #7f1d1d;
+    --status-danger-text: #fecaca;
+    --status-warning-bg: #78350f;
+    --status-warning-text: #fde68a;
+    --status-info-bg: #1e3a8a;
+    --status-info-text: #bfdbfe;
+    
+    --udd-blue-light: #1e3a8a;
+}
+
+/* Global Reset & Typography */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-main);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    line-height: 1.5;
+}
+
+/* Base Components */
+.card {
+    background-color: var(--bg-card);
+    border: none;
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: none;
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn-primary {
+    background-color: var(--udd-blue);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--udd-blue-dark);
+    box-shadow: 0 8px 16px -4px rgba(37, 99, 235, 0.3);
+}
+
+/* Badges & Status */
+.badge {
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.badge-success { background: var(--status-success-bg); color: var(--status-success-text); }
+.badge-danger { background: var(--status-danger-bg); color: var(--status-danger-text); }
+.badge-warning { background: var(--status-warning-bg); color: var(--status-warning-text); }
+.badge-info { background: var(--status-info-bg); color: var(--status-info-text); }
+
+/* Layout Utilities */
+.flex { display: flex; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.flex-column { flex-direction: column; }
+.gap-1 { gap: 0.25rem; }
+.gap-2 { gap: 0.5rem; }
+.gap-4 { gap: 1rem; }
+
+/* Readability - Higher contrast for specific variants */
+.text-muted { color: var(--text-muted); }
+.text-main { color: var(--text-main); }
+.font-bold { font-weight: 700; }
+.font-extrabold { font-weight: 800; }

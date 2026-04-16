@@ -1,303 +1,266 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="light">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name', 'Enrollment System') }}</title>
+    <title>{{ config('app.name', 'UdD Enrollment') }}</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    @vite(['resources/css/app.css', 'resources/js/theme.js'])
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --auth-bg-start: #f8fafc;
+            --auth-bg-end: #e2e8f0;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.5);
+        }
+
+        [data-theme="dark"] {
+            --auth-bg-start: #0f172a;
+            --auth-bg-end: #020617;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(51, 65, 85, 0.5);
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 0;
+            background-color: var(--auth-bg-end);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
-            color: #1f2937;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow: hidden;
+            position: relative;
         }
 
-        .auth-container {
-            width: 100%;
-            max-width: 440px;
+        /* Oceanic Blur Background Components */
+        .bg-blur-blob {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--udd-blue) 0%, transparent 70%);
+            filter: blur(80px);
+            opacity: 0.15;
+            z-index: -1;
+            animation: float 20s infinite alternate;
+        }
+
+        .blob-1 { top: -200px; right: -100px; background: radial-gradient(circle, #3b82f6 0%, transparent 70%); }
+        .blob-2 { bottom: -200px; left: -100px; background: radial-gradient(circle, #8b5cf6 0%, transparent 70%); }
+
+        [data-theme="dark"] .bg-blur-blob { opacity: 0.25; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(100px, 50px) scale(1.1); }
         }
 
         .auth-card {
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            padding: 40px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 440px;
+            padding: 3.5rem 2.5rem;
+            position: relative;
+            z-index: 10;
         }
 
         .auth-header {
             text-align: center;
-            margin-bottom: 32px;
+            margin-bottom: 2.5rem;
         }
 
-        .logo-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 24px;
+        .auth-logo-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 1.5rem;
         }
 
-        .logo-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .auth-logo-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120%;
+            height: 120%;
+            background: var(--udd-blue);
+            filter: blur(25px);
+            opacity: 0.2;
+            border-radius: 50%;
         }
 
-        .system-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #1f2937;
-            letter-spacing: -0.01em;
-        }
-
-        .welcome-title {
-            font-size: 28px;
-            font-weight: 700;
-            color: #111827;
-            margin-bottom: 8px;
-            letter-spacing: -0.02em;
-        }
-
-        .welcome-subtitle {
-            font-size: 15px;
-            color: #6b7280;
-            font-weight: 400;
-        }
-
-        .auth-form {
-            margin-bottom: 24px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
+        .auth-logo {
+            height: 80px;
+            width: auto;
+            position: relative;
+            z-index: 2;
         }
 
         .form-label {
             display: block;
-            font-size: 14px;
-            font-weight: 500;
-            color: #374151;
-            margin-bottom: 8px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            margin-bottom: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            color: var(--text-muted);
+            pointer-events: none;
+            transition: color 0.2s;
         }
 
         .form-control {
             width: 100%;
-            padding: 12px 16px;
-            font-size: 15px;
-            border: 1.5px solid #e5e7eb;
-            border-radius: 8px;
-            transition: all 0.2s;
+            padding: 0.9rem 1.25rem 0.9rem 3rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border: 2px solid transparent;
+            background: rgba(var(--bg-primary-rgb), 0.5); /* Assuming we adds rgb version in app.css or use static */
+            background: var(--bg-primary);
+            border-radius: 16px;
+            color: var(--text-main);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
             font-family: inherit;
-            background: white;
         }
 
         .form-control:focus {
-            outline: none;
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            background: var(--bg-card);
+            border-color: var(--udd-blue);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
         }
 
-        .form-control.is-invalid {
-            border-color: #ef4444;
+        .form-control:focus + .input-icon {
+            color: var(--udd-blue);
         }
 
-        .form-control.is-invalid:focus {
-            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
-        }
-
-        .form-hint {
-            display: block;
-            font-size: 13px;
-            color: #9ca3af;
-            margin-top: 6px;
-        }
-
-        .form-group-checkbox {
-            margin-bottom: 24px;
-        }
-
-        .checkbox-label {
+        .btn-auth {
+            width: 100%;
+            padding: 1.1rem;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 800;
+            letter-spacing: 0.02em;
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            color: #374151;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .checkbox-label input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-            accent-color: #2563eb;
-        }
-
-        .btn {
-            font-family: inherit;
-            font-size: 15px;
-            font-weight: 500;
-            padding: 12px 24px;
-            border-radius: 8px;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
             border: none;
             cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn-primary {
-            background: #2563eb;
             color: white;
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
         }
 
-        .btn-primary:hover {
-            background: #1d4ed8;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        .btn-student {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
         }
 
-        .btn-primary:active {
+        .btn-professor {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            box-shadow: 0 10px 15px -3px rgba(5, 150, 105, 0.3);
+        }
+
+        .btn-auth:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        .btn-auth:active {
             transform: translateY(0);
         }
 
-        .btn-block {
-            width: 100%;
-        }
-
-        .alert {
-            padding: 14px 16px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: flex;
-            gap: 12px;
-            align-items: flex-start;
-        }
-
-        .alert-danger {
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            color: #991b1b;
-        }
-
-        .alert-icon {
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-
-        .alert-content {
-            flex: 1;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        .auth-footer {
-            text-align: center;
-            padding-top: 24px;
-            border-top: 1px solid #f3f4f6;
-        }
-
-        .footer-text {
-            font-size: 14px;
-            color: #6b7280;
-        }
-
-        .footer-link {
-            color: #2563eb;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-
-        .footer-link:hover {
-            color: #1d4ed8;
-            text-decoration: underline;
-        }
-
         .test-credentials {
-            margin-top: 24px;
-            padding: 16px;
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
+            margin-top: 2.5rem;
+            padding: 1.5rem;
+            background: rgba(var(--bg-primary-rgb), 0.3);
+            background: var(--bg-primary);
+            border-radius: 20px;
+            opacity: 0.8;
+            transition: opacity 0.3s;
         }
 
-        .test-credentials-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #374151;
-            margin-bottom: 12px;
+        .test-credentials:hover {
+            opacity: 1;
         }
 
-        .test-credentials-body {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .credential-item {
-            font-size: 13px;
-        }
-
-        .credential-label {
-            display: block;
-            color: #6b7280;
-            margin-bottom: 6px;
-            font-weight: 500;
-        }
-
-        .credential-values {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .credential-values code {
-            background: white;
+        .credential-item code {
+            background: var(--bg-card);
             padding: 4px 10px;
-            border-radius: 6px;
-            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
-            font-size: 13px;
-            color: #2563eb;
-            border: 1px solid #e5e7eb;
-            font-weight: 500;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--udd-blue);
         }
 
-        @media (max-width: 480px) {
-            .auth-card {
-                padding: 32px 24px;
-            }
+        .auth-footer-link {
+            color: var(--udd-blue);
+            text-decoration: none;
+            font-weight: 700;
+            position: relative;
+            transition: all 0.2s;
+        }
 
-            .welcome-title {
-                font-size: 24px;
-            }
+        .auth-footer-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--udd-blue);
+            transform: scaleX(0);
+            transition: transform 0.2s;
+            transform-origin: right;
+        }
+
+        .auth-footer-link:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
         }
     </style>
 </head>
 <body>
+    <div class="bg-blur-blob blob-1"></div>
+    <div class="bg-blur-blob blob-2"></div>
+
     @yield('content')
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
+        });
+    </script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="light">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,179 +7,157 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    @vite(['resources/css/app.css', 'resources/js/theme.js'])
+    
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #f8fafc;
-            color: #1e293b;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
         .hero {
             flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 4rem 2rem;
-            background: radial-gradient(circle at top right, #eff6ff, #f8fafc);
+            min-height: 100vh;
+            background: radial-gradient(circle at top right, var(--status-info-bg), var(--bg-primary));
             position: relative;
             overflow: hidden;
         }
 
         .hero-container {
-            max-width: 950px;
-            text-align: center;
-            z-index: 10;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 10;
         }
 
         .main-logo {
-            height: 150px; 
+            height: 140px; 
             width: auto;
-            margin-bottom: 2rem;
-            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.08));
+            margin-bottom: 2.5rem;
+            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.1));
         }
 
         .hero-title {
-            font-size: 3.8rem; 
+            font-size: 4rem; 
             font-weight: 800;
-            color: #0f172a;
+            color: var(--text-main);
             line-height: 1.1;
-            margin-bottom: 0.75rem;
-            letter-spacing: -1.5px;
+            margin-bottom: 1rem;
+            letter-spacing: -2px;
         }
 
         .hero-subtitle {
-            font-size: 1.15rem; 
-            color: #2563eb; 
-            font-weight: 700;
+            font-size: 1.25rem; 
+            color: var(--udd-blue); 
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 1.5rem;
+            letter-spacing: 3px;
+            text-indent: 3px; /* Fixes centering offset from letter-spacing */
+            margin-bottom: 2rem;
         }
 
-        .feature-description {
-            font-size: 1.1rem;
-            color: #64748b;
-            max-width: 600px;
-            margin-bottom: 3.5rem;
+        .hero-description {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            max-width: 650px;
+            margin: 0 auto 3.5rem auto;
             line-height: 1.7;
+            font-weight: 500;
         }
 
-        .button-group {
-            display: flex;
-            gap: 1.5rem;
-            justify-content: center;
-        }
-
-        .btn {
-            padding: 1.1rem 2.8rem;
-            border-radius: 14px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 1rem;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        .btn-large {
+            padding: 1.25rem 3rem;
+            font-size: 1.1rem;
+            border-radius: var(--radius-xl);
             display: inline-flex;
             align-items: center;
+            gap: 12px;
+            font-weight: 800;
+        }
+
+        .btn-portal {
+            background: var(--bg-card);
+            color: var(--text-main);
+            border: 2px solid var(--border-main);
+            min-width: 240px;
             justify-content: center;
-            border: 2px solid transparent; /* Keeps both buttons the exact same size to prevent layout jumping */
         }
 
-        /* Default Student Button (Blue) */
-        .btn-student {
-            background: #2563eb; 
-            color: white;
-            border-color: #2563eb;
-            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
-        }
-
-        /* Normal hover for Student (Gets slightly darker blue) */
-        .button-group:not(:has(.btn-professor:hover)) .btn-student:hover {
-            background: #1d4ed8;
-            border-color: #1d4ed8;
+        .btn-portal:hover {
+            background: var(--udd-blue) !important;
+            color: white !important;
+            border-color: var(--udd-blue) !important;
             transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(37, 99, 235, 0.3);
-        }
-
-        /* Default Professor Button (White/Outlined) */
-        .btn-professor {
-            background: white;
-            color: #0f172a;
-            border-color: #e2e8f0;
-        }
-
-        /* The Swap Effect: Student turns white/outline when Professor is hovered */
-        .button-group:has(.btn-professor:hover) .btn-student {
-            background: white;
-            color: #0f172a;
-            border-color: #e2e8f0;
-            box-shadow: none;
-            transform: translateY(0);
-        }
-
-        /* The Swap Effect: Professor turns blue when hovered */
-        .btn-professor:hover {
-            background: #2563eb;
-            color: white;
-            border-color: #2563eb;
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(37, 99, 235, 0.3);
+            box-shadow: var(--shadow-lg);
         }
 
         .blob {
             position: absolute;
             z-index: 1;
             filter: blur(100px);
-            opacity: 0.3;
+            opacity: 0.2;
             border-radius: 50%;
         }
 
         @media (max-width: 768px) {
-            .hero-title { font-size: 2.5rem; }
+            .hero-title { font-size: 2.75rem; }
             .hero-subtitle { font-size: 1rem; }
-            .button-group { flex-direction: column; width: 100%; }
-            .btn { width: 100%; }
+            .btn-group { flex-direction: column; width: 100%; gap: 1rem; }
+            .btn-large { width: 100%; }
         }
     </style>
 </head>
 <body>
 
     <section class="hero">
-        <div class="blob" style="width: 600px; height: 600px; background: #bfdbfe; top: -15%; right: -10%;"></div>
-        <div class="blob" style="width: 500px; height: 500px; background: #dbeafe; bottom: -15%; left: -10%;"></div>
+        <div class="blob" style="width: 600px; height: 600px; background: var(--udd-blue); top: -15%; right: -10%;"></div>
+        <div class="blob" style="width: 500px; height: 500px; background: var(--status-info-text); bottom: -15%; left: -10%;"></div>
 
         <div class="hero-container">
             <img src="{{ asset('images/udd_logo.PNG') }}" alt="Universidad de Dagupan Logo" class="main-logo">
             
             <h2 class="hero-title">Universidad de Dagupan</h2>
-            
-            <p class="hero-subtitle">
-                The official Enrollment System for Universidad de Dagupan
-            </p>
+            <p class="hero-subtitle">Official Enrollment System</p>
 
-            <p class="feature-description">
-                Access your courses, manage schedules, and track your academic progress all in one platform.
+            <p class="hero-description">
+                Welcome to the digital academic hub of Universidad de Dagupan. 
+                Experience a streamlined enrollment process tailored for excellence.
             </p>
             
-            <div class="button-group">
-                <a href="{{ route('student.login') }}" class="btn btn-student">
-                    Login as Student
+            <div style="display: flex; justify-content: center; align-items: center; gap: 1.5rem; width: 100%;">
+                <a href="{{ route('student.login') }}" class="btn btn-portal btn-large">
+                    <i data-lucide="graduation-cap" style="width: 24px; height: 24px;"></i>
+                    Student Portal
                 </a>
-                <a href="{{ route('professor.login') }}" class="btn btn-professor">
-                    Professor Portal
+                <a href="{{ route('professor.login') }}" class="btn btn-portal btn-large">
+                    <i data-lucide="shield-check" style="width: 24px; height: 24px;"></i>
+                    Professor Access
                 </a>
             </div>
         </div>
     </section>
 
-    <footer style="padding: 2.5rem; text-align: center; color: #94a3b8; font-size: 0.95rem; background: transparent;">
-        &copy; 2026 Universidad de Dagupan. All Rights Reserved.
+    <footer style="padding: 3rem; text-align: center; color: var(--text-muted); font-size: 0.95rem; font-weight: 700;">
+        <div class="flex items-center justify-center gap-2 mb-2">
+            <i data-lucide="building-2" style="width: 16px;"></i>
+            <span>&copy; 2026 Universidad de Dagupan</span>
+        </div>
+        <p style="font-size: 0.8rem; opacity: 0.6;">All Rights Reserved. Secure Academic Environment.</p>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
+        });
+    </script>
 </body>
 </html>
