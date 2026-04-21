@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Student Portal') - Enrollment System</title>
+    <title>@yield('title', 'Student Access') - Enrollment System</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
@@ -118,7 +118,7 @@
         <div class="flex items-center gap-4 mb-8" style="margin-bottom: 3rem;">
             <img src="{{ asset('images/udd_logo.PNG') }}" alt="Logo" style="height: 48px; width: auto;">
             <div>
-                <h1 class="font-extrabold" style="font-size: 1.1rem; line-height: 1.1;">UdD Portal</h1>
+                <h1 class="font-extrabold" style="font-size: 1.1rem; line-height: 1.1;">Enrollment System</h1>
                 <p class="text-muted" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">Enrollment</p>
             </div>
         </div>

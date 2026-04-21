@@ -72,8 +72,8 @@
             <ul class="navbar-nav">
                 <li><a href="{{ route('courses.index') }}" class="nav-link {{ request()->routeIs('courses.*') ? 'active' : '' }}">Courses</a></li>
                 <li><a href="{{ route('finance.index') }}" class="nav-link {{ request()->routeIs('finance.*') ? 'active' : '' }}">Finances</a></li>
-                <li><a href="{{ route('student.login') }}" class="nav-link">Student Portal</a></li>
-                <li><a href="{{ route('professor.login') }}" class="nav-link">Professor Portal</a></li>
+                <li><a href="{{ route('student.login') }}" class="nav-link">Student Login</a></li>
+                <li><a href="{{ route('professor.login') }}" class="nav-link">Faculty Login</a></li>
             </ul>
         </div>
     </nav>

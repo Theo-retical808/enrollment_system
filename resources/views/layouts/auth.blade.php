@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="light">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name', 'UdD Enrollment') }}</title>
+    <title>@yield('title', config('app.name', 'UdD Enrollment'))</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -16,115 +16,212 @@
     @vite(['resources/css/app.css', 'resources/js/theme.js'])
 
     <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
         :root {
-            --auth-bg-start: #f8fafc;
-            --auth-bg-end: #e2e8f0;
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.5);
+          --navy:     #0c1660;
+          --navy-mid: #152080;
+          --navy-lit: #1c2ea0;
+          --blue:     #1a56db;
+          --blue-lit: #3b82f6;
+          --white:    #ffffff;
+          --gray-50:  #f8f9fc;
+          --gray-100: #eef0f6;
+          --gray-300: #c4cade;
+          --gray-500: #7480a0;
+          --gray-700: #3d4a6b;
+          --text:     #111827;
         }
 
-        [data-theme="dark"] {
-            --auth-bg-start: #0f172a;
-            --auth-bg-end: #020617;
-            --glass-bg: rgba(30, 41, 59, 0.7);
-            --glass-border: rgba(51, 65, 85, 0.5);
+        html, body {
+          height: 100%;
+          font-family: 'Figtree', sans-serif;
+          background: var(--gray-50);
+          color: var(--text);
+          overflow: hidden;
         }
 
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: var(--auth-bg-end);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            overflow: hidden;
-            position: relative;
+        .layout {
+          display: flex;
+          min-height: 100vh;
         }
 
-        /* Oceanic Blur Background Components */
-        .bg-blur-blob {
-            position: absolute;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, var(--udd-blue) 0%, transparent 70%);
-            filter: blur(80px);
-            opacity: 0.15;
-            z-index: -1;
-            animation: float 20s infinite alternate;
+        /* ── LEFT PANEL ── */
+        .left {
+          width: 550px;
+          flex-shrink: 0;
+          background: var(--navy);
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          padding: 64px 60px;
+          overflow: hidden;
         }
 
-        .blob-1 { top: -200px; right: -100px; background: radial-gradient(circle, #3b82f6 0%, transparent 70%); }
-        .blob-2 { bottom: -200px; left: -100px; background: radial-gradient(circle, #8b5cf6 0%, transparent 70%); }
-
-        [data-theme="dark"] .bg-blur-blob { opacity: 0.25; }
-
-        @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(100px, 50px) scale(1.1); }
+        .left::before {
+          content: '';
+          position: absolute;
+          bottom: -140px; right: -140px;
+          width: 400px; height: 400px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(26,86,219,.3) 0%, transparent 70%);
+          pointer-events: none;
         }
 
-        .auth-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 28px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-            width: 100%;
-            max-width: 440px;
-            padding: 3.5rem 2.5rem;
-            position: relative;
-            z-index: 10;
+        .left::after {
+          content: '';
+          position: absolute;
+          top: -80px; left: -80px;
+          width: 260px; height: 260px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(28,46,160,.5) 0%, transparent 70%);
+          pointer-events: none;
         }
 
-        .auth-header {
-            text-align: center;
-            margin-bottom: 2.5rem;
+        .left-body {
+          position: relative;
+          z-index: 1;
+          animation: fadeLeft .55s ease both;
         }
 
-        .auth-logo-container {
-            position: relative;
-            display: inline-block;
-            margin-bottom: 1.5rem;
+        .seal-wrap {
+          display: flex;
+          align-items: center;
+          gap: 13px;
+          margin-bottom: 56px;
         }
 
-        .auth-logo-glow {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 120%;
-            height: 120%;
-            background: var(--udd-blue);
-            filter: blur(25px);
-            opacity: 0.2;
-            border-radius: 50%;
+        .seal-circle {
+          width: 72px; height: 72px;
+          display: flex; align-items: center; justify-content: center;
+          flex-shrink: 0;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1.5px solid rgba(255, 255, 255, 0.15);
+          border-radius: 50%;
+          padding: 12px;
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
         }
 
-        .auth-logo {
-            height: 80px;
-            width: auto;
-            position: relative;
-            z-index: 2;
+        .seal-logo {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          filter: drop-shadow(0 4px 12px rgba(255, 255, 255, 0.1));
         }
 
+        .seal-name {
+          font-size: 13px;
+          font-weight: 700;
+          color: var(--white);
+          line-height: 1.25;
+        }
+
+        .seal-sub {
+          font-size: 10px;
+          font-weight: 400;
+          letter-spacing: .14em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,.4);
+          margin-top: 3px;
+        }
+
+        .left-label {
+          font-size: 10.5px;
+          font-weight: 600;
+          letter-spacing: .2em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,.4);
+          margin-bottom: 14px;
+        }
+
+        .left-heading {
+          font-size: 48px;
+          font-weight: 800;
+          color: var(--white);
+          line-height: 1.1;
+          letter-spacing: -.02em;
+          margin-bottom: 24px;
+        }
+
+        .left-heading .accent { color: #60a5fa; }
+
+        .left-desc {
+          font-size: 15px;
+          font-weight: 400;
+          color: rgba(255,255,255,.5);
+          line-height: 1.7;
+          max-width: 380px;
+        }
+
+        .iso-badge {
+          position: relative;
+          z-index: 1;
+          display: inline-flex;
+          align-items: center;
+          gap: 9px;
+          margin-top: 44px;
+          padding: 10px 16px;
+          border: 1px solid rgba(255,255,255,.1);
+          border-radius: 8px;
+          background: rgba(255,255,255,.04);
+        }
+
+        .iso-dot {
+          width: 7px; height: 7px;
+          border-radius: 50%;
+          background: #34d399;
+          box-shadow: 0 0 7px #34d399;
+          flex-shrink: 0;
+        }
+
+        .iso-text {
+          font-size: 11.5px;
+          font-weight: 600;
+          color: rgba(255,255,255,.6);
+          letter-spacing: .03em;
+        }
+
+        .left-footer {
+          position: relative;
+          z-index: 1;
+          font-size: 11px;
+          color: rgba(255,255,255,.22);
+          letter-spacing: .05em;
+          animation: fadeLeft .55s ease .1s both;
+        }
+
+        /* ── RIGHT PANEL ── */
+        .right {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 48px 64px;
+          background: var(--white);
+          animation: fadeRight .55s ease both;
+          overflow-y: auto;
+        }
+
+        .right-inner {
+          width: 100%;
+          max-width: 400px;
+        }
+
+        /* Forms */
+        .form-group { margin-bottom: 1.5rem; }
         .form-label {
             display: block;
-            font-size: 0.75rem;
-            font-weight: 800;
-            color: var(--text-muted);
-            margin-bottom: 0.6rem;
+            font-size: 11px;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.1em;
+            color: var(--gray-500);
+            margin-bottom: 8px;
         }
-
-        .input-wrapper {
-            position: relative;
-            margin-bottom: 1.5rem;
-        }
-
+        .input-wrapper { position: relative; }
         .input-icon {
             position: absolute;
             left: 16px;
@@ -132,135 +229,146 @@
             transform: translateY(-50%);
             width: 18px;
             height: 18px;
-            color: var(--text-muted);
+            color: var(--gray-300);
             pointer-events: none;
-            transition: color 0.2s;
         }
-
         .form-control {
             width: 100%;
-            padding: 0.9rem 1.25rem 0.9rem 3rem;
-            font-size: 0.95rem;
-            font-weight: 600;
-            border: 2px solid transparent;
-            background: rgba(var(--bg-primary-rgb), 0.5); /* Assuming we adds rgb version in app.css or use static */
-            background: var(--bg-primary);
-            border-radius: 16px;
-            color: var(--text-main);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            outline: none;
+            padding: 14px 16px 14px 46px;
+            border-radius: 12px;
+            border: 1.5px solid var(--gray-100);
+            background: var(--gray-50);
             font-family: inherit;
+            font-size: 14.5px;
+            font-weight: 500;
+            color: var(--text);
+            transition: all 0.2s;
         }
-
         .form-control:focus {
-            background: var(--bg-card);
-            border-color: var(--udd-blue);
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+            outline: none;
+            border-color: var(--blue);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(26, 86, 219, 0.1);
         }
-
-        .form-control:focus + .input-icon {
-            color: var(--udd-blue);
-        }
+        .form-control:focus + .input-icon { color: var(--blue); }
 
         .btn-auth {
-            width: 100%;
-            padding: 1.1rem;
-            border-radius: 16px;
-            font-size: 1rem;
-            font-weight: 800;
-            letter-spacing: 0.02em;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            transition: all 0.3s;
+            gap: 12px;
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--white);
+            background: var(--navy);
             border: none;
             cursor: pointer;
-            color: white;
-            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+            transition: all 0.2s;
+            margin-top: 24px;
         }
-
-        .btn-student {
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-        }
-
-        .btn-professor {
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
-            box-shadow: 0 10px 15px -3px rgba(5, 150, 105, 0.3);
-        }
-
         .btn-auth:hover {
             transform: translateY(-2px);
-            filter: brightness(1.1);
-        }
-
-        .btn-auth:active {
-            transform: translateY(0);
-        }
-
-        .test-credentials {
-            margin-top: 2.5rem;
-            padding: 1.5rem;
-            background: rgba(var(--bg-primary-rgb), 0.3);
-            background: var(--bg-primary);
-            border-radius: 20px;
-            opacity: 0.8;
-            transition: opacity 0.3s;
-        }
-
-        .test-credentials:hover {
-            opacity: 1;
-        }
-
-        .credential-item code {
-            background: var(--bg-card);
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-family: 'JetBrains Mono', 'Fira Code', monospace;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--udd-blue);
+            background: var(--navy-lit);
+            box-shadow: 0 8px 24px rgba(12, 22, 96, 0.2);
         }
 
         .auth-footer-link {
-            color: var(--udd-blue);
+            color: var(--blue);
             text-decoration: none;
-            font-weight: 700;
-            position: relative;
-            transition: all 0.2s;
+            font-weight: 600;
+        }
+        .auth-footer-link:hover { text-decoration: underline; }
+
+        .test-credentials {
+            margin-top: 32px;
+            padding: 20px;
+            background: var(--gray-50);
+            border: 1.5px solid var(--gray-100);
+            border-radius: 16px;
         }
 
-        .auth-footer-link::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--udd-blue);
-            transform: scaleX(0);
-            transition: transform 0.2s;
-            transform-origin: right;
+        .credential-item code {
+            background: var(--white);
+            border: 1px solid var(--gray-100);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--blue);
+            font-weight: 600;
         }
 
-        .auth-footer-link:hover::after {
-            transform: scaleX(1);
-            transform-origin: left;
+        /* ── Animations ── */
+        @keyframes fadeLeft {
+          from { opacity: 0; transform: translateX(-18px); }
+          to   { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes fadeRight {
+          from { opacity: 0; transform: translateX(18px); }
+          to   { opacity: 1; transform: translateX(0); }
+        }
+
+        /* ── Mobile ── */
+        @media (max-width: 850px) {
+          .layout { flex-direction: column; }
+          .left { width: 100%; padding: 40px 30px; }
+          .right { padding: 40px 30px; }
+          html, body { overflow: auto; }
         }
     </style>
 </head>
 <body>
-    <div class="bg-blur-blob blob-1"></div>
-    <div class="bg-blur-blob blob-2"></div>
 
-    @yield('content')
+<div class="layout">
+    <!-- LEFT PANEL -->
+    <aside class="left">
+        <div class="left-body">
+            <div class="seal-wrap">
+                <div class="seal-circle">
+                    <img src="{{ asset('images/udd_logo.PNG') }}" alt="UDD Logo" class="seal-logo">
+                </div>
+                <div>
+                    <div class="seal-name">Universidad de Dagupan</div>
+                    <div class="seal-sub">Formerly Colegio de Dagupan</div>
+                </div>
+            </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.lucide) {
-                window.lucide.createIcons();
-            }
-        });
-    </script>
+            <p class="left-label">Enrollment System</p>
+            <h1 class="left-heading">
+                @yield('left_heading', 'Access Enrollment System')
+            </h1>
+            <p class="left-desc">
+                @yield('left_description', 'Empowering the UDD community with a modernized, efficient, and secure digital enrollment experience.')
+            </p>
+
+            <div class="iso-badge">
+                <div class="iso-dot"></div>
+                <div class="iso-text">ISO 21001:2018 Certified</div>
+            </div>
+        </div>
+
+        <div class="left-footer">
+            © {{ date('Y') }} Universidad de Dagupan &nbsp;·&nbsp; All rights reserved
+        </div>
+    </aside>
+
+    <!-- RIGHT PANEL -->
+    <main class="right">
+        <div class="right-inner">
+            @yield('content')
+        </div>
+    </main>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.lucide) {
+            window.lucide.createIcons();
+        }
+    });
+</script>
 </body>
 </html>

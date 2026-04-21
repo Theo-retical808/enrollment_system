@@ -116,7 +116,7 @@
         <div class="header-container">
             <div class="header-brand">
                 <img src="{{ asset('images/udd_logo.PNG') }}" alt="Logo" style="height: 48px; width: auto;">
-                <div class="header-title">Professor Portal</div>
+                <div class="header-title">Professor Management System</div>
             </div>
             
             <div class="flex items-center gap-4">
