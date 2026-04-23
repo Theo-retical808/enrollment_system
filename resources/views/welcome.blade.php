@@ -40,9 +40,9 @@
         }
 
         .main-logo {
-            height: 150px; 
+            height: 120px; 
             width: auto;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             filter: drop-shadow(0 10px 20px rgba(0,0,0,0.08));
         }
 
@@ -68,7 +68,7 @@
             font-size: 1.1rem;
             color: #64748b;
             max-width: 600px;
-            margin-bottom: 3.5rem;
+            margin-bottom: 2.5rem;
             line-height: 1.7;
         }
 
@@ -172,7 +172,7 @@
                     Login as Student
                 </a>
                 <a href="{{ route('professor.login') }}" class="btn btn-professor">
-                    Professor Portal
+                    Faculty Access
                 </a>
             </div>
         </div>

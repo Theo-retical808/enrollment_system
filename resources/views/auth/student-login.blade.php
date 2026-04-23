@@ -3,40 +3,37 @@
 @section('content')
 <style>
     body {
-        /* Updated to the soft blue gradient */
-        background: radial-gradient(circle at top right, #eff6ff, #f8fafc); 
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        margin: 0;
+        height: 100vh;
+        overflow: hidden;
     }
 
     .auth-container {
         min-height: 100vh;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: 2rem;
+        padding: 1rem;
     }
 
     .auth-card {
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(12px);
-        width: 100%;
-        max-width: 440px;
+        padding: 2.25rem 2.5rem;
         border-radius: 24px;
-        padding: 3rem;
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
         border: 1px solid rgba(255, 255, 255, 0.5);
     }
 
     .logo-section {
         text-align: center;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
     }
 
     .logo-section img {
-        height: 90px;
+        height: 55px;
         width: auto;
-        margin-bottom: 1.5rem;
+        margin-bottom: 0.75rem;
         filter: drop-shadow(0 4px 10px rgba(0,0,0,0.05));
     }
 
@@ -50,20 +47,20 @@
     }
 
     .welcome-title {
-        font-size: 1.75rem;
+        font-size: 1.5rem;
         font-weight: 800;
         color: #0f172a;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.25rem;
     }
 
     .welcome-subtitle {
         color: #64748b;
-        font-size: 0.95rem;
-        margin-bottom: 2rem;
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
     }
 
     .form-group {
-        margin-bottom: 1.25rem;
+        margin-bottom: 0.75rem;
     }
 
     .form-label {
@@ -96,14 +93,14 @@
         width: 100%;
         background: #2563eb; /* UdD Blue */
         color: white;
-        padding: 1.1rem;
-        border-radius: 14px;
+        padding: 0.9rem;
+        border-radius: 12px;
         border: none;
         font-weight: 700;
-        font-size: 1.05rem;
+        font-size: 1rem;
         cursor: pointer;
         transition: all 0.3s;
-        margin-top: 1rem;
+        margin-top: 0.5rem;
     }
 
     .btn-login:hover {
@@ -113,11 +110,14 @@
     }
 
     .test-credentials {
-        margin-top: 2rem;
-        background: #eff6ff; /* Soft blue tint */
+        margin-top: 1rem;
+        width: 100%;
+        max-width: 440px;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(8px);
         border-radius: 16px;
-        padding: 1.25rem;
-        border: 1px solid #dbeafe;
+        padding: 0.75rem 1.25rem;
+        border: 1px solid #e2e8f0;
     }
 
     .credential-item code {
@@ -145,11 +145,11 @@
 
 <div class="auth-container">
     <div class="auth-card">
-        <div class="logo-section">
-            <img src="{{ asset('images/udd_logo.PNG') }}" alt="Universidad de Dagupan Logo">
-            <h1 class="system-title">Enrollment System</h1>
-            <h2 class="welcome-title">Welcome back</h2>
-            <p class="welcome-subtitle">Please enter your details to sign in</p>
+        <div class="logo-section" style="margin-bottom: 1.25rem;">
+            <img src="{{ asset('images/udd_logo.PNG') }}" alt="UDD Logo" style="height: 70px; margin-bottom: 0.75rem;">
+            <h1 class="system-title" style="font-size: 0.75rem; margin-bottom: 0.25rem;">Enrollment System</h1>
+            <h2 class="welcome-title" style="font-size: 1.6rem; margin-bottom: 0.25rem;">Welcome back</h2>
+            <p class="welcome-subtitle" style="font-size: 0.9rem; margin-bottom: 0;">Please enter your details to sign in</p>
         </div>
 
         @if ($errors->any())
@@ -188,8 +188,8 @@
                 >
             </div>
 
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                <label style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: #64748b; cursor: pointer;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <label style="display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: #64748b; cursor: pointer;">
                     <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
                     Remember me
                 </label>
@@ -200,25 +200,25 @@
             </button>
         </form>
 
-        <div style="text-align: center; margin-top: 2rem; font-size: 0.95rem;">
+        <div style="text-align: center; margin-top: 1rem; font-size: 0.85rem;">
             <p style="color: #64748b;">
                 Are you a professor? 
                 <a href="{{ route('professor.login') }}" class="footer-link">Sign in here</a>
             </p>
         </div>
+    </div>
 
-        <div class="test-credentials">
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; color: #1e3a8a; font-weight: 700; font-size: 0.85rem; text-transform: uppercase;">
-                <span>Test Credentials</span>
+    <div class="test-credentials">
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
+            <div style="color: #1e3a8a; font-weight: 800; font-size: 0.7rem; text-transform: uppercase; white-space: nowrap;">
+                Test Access
             </div>
-            <div style="display: flex; flex-direction: column; gap: 10px;">
-                <div class="credential-item" style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-size: 0.85rem; color: #475569; font-weight: 600;">Regular Student:</span>
-                    <div><code>2024-001</code> <code>password</code></div>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: flex-end;">
+                <div class="credential-item" style="font-size: 0.75rem;">
+                    <span style="color: #64748b; font-weight: 600;">Student:</span> <code>2024-001</code> <code>password</code>
                 </div>
-                <div class="credential-item" style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-size: 0.85rem; color: #475569; font-weight: 600;">Irregular Student:</span>
-                    <div><code>2024-003</code> <code>password</code></div>
+                <div class="credential-item" style="font-size: 0.75rem;">
+                    <span style="color: #64748b; font-weight: 600;">Irreg:</span> <code>2024-003</code> <code>password</code>
                 </div>
             </div>
         </div>

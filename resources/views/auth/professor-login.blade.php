@@ -4,20 +4,14 @@
 <style>
     /* Styling isolated to match the UdD Blue theme */
     body {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        background: radial-gradient(circle at top right, #eff6ff, #f8fafc);
-        color: #1e293b;
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0;
+        height: 100vh;
+        overflow: hidden;
     }
     .auth-container {
         width: 100%;
         display: flex;
         justify-content: center;
-        padding: 2rem;
+        padding: 1rem;
     }
     .auth-card {
         background: rgba(255, 255, 255, 0.95);
@@ -27,16 +21,16 @@
         border: 1px solid rgba(255, 255, 255, 0.5);
         width: 100%;
         max-width: 440px;
-        padding: 3.5rem 3rem;
+        padding: 2.25rem 2.5rem;
     }
     .auth-header {
         text-align: center;
-        margin-bottom: 2.5rem;
+        margin-bottom: 1.5rem;
     }
     .auth-logo {
-        height: 90px;
+        height: 75px;
         width: auto;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
         filter: drop-shadow(0 4px 10px rgba(0,0,0,0.05));
     }
     .system-title {
@@ -52,7 +46,7 @@
         margin: 0;
     }
     .form-group {
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.25rem;
     }
     .form-label {
         display: block;
@@ -125,7 +119,7 @@
         margin-top: 2px;
     }
     .auth-footer {
-        margin-top: 2rem;
+        margin-top: 1.25rem;
         text-align: center;
     }
     .footer-text {
@@ -147,11 +141,10 @@
 
 <div class="auth-container">
     <div class="auth-card">
-        <div class="auth-header">
-            <img src="{{ asset('images/udd_logo.PNG') }}" alt="Universidad de Dagupan Logo" class="auth-logo">
-            
-            <h1 class="system-title">Professor Portal</h1>
-            <p class="welcome-subtitle">Sign in to manage your classes</p>
+        <div class="auth-header" style="margin-bottom: 1.25rem;">
+            <img src="{{ asset('images/udd_logo.PNG') }}" alt="UDD Logo" class="auth-logo" style="height: 70px; margin-bottom: 0.75rem;">
+            <h1 class="system-title" style="font-size: 1.6rem; margin-bottom: 0.25rem;">Faculty Login</h1>
+            <p class="welcome-subtitle" style="font-size: 0.9rem;">Sign in to manage academic records</p>
         </div>
 
         @if ($errors->any())
@@ -204,7 +197,7 @@
             </div>
 
             <button type="submit" class="btn btn-primary btn-block">
-                Access Portal
+                Sign in to System
             </button>
         </form>
 

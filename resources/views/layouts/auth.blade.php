@@ -18,13 +18,15 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at top right, #eff6ff, #f8fafc);
+            height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
             color: #1f2937;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
