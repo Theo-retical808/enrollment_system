@@ -6,36 +6,31 @@
 
 <style>
     :root {
-        /* General Colors */
-        --text-main: #0f172a;
-        --text-muted: #64748b;
-        --text-light: #475569;
+        /* Map page variables to global layout theme variables */
+        --text-main: var(--text-primary);
+        --text-muted: var(--text-secondary);
+        --text-light: var(--text-secondary);
         --bg-main: transparent;
-        --border-light: #f1f5f9;
-        
-        --card-bg: #ffffff;
-        --card-border: #e2e8f0;
-        --table-header-bg: #f8fafc;
-        
-        /* Gradient Colors (Total Paid Card) */
-        --grad-start: #1e3a8a;
-        --grad-end: #2563eb;
-        
-        /* Sky Theme (Pending Card Icon) */
-        --sky-bg: #e0f2fe;
-        --sky-text-dark: #0284c7;
-        
-        /* Success Theme (Paid Pill) */
-        --success-bg: #dcfce7;
-        --success-text: #166534;
-        
-        /* Warning Theme (Pending Pill) */
-        --warning-bg: #fef3c7;
-        --warning-text: #92400e;
+        --border-light: var(--border-light);
 
-        /* Danger Theme (Failed Pill) */
-        --danger-bg: #fee2e2;
-        --danger-text: #991b1b;
+        --card-bg: var(--bg-white);
+        --card-border: var(--border-light);
+        --table-header-bg: var(--bg-white);
+
+        --grad-start: var(--accent-blue);
+        --grad-end: var(--accent-blue-text);
+
+        --sky-bg: var(--accent-blue);
+        --sky-text-dark: var(--accent-blue-text);
+
+        --success-bg: var(--card-bg);
+        --success-text: var(--text-primary);
+
+        --warning-bg: var(--card-bg);
+        --warning-text: var(--text-primary);
+
+        --danger-bg: var(--card-bg);
+        --danger-text: var(--text-primary);
     }
 
     /* Dark Mode Colors - Sleek Slate */

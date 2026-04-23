@@ -1,173 +1,280 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Student Access') - Enrollment System</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    
-    @vite(['resources/css/app.css', 'resources/js/theme.js'])
-
+    <title>@yield('title', 'Student Portal') - Enrollment System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --sidebar-width: 260px;
+            /* The perfect cream background! */
+            --primary-bg: #fdfbf5; 
+            --accent-blue: #eff6ff;
+            --accent-blue-text: #2563eb;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --bg-white: #ffffff;
+            --border-color: #e2e8f0;
+            --border-light: #f1f5f9;
+            --hover-bg: #f1f5f9;
+            --card-shadow: 0 4px 15px -1px rgba(0, 0, 0, 0.03);
+            /* Stat card gradients (light) */
+            --sky-gradient: linear-gradient(135deg,#93c5fd 0%,#3b82f6 100%);
+            --blue-gradient: linear-gradient(135deg,#bfdbfe 0%,#60a5fa 100%);
+            --reg-gradient: linear-gradient(135deg,#dbeafe 0%,#60a5fa 100%);
+            --irreg-gradient: linear-gradient(135deg,#ffedd5 0%,#f97316 100%);
+            --success-gradient: linear-gradient(135deg,#bbf7d0 0%,#34d399 100%);
+            --danger-gradient: linear-gradient(135deg,#fee2e2 0%,#ef4444 100%);
+        }
+        
+        [data-theme="dark"] {
+            /* Deep navy background and card tones to match the student UI */
+            --primary-bg: #0b0c0d;
+            --accent-blue: #10283e;
+            --accent-blue-text: #60a5fa;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --bg-white: #1e293b; /* card background */
+            --border-color: #263645;
+            --border-light: #233342;
+            --hover-bg: #172433;
+            --card-shadow: 0 6px 20px -6px rgba(0, 0, 0, 0.6);
+            /* Stat card gradients (dark) */
+            --sky-gradient: linear-gradient(135deg,#0f172a 0%,#0b3a66 100%);
+            --blue-gradient: linear-gradient(135deg,#0b254a 0%,#122e6a 100%);
+            --reg-gradient: linear-gradient(135deg,#0b254a 0%,#1e40af 100%);
+            --irreg-gradient: linear-gradient(135deg,#4c1d00 0%,#7c2d12 100%);
+            --success-gradient: linear-gradient(135deg,#064e3b 0%,#10b981 100%);
+            --danger-gradient: linear-gradient(135deg,#4c0f0f 0%,#991b1b 100%);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Sidebar Styles */
         .sidebar {
-            width: 280px;
-            background: var(--bg-sidebar);
+            width: var(--sidebar-width);
+            background: var(--bg-white);
+            border-right: 1px solid var(--border-color);
             padding: 2rem 1.5rem;
             display: flex;
             flex-direction: column;
             position: fixed;
             height: 100vh;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        
+        /* Updated Logo Section */
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 3rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
             transition: all 0.3s ease;
-            z-index: 100;
+        }
+        
+        /* Updated Active State to UdD Blue */
+        .nav-link.active {
+            background: var(--accent-blue);
+            color: var(--accent-blue-text);
+        }
+        
+        .nav-link:hover:not(.active) {
+            background: var(--hover-bg);
+            color: var(--text-primary);
         }
 
+        /* Main Content Area */
         .main-wrapper {
-            margin-left: 280px;
+            margin-left: var(--sidebar-width);
             flex: 1;
-            min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
-
+        
         .top-nav {
-            padding: 1.25rem 2rem;
-            background: var(--bg-card);
+            padding: 1.5rem 2rem;
+            background: var(--bg-white);
+            backdrop-filter: blur(8px);
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
-            z-index: 90;
+            z-index: 50;
+            border-bottom: 1px solid var(--border-light);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .content-body { padding: 2rem; }
+
+        /* Modern Card Styles */
+        .card {
+            background: var(--bg-white);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--card-shadow);
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 0.85rem 1rem;
-            color: var(--text-muted);
-            text-decoration: none;
-            font-weight: 600;
-            border-radius: var(--radius-md);
-            margin-bottom: 0.5rem;
-            transition: all 0.2s ease;
-        }
-
-        .nav-link i {
-            width: 20px;
-            height: 20px;
-        }
-
-        .nav-link:hover {
-            background: var(--border-light);
-            color: var(--text-main);
-        }
-
-        .nav-link.active {
-            background: var(--udd-blue-light);
-            color: var(--udd-blue);
-        }
-
-        .content-body {
-            padding: 2.5rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        /* Custom Theme Toggle Styling */
-        .theme-toggle {
-            width: 56px;
-            height: 28px;
-            background: var(--border-main);
+        /* Reusable stat card used on dashboards */
+        .stat-card {
+            padding: 1.5rem;
             border-radius: 20px;
-            cursor: pointer;
-            position: relative;
+            border: 1px solid var(--border-light);
+            color: var(--text-primary);
             display: flex;
-            align-items: center;
-            padding: 0 4px;
+            flex-direction: column;
+            justify-content: center;
+            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
 
-        .theme-toggle-dot {
-            width: 22px;
-            height: 22px;
+        .stat-card.sky { background: var(--sky-gradient); }
+        .stat-card.blue { background: var(--blue-gradient); }
+        .stat-card.reg { background: var(--reg-gradient); }
+        .stat-card.irreg { background: var(--irreg-gradient); }
+        .stat-card.success { background: var(--success-gradient); }
+        .stat-card.danger { background: var(--danger-gradient); }
+
+        /* Ensure text is readable on colored gradients */
+        .stat-card h2, .stat-card span { color: rgba(255,255,255,0.95); font-weight: 700; }
+        
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            border: none;
+            font-size: 0.9rem;
+        }
+        
+        .btn-logout { 
+            color: #ef4444; 
+            margin-top: auto; 
+        }
+        
+        .btn-logout:hover {
+            background: #fef2f2 !important;
+            color: #dc2626 !important;
+        }
+        
+        /* Theme Toggle Switch */
+        .theme-toggle {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: var(--border-color);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            padding: 3px;
+        }
+        
+        .theme-toggle-slider {
+            width: 24px;
+            height: 24px;
             background: white;
             border-radius: 50%;
+            transition: transform 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 12px;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: var(--shadow-sm);
         }
-
-        [data-theme="dark"] .theme-toggle-dot {
-            transform: translateX(26px);
-            background: var(--udd-blue);
+        
+        [data-theme="dark"] .theme-toggle {
+            background: var(--accent-blue-text);
+        }
+        
+        [data-theme="dark"] .theme-toggle-slider {
+            transform: translateX(30px);
         }
     </style>
     @yield('styles')
+    <script>
+        // Theme toggle functionality
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Update icon
+            document.getElementById('theme-icon').textContent = newTheme === 'dark' ? '🌙' : '☀️';
+        }
+        
+        // Load saved theme on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            document.getElementById('theme-icon').textContent = savedTheme === 'dark' ? '🌙' : '☀️';
+        });
+    </script>
 </head>
 <body>
     <aside class="sidebar">
-        <div class="flex items-center gap-4 mb-8" style="margin-bottom: 3rem;">
-            <img src="{{ asset('images/udd_logo.PNG') }}" alt="Logo" style="height: 48px; width: auto;">
-            <div>
-                <h1 class="font-extrabold" style="font-size: 1.1rem; line-height: 1.1;">Enrollment System</h1>
-                <p class="text-muted" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">Enrollment</p>
-            </div>
+        <div class="logo">
+            <img src="{{ asset('images/udd_logo.PNG') }}" alt="Universidad de Dagupan Logo" style="height: 40px; width: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));">
+            <span>Student Portal</span>
         </div>
         
-        <nav style="flex: 1;">
-            <a href="{{ route('student.dashboard') }}" class="nav-link {{ request()->routeIs('student.dashboard') ? 'active' : '' }}">
-                <i data-lucide="layout-dashboard"></i>
-                Dashboard
-            </a>
-            <a href="{{ route('student.courses') }}" class="nav-link {{ request()->routeIs('student.courses') ? 'active' : '' }}">
-                <i data-lucide="book-open"></i>
-                My Courses
-            </a>
-            <a href="{{ route('student.schedule') }}" class="nav-link {{ request()->routeIs('student.schedule') ? 'active' : '' }}">
-                <i data-lucide="calendar"></i>
-                Schedule
-            </a>
-            <a href="{{ route('student.finances') }}" class="nav-link {{ request()->routeIs('student.finances') ? 'active' : '' }}">
-                <i data-lucide="credit-card"></i>
-                Finances
-            </a>
+        <nav style="display:flex; flex-direction:column; height: 100%;">
+            <a href="{{ route('student.dashboard') }}" class="nav-link {{ request()->routeIs('student.dashboard') ? 'active' : '' }}">Dashboard</a>
+            <a href="{{ route('student.courses') }}" class="nav-link {{ request()->routeIs('student.courses') ? 'active' : '' }}">My Courses</a>
+            <a href="{{ route('student.schedule') }}" class="nav-link {{ request()->routeIs('student.schedule') ? 'active' : '' }}">Schedule</a>
+            <a href="{{ route('student.finances') }}" class="nav-link {{ request()->routeIs('student.finances') ? 'active' : '' }}">Finances</a>
+            
+            <form method="POST" action="{{ route('student.logout') }}" style="margin-top: auto;">
+                @csrf
+                <button type="submit" class="nav-link btn-logout" style="width:100%; border:none; background:none; cursor:pointer; text-align: left;">
+                    Logout
+                </button>
+            </form>
         </nav>
-
-        <form method="POST" action="{{ route('student.logout') }}">
-            @csrf
-            <button type="submit" class="nav-link" style="width:100%; border:none; background:none; cursor:pointer; color: var(--status-danger-text);">
-                <i data-lucide="log-out"></i>
-                Logout
-            </button>
-        </form>
     </aside>
 
     <div class="main-wrapper">
         <header class="top-nav">
-            <h2 class="font-extrabold text-main" style="font-size: 1.25rem;">@yield('title')</h2>
-            
-            <div class="flex items-center gap-4">
-                <div class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
-                    <div class="theme-toggle-dot">
+            <h1 style="font-size: 1.25rem; font-weight: 800; color: var(--text-primary); transition: color 0.3s ease;">@yield('title')</h1>
+            <div style="display:flex; align-items:center; gap:16px;">
+                <div class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">
+                    <div class="theme-toggle-slider">
                         <span id="theme-icon">☀️</span>
                     </div>
                 </div>
-                
-                <div class="flex items-center gap-2" style="background: var(--border-light); padding: 4px 12px 4px 4px; border-radius: 30px;">
-                    <div style="width:32px; height:32px; background: var(--udd-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
-                        <i data-lucide="user" style="width:18px; height:18px;"></i>
-                    </div>
-                    <span class="font-bold" style="font-size: 0.85rem;">{{ Auth::guard('student')->user()->full_name ?? 'Student' }}</span>
-                </div>
+                <span style="font-weight: 700; font-size: 0.9rem; color: var(--text-secondary); transition: color 0.3s ease;">{{ Auth::guard('student')->user()->full_name ?? 'Student' }}</span>
+                <div style="width:38px; height:38px; background:var(--border-color); border-radius:50%; border: 2px solid var(--bg-white); box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: all 0.3s ease;"></div>
             </div>
         </header>
 
@@ -175,14 +282,5 @@
             @yield('content')
         </main>
     </div>
-
-    <!-- Initialize Lucide Icons -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.lucide) {
-                window.lucide.createIcons();
-            }
-        });
-    </script>
 </body>
 </html>
