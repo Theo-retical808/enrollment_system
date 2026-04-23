@@ -4,19 +4,79 @@
 
 @section('content')
 
-<div class="page-header mb-8 flex justify-between items-center">
-    <div>
-        <p class="text-muted font-bold" style="letter-spacing: 0.05em; text-transform: uppercase; font-size: 0.8rem;">Academic Overview</p>
-        <h1 class="text-main font-extrabold" style="font-size: 2.2rem;">Professor Dashboard</h1>
+<style>
+    .lms-banner {
+        background: linear-gradient(90deg, #1e40af 0%, #1e3a8a 100%);
+        border-radius: 12px;
+        padding: 2.25rem 2.5rem; /* Precise 'stripe' height like LMS */
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.25rem;
+        box-shadow: none;
+    }
+    
+    .lms-banner-content h2 {
+        font-size: 1.85rem; /* Perfectly scaled like LMS */
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+        letter-spacing: -0.01em;
+        color: white;
+    }
+    
+    .lms-banner-content p {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.95rem;
+        font-weight: 400;
+        margin: 0;
+    }
+    
+    .lms-role-badge {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        padding: 0.85rem 1.35rem; /* Proportional to the banner height */
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    
+    .lms-role-label {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 2px;
+        display: block;
+        font-weight: 600;
+    }
+    
+    .lms-role-value {
+        font-weight: 700;
+        font-size: 1.15rem; /* Clean and readable like LMS */
+        display: block;
+        color: white;
+        line-height: 1.1;
+    }
+</style>
+
+<!-- Hero Banner -->
+<div class="lms-banner">
+    <div class="lms-banner-content">
+        <h2>Welcome back, {{ strtoupper(Auth::guard('professor')->user()->first_name ?? Auth::guard('professor')->user()->full_name) }}!</h2>
+        <p>{{ now()->format('l, F j, Y') }}.</p>
     </div>
-    <div style="text-align: right;">
-        <p class="text-muted font-bold" style="font-size: 0.85rem;">{{ now()->format('F d, Y') }}</p>
-        <span class="badge badge-success">
-            <i data-lucide="shield-check" style="width: 12px;"></i>
-            Active Session
-        </span>
+    <div class="lms-role-badge">
+        <i data-lucide="contact-2" style="width: 22px; height: 22px; color: rgba(255,255,255,0.85);"></i>
+        <div>
+            <span class="lms-role-label">Current Role</span>
+            <span class="lms-role-value">Professor</span>
+        </div>
     </div>
 </div>
+
 
 <!-- Alerts -->
 @if(session('success'))
@@ -34,48 +94,48 @@
 @endif
 
 <!-- Stats Grid -->
-<div class="stats-grid">
-    <div class="stat-card">
-        <div class="stat-icon-box" style="background: var(--udd-blue-light); color: var(--udd-blue);">
-            <i data-lucide="clipboard-list" style="width: 28px; height: 28px;"></i>
+<div class="stats-grid" style="gap: 1rem; margin-bottom: 1.5rem;">
+    <div class="stat-card" style="padding: 1.25rem;">
+        <div class="stat-icon-box" style="background: var(--udd-blue-light); color: var(--udd-blue); width: 44px; height: 44px; border-radius: 10px; margin-bottom: 0.75rem;">
+            <i data-lucide="clipboard-list" style="width: 22px; height: 22px;"></i>
         </div>
-        <span class="text-muted font-bold" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Pending Reviews</span>
-        <h2 class="text-main font-extrabold" style="font-size: 2.25rem; line-height: 1;">{{ $pendingEnrollments->count() }}</h2>
+        <span class="text-muted font-bold" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em;">Pending Reviews</span>
+        <h2 class="text-main font-extrabold" style="font-size: 1.75rem; line-height: 1;">{{ $pendingEnrollments->count() }}</h2>
     </div>
 
-    <div class="stat-card">
-        <div class="stat-icon-box" style="background: var(--status-success-bg); color: var(--status-success-text);">
-            <i data-lucide="user-check" style="width: 28px; height: 28px;"></i>
+    <div class="stat-card" style="padding: 1.25rem;">
+        <div class="stat-icon-box" style="background: var(--status-success-bg); color: var(--status-success-text); width: 44px; height: 44px; border-radius: 10px; margin-bottom: 0.75rem;">
+            <i data-lucide="user-check" style="width: 22px; height: 22px;"></i>
         </div>
-        <span class="text-muted font-bold" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Approved Today</span>
-        <h2 class="text-main font-extrabold" style="font-size: 2.25rem; line-height: 1;">{{ $recentlyReviewed->where('status', 'approved')->count() }}</h2>
+        <span class="text-muted font-bold" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em;">Approved Today</span>
+        <h2 class="text-main font-extrabold" style="font-size: 1.75rem; line-height: 1;">{{ $recentlyReviewed->where('status', 'approved')->count() }}</h2>
     </div>
 
-    <div class="stat-card">
-        <div class="stat-icon-box" style="background: var(--status-danger-bg); color: var(--status-danger-text);">
-            <i data-lucide="user-x" style="width: 28px; height: 28px;"></i>
+    <div class="stat-card" style="padding: 1.25rem;">
+        <div class="stat-icon-box" style="background: var(--status-danger-bg); color: var(--status-danger-text); width: 44px; height: 44px; border-radius: 10px; margin-bottom: 0.75rem;">
+            <i data-lucide="user-x" style="width: 22px; height: 22px;"></i>
         </div>
-        <span class="text-muted font-bold" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Rejected Today</span>
-        <h2 class="text-main font-extrabold" style="font-size: 2.25rem; line-height: 1;">{{ $recentlyReviewed->where('status', 'rejected')->count() }}</h2>
+        <span class="text-muted font-bold" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em;">Rejected Today</span>
+        <h2 class="text-main font-extrabold" style="font-size: 1.75rem; line-height: 1;">{{ $recentlyReviewed->where('status', 'rejected')->count() }}</h2>
     </div>
 
-    <div class="stat-card">
-        <div class="stat-icon-box" style="background: var(--status-info-bg); color: var(--status-info-text);">
-            <i data-lucide="users" style="width: 28px; height: 28px;"></i>
+    <div class="stat-card" style="padding: 1.25rem;">
+        <div class="stat-icon-box" style="background: var(--status-info-bg); color: var(--status-info-text); width: 44px; height: 44px; border-radius: 10px; margin-bottom: 0.75rem;">
+            <i data-lucide="users" style="width: 22px; height: 22px;"></i>
         </div>
-        <span class="text-muted font-bold" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Total History</span>
-        <h2 class="text-main font-extrabold" style="font-size: 2.25rem; line-height: 1;">{{ $recentlyReviewed->count() }}</h2>
+        <span class="text-muted font-bold" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em;">Total History</span>
+        <h2 class="text-main font-extrabold" style="font-size: 1.75rem; line-height: 1;">{{ $recentlyReviewed->count() }}</h2>
     </div>
 </div>
 
-<div class="card mb-8" style="padding: 0; overflow: hidden;">
-    <div class="flex justify-between items-center" style="padding: 1.5rem 2rem; border-bottom: 2px solid var(--border-light); background: var(--bg-primary);">
-        <div class="flex items-center gap-3">
-            <i data-lucide="clock" class="text-muted"></i>
-            <h3 class="text-main font-extrabold" style="font-size: 1.25rem;">Pending Schedule Reviews</h3>
+<div class="card mb-5" style="padding: 0; overflow: hidden; border-radius: 12px;">
+    <div class="flex justify-between items-center" style="padding: 1rem 1.25rem; border-bottom: 1px solid var(--border-light); background: var(--bg-primary);">
+        <div class="flex items-center gap-2">
+            <i data-lucide="clock" class="text-muted" style="width: 18px;"></i>
+            <h3 class="text-main font-extrabold" style="font-size: 1rem;">Pending Schedule Reviews</h3>
         </div>
         @if($pendingEnrollments->count() > 0)
-            <span class="badge badge-danger" style="padding: 6px 14px; font-size: 0.85rem;">{{ $pendingEnrollments->count() }} ACTION REQUIRED</span>
+            <span class="badge badge-danger" style="padding: 4px 10px; font-size: 0.7rem; font-weight: 800;">{{ $pendingEnrollments->count() }} ACTION REQUIRED</span>
         @endif
     </div>
     
@@ -92,41 +152,38 @@
             <div style="overflow-x: auto;">
                 <table style="width: 100%; border-collapse: collapse; text-align: left;">
                     <thead>
-                        <tr style="background: var(--bg-primary); border-bottom: 2px solid var(--border-light);">
-                            <th style="padding: 1.25rem 2rem; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Student Info</th>
-                            <th style="padding: 1.25rem 1rem; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Classification</th>
-                            <th style="padding: 1.25rem 1rem; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Course Load</th>
-                            <th style="padding: 1.25rem 1rem; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Submission</th>
-                            <th style="padding: 1.25rem 2rem; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; text-align: center;">Task</th>
+                        <tr style="background: var(--bg-primary); border-bottom: 1px solid var(--border-light);">
+                            <th style="padding: 0.75rem 1.25rem; font-size: 0.65rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Student Info</th>
+                            <th style="padding: 0.75rem 1rem; font-size: 0.65rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Classification</th>
+                            <th style="padding: 0.75rem 1rem; font-size: 0.65rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Course Load</th>
+                            <th style="padding: 0.75rem 1rem; font-size: 0.65rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Submission</th>
+                            <th style="padding: 0.75rem 1.25rem; font-size: 0.65rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; text-align: center;">Task</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($pendingEnrollments as $enrollment)
                             <tr style="border-bottom: 1px solid var(--border-light); transition: background 0.2s;" onmouseover="this.style.background='var(--border-light)'" onmouseout="this.style.background='transparent'">
-                                <td style="padding: 1.5rem 2rem;">
-                                    <div class="text-main font-extrabold" style="font-size: 1.05rem;">{{ $enrollment->student->full_name }}</div>
-                                    <div class="text-muted font-bold" style="font-size: 0.85rem; margin-top: 2px;">ID: {{ $enrollment->student->student_id }}</div>
+                                <td style="padding: 0.85rem 1.25rem;">
+                                    <div class="text-main font-extrabold" style="font-size: 0.95rem;">{{ $enrollment->student->full_name }}</div>
+                                    <div class="text-muted font-bold" style="font-size: 0.75rem; margin-top: 2px;">{{ $enrollment->student->student_id }}</div>
                                 </td>
-                                <td style="padding: 1.5rem 1rem;">
-                                    @php
-                                        $typeTheme = $enrollment->student->isRegular() ? 'info' : 'warning';
-                                    @endphp
-                                    <span class="badge badge-{{ $typeTheme }}" style="padding: 4px 12px; font-weight: 800;">{{ $enrollment->student->isRegular() ? 'REGULAR' : 'IRREGULAR' }}</span>
+                                <td style="padding: 0.85rem 1rem;">
+                                    <span class="badge badge-{{ $enrollment->student->isRegular() ? 'info' : 'warning' }}" style="padding: 3px 10px; font-weight: 800; font-size: 0.65rem;">{{ $enrollment->student->isRegular() ? 'REGULAR' : 'IRREGULAR' }}</span>
                                 </td>
-                                <td style="padding: 1.5rem 1rem;">
-                                    <div class="text-main font-bold" style="font-size: 1rem;">{{ $enrollment->courses->count() }} Courses</div>
-                                    <div class="text-muted font-bold" style="font-size: 0.85rem;">{{ $enrollment->total_units }} Units Total</div>
+                                <td style="padding: 0.85rem 1rem;">
+                                    <div class="text-main font-bold" style="font-size: 0.9rem;">{{ $enrollment->courses->count() }} Courses</div>
+                                    <div class="text-muted font-bold" style="font-size: 0.75rem;">{{ $enrollment->total_units }} Units</div>
                                 </td>
-                                <td style="padding: 1.5rem 1rem;">
-                                    <div class="flex items-center gap-2 text-muted font-bold" style="font-size: 0.85rem;">
-                                        <i data-lucide="clock" style="width: 14px;"></i>
+                                <td style="padding: 0.85rem 1rem;">
+                                    <div class="flex items-center gap-2 text-muted font-bold" style="font-size: 0.75rem;">
+                                        <i data-lucide="clock" style="width: 12px;"></i>
                                         {{ $enrollment->submitted_at->diffForHumans() }}
                                     </div>
                                 </td>
-                                <td style="padding: 1.5rem 2rem; text-align: center;">
-                                    <a href="{{ route('professor.review', $enrollment->id) }}" class="btn btn-primary" style="padding: 0.6rem 2rem; border-radius: 30px; font-size: 0.85rem;">
-                                        Review Schedule
-                                        <i data-lucide="chevron-right" style="width: 16px;"></i>
+                                <td style="padding: 0.85rem 1.25rem; text-align: center;">
+                                    <a href="{{ route('professor.review', $enrollment->id) }}" class="btn btn-primary" style="padding: 0.5rem 1.25rem; border-radius: 20px; font-size: 0.8rem;">
+                                        Review
+                                        <i data-lucide="chevron-right" style="width: 14px;"></i>
                                     </a>
                                 </td>
                             </tr>

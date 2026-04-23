@@ -3,7 +3,6 @@
 @section('title', 'Dashboard')
 
 @section('content')
-
 <style>
     :root {
         /* Light Mode Colors */
@@ -79,33 +78,174 @@
         border-color: var(--card-border) !important;
         color: var(--text-main) !important;
     }
+
+    /* LMS Specific Hero Banner Styles - Exact Match */
+    .lms-banner {
+        background: linear-gradient(90deg, #1e40af 0%, #1e3a8a 100%); /* Slightly deeper blue */
+        border-radius: 10px;
+        padding: 2.25rem 3rem; /* Taller banner like LMS */
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.25rem;
+        box-shadow: none;
+    }
+    
+    .lms-banner-content h2 {
+        font-size: 2.1rem; /* Larger, more prominent like LMS */
+        font-weight: 700;
+        margin-bottom: 0.35rem;
+        letter-spacing: -0.02em;
+        color: white;
+    }
+    
+    .lms-banner-content p {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 1rem;
+        font-weight: 400;
+    }
+    
+    .lms-banner {
+        background: linear-gradient(90deg, #1e40af 0%, #1e3a8a 100%);
+        border-radius: 12px;
+        padding: 2.25rem 2.5rem; /* Precise 'stripe' height like LMS */
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.25rem;
+        box-shadow: none;
+    }
+    
+    .lms-banner-content h2 {
+        font-size: 1.85rem; /* Perfectly scaled like LMS */
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+        letter-spacing: -0.01em;
+        color: white;
+    }
+    
+    .lms-banner-content p {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.95rem;
+        font-weight: 400;
+    }
+    
+    .lms-role-badge {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        padding: 0.85rem 1.35rem; /* Proportional to the banner height */
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    
+    .lms-role-label {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 2px;
+        display: block;
+        font-weight: 600;
+    }
+    
+    .lms-role-value {
+        font-weight: 700;
+        font-size: 1.15rem; /* Clean and readable like LMS */
+        display: block;
+        color: white;
+        line-height: 1.1;
+    }
+</style>
+<!-- Hero Banner -->
+<div class="lms-banner">
+    <div class="lms-banner-content">
+        <h2>Welcome back, {{ strtoupper($student->first_name ?? $student->full_name) }}!</h2>
+        <p>{{ now()->format('l, F j, Y') }}.</p>
+    </div>
+    <div class="lms-role-badge">
+        <i data-lucide="contact-2" style="width: 22px; height: 22px; color: rgba(255,255,255,0.85);"></i>
+        <div>
+            <span class="lms-role-label">Current Role</span>
+            <span class="lms-role-value">Student</span>
+        </div>
+    </div>
+</div>
+
+<style>
+    .lms-stat-card {
+        background: var(--bg-white);
+        border: 1px solid var(--border-color);
+        border-radius: 12px; /* Slightly tighter corners */
+        padding: 1.1rem 1.25rem; /* Tightened padding */
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+    .lms-stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .lms-stat-content .label {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+        display: block;
+    }
+    .lms-stat-content .value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+    }
 </style>
 
-<div style="margin-bottom: 2rem;">
-    <p style="color: var(--text-muted); font-weight: 500;">Welcome back, {{ $student->full_name }}</p>
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.25rem;">
+    <div class="lms-stat-card">
+        <div class="lms-stat-icon" style="background: #eff6ff; color: #3b82f6;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="lms-stat-content">
+            <span class="label">Student ID</span>
+            <h2 class="value">{{ $student->student_id }}</h2>
+        </div>
+    </div>
+
+    <div class="lms-stat-card">
+        <div class="lms-stat-icon" style="background: #fdf4ff; color: #d946ef;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+        </div>
+        <div class="lms-stat-content">
+            <span class="label">Year Level</span>
+            <h2 class="value">{{ $student->year_level }}</h2>
+        </div>
+    </div>
+
+    <div class="lms-stat-card">
+        <div class="lms-stat-icon" style="background: {{ $student->isRegular() ? '#f0fdf4' : '#fff7ed' }}; color: {{ $student->isRegular() ? '#22c55e' : '#f97316' }};">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+        </div>
+        <div class="lms-stat-content">
+            <span class="label">Status</span>
+            <h2 class="value">{{ $student->isRegular() ? 'Regular' : 'Irregular' }}</h2>
+        </div>
+    </div>
 </div>
 
-<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem;">
-    <div class="stat-card sky">
-        <span class="label">Student ID</span>
-        <h2 class="value">{{ $student->student_id }}</h2>
-    </div>
-
-    <div class="stat-card blue">
-        <span class="label">Year Level</span>
-        <h2 class="value">{{ $student->year_level }}</h2>
-    </div>
-
-    <div class="stat-card {{ $student->isRegular() ? 'reg' : 'irreg' }}">
-        <span class="label">Status</span>
-        <h2 class="value">{{ $student->isRegular() ? 'Regular' : 'Irregular' }}</h2>
-    </div>
-</div>
-
-<div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 1.5rem;">
-    <div class="card">
-        <h3 style="margin-bottom: 1.5rem; color: var(--text-main);">Student Information</h3>
-        <div style="display:flex; flex-direction:column; gap: 1rem;">
+<div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 1.25rem;">
+    <div class="card" style="background: var(--bg-white); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.25rem; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
+        <h3 style="margin-bottom: 1rem; color: var(--text-primary); font-size: 1.15rem;">Student Information</h3>
+        <div style="display:flex; flex-direction:column; gap: 0.85rem;">
             <div style="display:flex; justify-content:space-between; border-bottom: 1px solid var(--border-light); padding-bottom: 0.5rem;">
                 <span style="color: var(--text-muted);">Email</span>
                 <span style="font-weight:600; color: var(--text-main);">{{ $student->email }}</span>
@@ -114,14 +254,14 @@
                 <span style="color: var(--text-muted);">School</span>
                 <span style="font-weight:600; color: var(--text-main);">{{ $student->school->name ?? 'N/A' }}</span>
             </div>
-            <div style="background: var(--sky-bg); color: var(--sky-text); padding: 0.8rem; border-radius: 10px; font-size: 0.85rem; font-weight: 600;">
+            <div style="background: var(--sky-bg); color: var(--sky-text); padding: 0.75rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600;">
                 {{ $classificationInfo['message'] }}
             </div>
         </div>
     </div>
 
-    <div class="card" style="display:flex; flex-direction:column; justify-content:center;">
-        <h3 style="margin-bottom: 1rem; color: var(--text-main);">Payment Status</h3>
+    <div class="card" style="display:flex; flex-direction:column; justify-content:center; background: var(--bg-white); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.25rem; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
+        <h3 style="margin-bottom: 0.75rem; color: var(--text-primary); font-size: 1.15rem;">Payment Status</h3>
         @if($paymentStatus['status'] === 'paid')
             <div style="background: var(--success-bg); border-radius:12px; padding: 1.2rem; border-left: 4px solid var(--success-border);">
                 <p style="color: var(--success-text); font-weight:700;">✓ Payment Completed</p>
@@ -137,8 +277,11 @@
     </div>
 </div>
 
-<div class="card" style="margin-top: 1.5rem;">
-    <h3 style="margin-bottom: 1.5rem; color: var(--text-main);">Enrollment Status</h3>
+<div class="card" style="margin-top: 1.25rem; background: var(--bg-white); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.25rem; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
+    <h3 style="margin-bottom: 1rem; color: var(--text-primary); font-size: 1.15rem; display: flex; align-items: center; gap: 8px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+        Enrollment Status
+    </h3>
     @if($currentEnrollment)
         <div style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--card-border);">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1rem;">
@@ -175,7 +318,9 @@
     @else
         <div style="text-align:center; padding: 2.5rem; background: var(--card-bg); border-radius: 12px; border: 1px dashed var(--text-muted);">
             <p style="color: var(--text-muted); margin-bottom:1.5rem; font-weight: 500;">No Current Enrollment Found</p>
-            <a href="#" style="background: var(--reg-text); color: white; padding: 0.8rem 2rem; border-radius: 12px; text-decoration: none; font-weight: 700; display: inline-block; transition: background 0.3s;" class="btn">Start Enrollment</a>
+            <a href="{{ $student->isRegular() ? route('student.enrollment.regular') : route('student.enrollment.irregular') }}" style="background: var(--reg-text); color: white; padding: 0.8rem 2rem; border-radius: 12px; text-decoration: none; font-weight: 700; display: inline-block; transition: background 0.3s;" class="btn">
+                {{ $student->isRegular() ? 'Get My Schedule' : 'Start Enrollment' }}
+            </a>
         </div>
     @endif
 </div>

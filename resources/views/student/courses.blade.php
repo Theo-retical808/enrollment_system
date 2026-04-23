@@ -37,93 +37,75 @@
         <p style="color: var(--text-muted); font-size: 0.95rem;">View your curriculum and track your academic progress</p>
     </div>
 
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
-        <div class="stat-card sky">
-            <div style="display: flex; align-items: center; gap: 1rem;">
-                <div style="background: rgba(255,255,255,0.2); padding: 0.75rem; border-radius: 12px;">
-                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                    </svg>
-                </div>
-                <div>
-                    <div style="font-size: 0.875rem; opacity: 0.9; margin-bottom: 0.25rem;">Completed Courses</div>
-                    <div style="font-size: 1.75rem; font-weight: 800;">{{ $completedCount }}</div>
-                </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+        <div class="card" style="padding:1.1rem 1.25rem; display: flex; align-items: center; gap: 0.85rem; border: none; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); border-radius: 12px;">
+            <div style="background: #ecfdf5; color: #10b981; padding: 0.8rem; border-radius: 12px;">
+                <i data-lucide="check-circle" style="width: 24px; height: 24px;"></i>
+            </div>
+            <div>
+                <div style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 0.25rem; font-weight: 600;">Completed Courses</div>
+                <div style="font-size: 1.75rem; font-weight: 800; color: var(--text-main);">{{ $completedCount }}</div>
             </div>
         </div>
 
-        <div class="card" style="padding:1.5rem;">
-            <div style="display: flex; align-items: center; gap: 1rem;">
-                <div style="background: var(--accent-blue); color: var(--accent-blue-text); padding: 0.75rem; border-radius: 12px;">
-                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/>
-                    </svg>
-                </div>
-                <div>
-                    <div style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 0.25rem;">Units Completed</div>
-                    <div style="font-size: 1.75rem; font-weight: 800; color: var(--text-main);">{{ $totalUnitsCompleted }}</div>
-                </div>
+        <div class="card" style="padding:1.1rem 1.25rem; display: flex; align-items: center; gap: 0.85rem; border: none; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); border-radius: 12px;">
+            <div style="background: #fef2f2; color: #ef4444; padding: 0.8rem; border-radius: 12px;">
+                <i data-lucide="book-open" style="width: 24px; height: 24px;"></i>
+            </div>
+            <div>
+                <div style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 0.25rem; font-weight: 600;">Units Completed</div>
+                <div style="font-size: 1.75rem; font-weight: 800; color: var(--text-main);">{{ $totalUnitsCompleted }}</div>
             </div>
         </div>
 
-        @if($failedCount > 0)
-        <div class="card" style="padding:1.5rem;">
-            <div style="display: flex; align-items: center; gap: 1rem;">
-            <div style="background: var(--danger-bg); color: var(--danger-text); padding: 0.75rem; border-radius: 12px;">
-                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-                    </svg>
-                </div>
-                <div>
-                    <div style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 0.25rem;">Failed Courses</div>
-                    <div style="font-size: 1.75rem; font-weight: 800; color: var(--text-main);">{{ $failedCount }}</div>
-                </div>
+        <div class="card" style="padding:1.5rem; display: flex; align-items: center; gap: 1rem; border: none; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+            <div style="background: #eff6ff; color: #3b82f6; padding: 0.8rem; border-radius: 12px;">
+                <i data-lucide="clock" style="width: 24px; height: 24px;"></i>
+            </div>
+            <div>
+                <div style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 0.25rem; font-weight: 600;">Current Enrollment</div>
+                <div style="font-size: 1.75rem; font-weight: 800; color: var(--text-main);">{{ $currentCourses->count() }}</div>
             </div>
         </div>
-        @endif
-
-        @if($currentCourses->count() > 0)
-        <div class="card" style="padding:1.5rem;">
-            <div style="display: flex; align-items: center; gap: 1rem;">
-            <div style="background: var(--accent-blue); color: var(--accent-blue-text); padding: 0.75rem; border-radius: 12px;">
-                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
-                    </svg>
-                </div>
-                <div>
-                    <div style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 0.25rem;">Current Enrollment</div>
-                    <div style="font-size: 1.75rem; font-weight: 800; color: var(--text-main);">{{ $currentCourses->count() }}</div>
-                </div>
-            </div>
-        </div>
-        @endif
     </div>
 
     @if($currentCourses->count() > 0)
-    <div style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; overflow: hidden; margin-bottom: 2rem;">
-        <div style="padding: 1.5rem; border-bottom: 1px solid var(--card-border); background: var(--hover-bg);">
-            <h2 style="font-size: 1.125rem; font-weight: 700; color: var(--text-main); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
-                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
-                </svg>
-                Currently Enrolled (This Semester)
-            </h2>
-        </div>
-        <div style="padding: 1.5rem;">
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem;">
-                @foreach($currentCourses as $course)
-                    <div style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 1rem;">
-                        <div style="font-weight: 700; color: var(--text-main); margin-bottom: 0.25rem;">{{ $course->course_code }}</div>
-                        <div style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 0.5rem;">{{ $course->title }}</div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="background: var(--hover-bg); color: var(--text-main); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
-                                {{ $course->units }} units
-                            </span>
-                            <span style="color: var(--text-muted); font-size: 0.75rem;">Year {{ $course->year_level }}</span>
+    <div style="margin-bottom: 2rem;">
+        <h2 style="font-size: 1.15rem; font-weight: 800; color: var(--text-main); margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;">
+            <i data-lucide="layout-grid" style="color: #6366f1; width: 20px; height: 20px;"></i>
+            Currently Enrolled
+        </h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem;">
+            @foreach($currentCourses as $course)
+                @php
+                    $prefix = substr($course->course_code, 0, 2);
+                    $theme = match($prefix) {
+                        'CS' => ['icon' => 'code-2', 'color' => '#2563eb', 'bg' => '#eff6ff'],
+                        'MATH' => ['icon' => 'variable', 'color' => '#db2777', 'bg' => '#fdf2f8'],
+                        'PHYS' => ['icon' => 'atom', 'color' => '#7c3aed', 'bg' => '#f5f3ff'],
+                        'ENGL' => ['icon' => 'languages', 'color' => '#ea580c', 'bg' => '#fff7ed'],
+                        default => ['icon' => 'book', 'color' => '#4b5563', 'bg' => '#f8fafc'],
+                    };
+                @endphp
+                <div class="card" style="padding: 0; overflow: hidden; border: 1px solid #e2e8f0; border-radius: 14px; transition: all 0.3s ease; background: white;" onmouseover="this.style.borderColor='{{ $theme['color'] }}'; this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='#e2e8f0'; this.style.transform='translateY(0)';">
+                    <div style="padding: 1rem 1.25rem; border-bottom: 1px solid #f1f5f9; background: {{ $theme['bg'] }}; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div style="width: 28px; height: 28px; background: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: {{ $theme['color'] }}; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                                <i data-lucide="{{ $theme['icon'] }}" style="width: 16px; height: 16px;"></i>
+                            </div>
+                            <span style="font-weight: 800; color: {{ $theme['color'] }}; font-size: 0.9rem;">{{ $course->course_code }}</span>
+                        </div>
+                        <span style="font-size: 0.65rem; font-weight: 700; color: #94a3b8; text-transform: uppercase;">Yr {{ $course->year_level }}</span>
+                    </div>
+                    <div style="padding: 1rem 1.25rem;">
+                        <h3 style="font-size: 1rem; font-weight: 700; color: #1e293b; margin-bottom: 0.75rem; line-height: 1.4; min-height: 2.8rem;">{{ $course->title }}</h3>
+                        <div style="display: flex; align-items: center; gap: 6px; color: #64748b; font-size: 0.8rem; font-weight: 500;">
+                            <i data-lucide="layers-2" style="width: 14px; height: 14px; opacity: 0.7;"></i>
+                            {{ $course->units }} Units
                         </div>
                     </div>
-                @endforeach
-            </div>
+                </div>
+            @endforeach
         </div>
     </div>
     @endif

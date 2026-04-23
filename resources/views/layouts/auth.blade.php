@@ -18,7 +18,7 @@
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Inter', sans-serif;
             background: radial-gradient(circle at top right, #eff6ff, #f8fafc);
             height: 100vh;
             display: flex;

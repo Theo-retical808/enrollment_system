@@ -207,141 +207,173 @@
                     </div>
                 </div>
             @endif
-        </div>
-
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem;">
-            <div class="card" style="padding: 1.5rem; border: 1px solid var(--card-border); background: var(--card-bg);">
-                <h3 style="color: var(--text-muted); margin-bottom: 0.5rem; font-size: 0.85rem; text-transform: uppercase; font-weight: 700;">Semester</h3>
-                <p style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin: 0;">{{ $currentEnrollment->semester }}</p>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0; font-weight: 500;">{{ $currentEnrollment->academic_year }}</p>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem;">
+        <div class="card" style="padding: 1.1rem 1.25rem; border: none; background: white; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); display: flex; align-items: center; gap: 0.85rem; border-radius: 12px;">
+            <div style="background: #eff6ff; color: #3b82f6; padding: 0.7rem; border-radius: 10px;">
+                <i data-lucide="graduation-cap" style="width: 20px; height: 20px;"></i>
             </div>
-            
-            <div class="card" style="padding: 1.5rem; border: 1px solid var(--card-border); background: var(--card-bg);">
-                <h3 style="color: var(--text-muted); margin-bottom: 0.5rem; font-size: 0.85rem; text-transform: uppercase; font-weight: 700;">Total Courses</h3>
-                <p style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin: 0;">{{ $currentEnrollment->courses->count() }}</p>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0; font-weight: 500;">Classes Enrolled</p>
-            </div>
-            
-            <div class="card" style="padding: 1.5rem; border: 1px solid var(--card-border); background: var(--card-bg);">
-                <h3 style="color: var(--text-muted); margin-bottom: 0.5rem; font-size: 0.85rem; text-transform: uppercase; font-weight: 700;">Total Units</h3>
-                <p style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin: 0;">{{ $currentEnrollment->courses->sum('units') }}</p>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0; font-weight: 500;">Out of 21 Max</p>
+            <div>
+                <h3 style="color: #64748b; margin: 0; font-size: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.025em;">Semester</h3>
+                <p style="font-size: 1.1rem; font-weight: 800; color: #1e293b; margin: 0;">{{ $currentEnrollment->semester }}</p>
             </div>
         </div>
-
-        @if($currentEnrollment->courses->count() > 0)
-            <div class="card" style="padding: 0; overflow: hidden; margin-bottom: 2rem; border: 1px solid var(--card-border); background: var(--card-bg);">
-                <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-light); background: var(--card-bg);">
-                    <h3 style="color: var(--text-main); margin: 0; font-weight: 700;">Course List</h3>
-                </div>
-                <div style="overflow-x: auto;">
-                    <table style="width: 100%; border-collapse: collapse; text-align: left;">
-                        <thead style="background: var(--table-header-bg); border-bottom: 1px solid var(--card-border);">
-                            <tr>
-                                <th style="padding: 1rem 1.5rem; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Course Code</th>
-                                <th style="padding: 1rem 1.5rem; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Course Title</th>
-                                <th style="padding: 1rem 1.5rem; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; text-align: center;">Units</th>
-                                <th style="padding: 1rem 1.5rem; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Schedule</th>
-                                <th style="padding: 1rem 1.5rem; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Room & Instructor</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($currentEnrollment->courses as $course)
-                            <tr style="border-bottom: 1px solid var(--border-light); background: var(--card-bg);">
-                                <td style="padding: 1.2rem 1.5rem; font-weight: 700; color: var(--text-main);">
-                                    {{ $course->course_code }}
-                                </td>
-                                <td style="padding: 1.2rem 1.5rem;">
-                                    <p style="font-weight: 600; color: var(--text-main); margin: 0;">{{ $course->title }}</p>
-                                    @if($course->description)
-                                        <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0.25rem 0 0 0;">
-                                            {{ Str::limit($course->description, 60) }}
-                                        </p>
-                                    @endif
-                                </td>
-                                <td style="padding: 1.2rem 1.5rem; text-align: center; font-weight: 700; color: var(--text-muted);">
-                                    {{ $course->units }}
-                                </td>
-                                <td style="padding: 1.2rem 1.5rem;">
-                                    @if($course->pivot->schedule_day && $course->pivot->start_time && $course->pivot->end_time)
-                                        <p style="font-weight: 600; color: var(--text-main); margin: 0;">{{ $course->pivot->schedule_day }}</p>
-                                        <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
-                                            {{ date('g:i A', strtotime($course->pivot->start_time)) }} - 
-                                            {{ date('g:i A', strtotime($course->pivot->end_time)) }}
-                                        </p>
-                                    @else
-                                        <span style="color: var(--text-light); font-weight: 500; font-size: 0.9rem;">TBA</span>
-                                    @endif
-                                </td>
-                                <td style="padding: 1.2rem 1.5rem;">
-                                    <p style="font-weight: 600; color: var(--text-main); margin: 0;">Room: {{ $course->pivot->room ?? 'TBA' }}</p>
-                                    <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Prof: {{ $course->pivot->instructor ?? 'TBA' }}</p>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+        
+        <div class="card" style="padding: 1.1rem 1.25rem; border: none; background: white; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); display: flex; align-items: center; gap: 0.85rem; border-radius: 12px;">
+            <div style="background: #fdf2f8; color: #ec4899; padding: 0.7rem; border-radius: 10px;">
+                <i data-lucide="book-open" style="width: 20px; height: 20px;"></i>
             </div>
+            <div>
+                <h3 style="color: #64748b; margin: 0; font-size: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.025em;">Courses</h3>
+                <p style="font-size: 1.1rem; font-weight: 800; color: #1e293b; margin: 0;">{{ $currentEnrollment->courses->count() }} Classes</p>
+            </div>
+        </div>
+        
+        <div class="card" style="padding: 1.1rem 1.25rem; border: none; background: white; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); display: flex; align-items: center; gap: 0.85rem; border-radius: 12px;">
+            <div style="background: #f5f3ff; color: #8b5cf6; padding: 0.7rem; border-radius: 10px;">
+                <i data-lucide="layers" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div>
+                <h3 style="color: #64748b; margin: 0; font-size: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.025em;">Total Units</h3>
+                <p style="font-size: 1.1rem; font-weight: 800; color: #1e293b; margin: 0;">{{ $currentEnrollment->courses->sum('units') }} / 21</p>
+            </div>
+        </div>
+    </div>
 
-            <div class="card" style="padding: 0; overflow: hidden; margin-bottom: 2rem; border: 1px solid var(--card-border); background: var(--card-bg);">
-                <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-light); background: var(--card-bg);">
-                    <h3 style="color: var(--text-main); margin: 0; font-weight: 700;">Weekly Overview</h3>
-                </div>
-                <div style="padding: 1.5rem; background: var(--table-header-bg);">
+    @if($currentEnrollment->courses->count() > 0)
+        <div style="margin-bottom: 2rem;">
+            <h2 style="font-size: 1rem; font-weight: 700; color: #64748b; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.05em;">
+                <i data-lucide="list-checks" style="width: 18px; height: 18px;"></i>
+                Enrolled Course List
+            </h2>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                @foreach($currentEnrollment->courses as $course)
                     @php
-                        $weeklySchedule = [];
-                        $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-                        
-                        foreach($currentEnrollment->courses as $course) {
-                            if($course->pivot->schedule_day && $course->pivot->start_time && $course->pivot->end_time) {
-                                $weeklySchedule[$course->pivot->schedule_day][] = [
-                                    'course' => $course,
-                                    'start_time' => $course->pivot->start_time,
-                                    'end_time' => $course->pivot->end_time,
-                                    'room' => $course->pivot->room
-                                ];
-                            }
-                        }
-                        
-                        foreach($weeklySchedule as $day => $courses) {
-                            usort($weeklySchedule[$day], function($a, $b) {
-                                return strtotime($a['start_time']) - strtotime($b['start_time']);
-                            });
-                        }
+                        $prefix = substr($course->course_code, 0, 2);
+                        $theme = match($prefix) {
+                            'CS' => ['icon' => 'code-2', 'color' => '#2563eb', 'bg' => '#eff6ff'],
+                            'MATH' => ['icon' => 'variable', 'color' => '#db2777', 'bg' => '#fdf2f8'],
+                            'PHYS' => ['icon' => 'atom', 'color' => '#7c3aed', 'bg' => '#f5f3ff'],
+                            'ENGL' => ['icon' => 'languages', 'color' => '#ea580c', 'bg' => '#fff7ed'],
+                            default => ['icon' => 'book', 'color' => '#4b5563', 'bg' => '#f8fafc'],
+                        };
                     @endphp
+                    <div class="card" style="padding: 1rem; border: 1px solid #e2e8f0; border-radius: 14px; background: white; display: grid; grid-template-columns: 80px 1.5fr 1fr 1fr; align-items: center; gap: 1.5rem;">
+                        <!-- Subject Badge -->
+                        <div style="text-align: center;">
+                            <div style="width: 40px; height: 40px; background: {{ $theme['bg'] }}; color: {{ $theme['color'] }}; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.25rem;">
+                                <i data-lucide="{{ $theme['icon'] }}" style="width: 20px; height: 20px;"></i>
+                            </div>
+                            <span style="font-weight: 800; color: {{ $theme['color'] }}; font-size: 0.8rem;">{{ $course->course_code }}</span>
+                        </div>
+
+                        <!-- Title & Units -->
+                        <div>
+                            <h4 style="font-size: 1.05rem; font-weight: 700; color: #1e293b; margin-bottom: 0.25rem;">{{ $course->title }}</h4>
+                            <p style="font-size: 0.85rem; color: #64748b; display: flex; align-items: center; gap: 4px;">
+                                <i data-lucide="layers-2" style="width: 14px; height: 14px; opacity: 0.7;"></i>
+                                {{ $course->units }} Units
+                            </p>
+                        </div>
+
+                        <!-- Schedule Day & Time -->
+                        <div style="background: #f8fafc; padding: 0.75rem 1rem; border-radius: 12px; border: 1px solid #f1f5f9;">
+                            <div style="display: flex; align-items: center; gap: 6px; color: #1e293b; font-weight: 700; font-size: 0.9rem; margin-bottom: 4px;">
+                                <i data-lucide="calendar" style="width: 16px; height: 16px; color: #6366f1;"></i>
+                                {{ $course->pivot->schedule_day ?? 'TBA' }}
+                            </div>
+                            <p style="font-size: 0.8rem; color: #64748b; font-weight: 600;">
+                                {{ $course->pivot->start_time ? date('g:i A', strtotime($course->pivot->start_time)) : 'TBA' }} - 
+                                {{ $course->pivot->end_time ? date('g:i A', strtotime($course->pivot->end_time)) : 'TBA' }}
+                            </p>
+                        </div>
+
+                        <!-- Room & Prof -->
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 6px; color: #4b5563; font-weight: 600; font-size: 0.9rem; margin-bottom: 4px;">
+                                <i data-lucide="map-pin" style="width: 16px; height: 16px; color: #94a3b8;"></i>
+                                Room: {{ $course->pivot->room ?? 'TBA' }}
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 6px; color: #64748b; font-size: 0.85rem;">
+                                <i data-lucide="user" style="width: 16px; height: 16px; color: #94a3b8;"></i>
+                                {{ $course->pivot->instructor ?? 'TBA' }}
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+
+        <div style="margin-bottom: 3rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 style="font-size: 1.1rem; font-weight: 700; color: #64748b; display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.05em; margin: 0;">
+                    <i data-lucide="calendar-days" style="width: 20px; height: 20px;"></i>
+                    Weekly Timeline
+                </h2>
+            </div>
+            
+            <div style="background: white; border: 1px solid #e2e8f0; border-radius: 24px; padding: 2rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.04);">
+                @php
+                    $weeklySchedule = [];
+                    $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
                     
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-                        @foreach($days as $day)
-                            <div style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 1.2rem; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
-                                <h4 style="color: var(--text-main); margin-bottom: 1rem; font-weight: 700; border-bottom: 2px solid var(--border-light); padding-bottom: 0.5rem;">{{ $day }}</h4>
-                                
+                    foreach($currentEnrollment->courses as $course) {
+                        if($course->pivot->schedule_day && $course->pivot->start_time && $course->pivot->end_time) {
+                            $prefix = substr($course->course_code, 0, 2);
+                            $colorData = match($prefix) {
+                                'CS' => ['primary' => '#2563eb', 'bg' => '#eff6ff'],
+                                'MATH' => ['primary' => '#db2777', 'bg' => '#fdf2f8'],
+                                'PHYS' => ['primary' => '#7c3aed', 'bg' => '#f5f3ff'],
+                                'ENGL' => ['primary' => '#ea580c', 'bg' => '#fff7ed'],
+                                default => ['primary' => '#4b5563', 'bg' => '#f8fafc'],
+                            };
+                            $weeklySchedule[$course->pivot->schedule_day][] = [
+                                'course' => $course,
+                                'start_time' => $course->pivot->start_time,
+                                'end_time' => $course->pivot->end_time,
+                                'room' => $course->pivot->room,
+                                'theme' => $colorData
+                            ];
+                        }
+                    }
+                @endphp
+                
+                <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 1rem;">
+                    @foreach($days as $day)
+                        <div style="border-right: {{ !$loop->last ? '1px solid #f1f5f9' : 'none' }}; padding-right: {{ !$loop->last ? '1rem' : '0' }};">
+                            <h4 style="color: #94a3b8; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1.5rem; text-align: center;">
+                                {{ substr($day, 0, 3) }}
+                            </h4>
+                            
+                            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
                                 @if(isset($weeklySchedule[$day]) && count($weeklySchedule[$day]) > 0)
+                                    @php
+                                        usort($weeklySchedule[$day], fn($a, $b) => strtotime($a['start_time']) - strtotime($b['start_time']));
+                                    @endphp
                                     @foreach($weeklySchedule[$day] as $schedule)
-                                        <div style="background: var(--table-header-bg); padding: 0.8rem; margin-bottom: 0.75rem; border-radius: 8px; border-left: 4px solid var(--grad-end); border-top: 1px solid var(--card-border); border-right: 1px solid var(--card-border); border-bottom: 1px solid var(--card-border);">
-                                            <p style="font-weight: 700; color: var(--text-main); margin: 0; font-size: 0.85rem;">
+                                        <div style="background: {{ $schedule['theme']['bg'] }}; border-radius: 12px; padding: 0.85rem; border: 1px solid rgba(0,0,0,0.02); transition: all 0.2s ease; cursor: default;" onmouseover="this.style.transform='scale(1.02)';" onmouseout="this.style.transform='scale(1)';">
+                                            <div style="font-weight: 800; color: {{ $schedule['theme']['primary'] }}; font-size: 0.8rem; margin-bottom: 4px;">
                                                 {{ $schedule['course']->course_code }}
-                                            </p>
-                                            <p style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; margin: 0.25rem 0;">
-                                                {{ date('g:i A', strtotime($schedule['start_time'])) }} - {{ date('g:i A', strtotime($schedule['end_time'])) }}
-                                            </p>
-                                            @if($schedule['room'])
-                                                <p style="font-size: 0.75rem; color: var(--text-light); margin: 0; font-weight: 500;">
-                                                    📍 {{ $schedule['room'] }}
-                                                </p>
-                                            @endif
+                                            </div>
+                                            <div style="font-size: 0.7rem; color: #1e293b; font-weight: 700; margin-bottom: 4px;">
+                                                {{ date('g:i A', strtotime($schedule['start_time'])) }}
+                                            </div>
+                                            <div style="font-size: 0.65rem; color: #64748b; font-weight: 600; display: flex; align-items: center; gap: 3px;">
+                                                <i data-lucide="map-pin" style="width: 10px; height: 10px;"></i>
+                                                {{ $schedule['room'] ?? 'TBA' }}
+                                            </div>
                                         </div>
                                     @endforeach
                                 @else
-                                    <div style="padding: 1rem 0; text-align: center;">
-                                        <p style="color: var(--text-light); font-size: 0.85rem; font-weight: 500; margin: 0;">No classes</p>
+                                    <div style="height: 60px; border-radius: 12px; background: #fafafa; display: flex; align-items: center; justify-content: center; opacity: 0.5;">
+                                        <div style="width: 4px; height: 4px; background: #cbd5e1; border-radius: 50%;"></div>
                                     </div>
                                 @endif
                             </div>
-                        @endforeach
-                    </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
+        </div>     </div>
 
         @else
             <div class="card" style="text-align: center; padding: 4rem 2rem; background: var(--card-bg); border: 1px solid var(--card-border);">
