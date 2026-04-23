@@ -1,45 +1,166 @@
 @extends('layouts.auth')
 
 @section('content')
+<style>
+    body {
+        /* Updated to the soft blue gradient */
+        background: radial-gradient(circle at top right, #eff6ff, #f8fafc); 
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        margin: 0;
+    }
+
+    .auth-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+    }
+
+    .auth-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(12px);
+        width: 100%;
+        max-width: 440px;
+        border-radius: 24px;
+        padding: 3rem;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .logo-section {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .logo-section img {
+        height: 90px;
+        width: auto;
+        margin-bottom: 1.5rem;
+        filter: drop-shadow(0 4px 10px rgba(0,0,0,0.05));
+    }
+
+    .system-title {
+        font-size: 0.75rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: #2563eb; /* UdD Blue */
+        margin-bottom: 0.5rem;
+    }
+
+    .welcome-title {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 0.5rem;
+    }
+
+    .welcome-subtitle {
+        color: #64748b;
+        font-size: 0.95rem;
+        margin-bottom: 2rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #475569;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.9rem 1rem;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        background: #f8fafc;
+        font-family: inherit;
+        transition: all 0.2s;
+        outline: none;
+        box-sizing: border-box;
+    }
+
+    .form-control:focus {
+        background: white;
+        border-color: #2563eb; /* UdD Blue */
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+
+    .btn-login {
+        width: 100%;
+        background: #2563eb; /* UdD Blue */
+        color: white;
+        padding: 1.1rem;
+        border-radius: 14px;
+        border: none;
+        font-weight: 700;
+        font-size: 1.05rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-top: 1rem;
+    }
+
+    .btn-login:hover {
+        background: #1d4ed8;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+    }
+
+    .test-credentials {
+        margin-top: 2rem;
+        background: #eff6ff; /* Soft blue tint */
+        border-radius: 16px;
+        padding: 1.25rem;
+        border: 1px solid #dbeafe;
+    }
+
+    .credential-item code {
+        background: white;
+        padding: 3px 8px;
+        border-radius: 6px;
+        border: 1px solid #bfdbfe;
+        font-size: 0.8rem;
+        color: #2563eb;
+        font-weight: 600;
+    }
+
+    .footer-link {
+        color: #2563eb; /* UdD Blue */
+        text-decoration: none;
+        font-weight: 700;
+        transition: color 0.2s;
+    }
+
+    .footer-link:hover {
+        color: #1d4ed8;
+        text-decoration: underline;
+    }
+</style>
+
 <div class="auth-container">
     <div class="auth-card">
-        <div class="auth-header">
-            <div class="logo-section">
-                <div class="logo-icon">
-                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="48" height="48" rx="12" fill="#2563eb"/>
-                        <path d="M24 14L16 20V32H20V26H28V32H32V20L24 14Z" fill="white"/>
-                    </svg>
-                </div>
-                <h1 class="system-title">Student Enrollment System</h1>
-            </div>
+        <div class="logo-section">
+            <img src="{{ asset('images/udd_logo.PNG') }}" alt="Universidad de Dagupan Logo">
+            <h1 class="system-title">Enrollment System</h1>
             <h2 class="welcome-title">Welcome back</h2>
             <p class="welcome-subtitle">Please enter your details to sign in</p>
         </div>
 
         @if ($errors->any())
-            <div class="alert alert-danger">
-                <svg class="alert-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-                </svg>
-                <div class="alert-content">
-                    @foreach ($errors->all() as $error)
-                        <div>{{ $error }}</div>
-                    @endforeach
-                </div>
+            <div style="background: #fef2f2; color: #ef4444; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; font-size: 0.85rem; border: 1px solid #fecaca;">
+                @foreach ($errors->all() as $error)
+                    <div>• {{ $error }}</div>
+                @endforeach
             </div>
         @endif
 
-        @if (session('error'))
-            <div class="alert alert-danger">
-                <svg class="alert-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-                </svg>
-                <div class="alert-content">{{ session('error') }}</div>
-            </div>
-        @endif
-
-        <form method="POST" action="{{ route('student.login') }}" class="auth-form">
+        <form method="POST" action="{{ route('student.login') }}">
             @csrf
             
             <div class="form-group">
@@ -47,14 +168,12 @@
                 <input 
                     id="student_id" 
                     type="text" 
-                    class="form-control @error('student_id') is-invalid @enderror" 
+                    class="form-control" 
                     name="student_id" 
                     value="{{ old('student_id') }}" 
                     required 
-                    autofocus
-                    placeholder="2024-001"
+                    placeholder="e.g., 2024-001"
                 >
-                <small class="form-hint">Format: YYYY-XXX (e.g., 2024-001)</small>
             </div>
 
             <div class="form-group">
@@ -62,55 +181,44 @@
                 <input 
                     id="password" 
                     type="password" 
-                    class="form-control @error('password') is-invalid @enderror" 
+                    class="form-control" 
                     name="password" 
                     required
-                    placeholder="Enter your password"
+                    placeholder="••••••••"
                 >
             </div>
 
-            <div class="form-group-checkbox">
-                <label class="checkbox-label">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <label style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: #64748b; cursor: pointer;">
                     <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
-                    <span>Remember me</span>
+                    Remember me
                 </label>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-block">
+            <button type="submit" class="btn-login">
                 Sign in
             </button>
         </form>
 
-        <div class="auth-footer">
-            <p class="footer-text">
+        <div style="text-align: center; margin-top: 2rem; font-size: 0.95rem;">
+            <p style="color: #64748b;">
                 Are you a professor? 
                 <a href="{{ route('professor.login') }}" class="footer-link">Sign in here</a>
             </p>
         </div>
 
-        <!-- Test Credentials Card -->
         <div class="test-credentials">
-            <div class="test-credentials-header">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                    <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
-                </svg>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; color: #1e3a8a; font-weight: 700; font-size: 0.85rem; text-transform: uppercase;">
                 <span>Test Credentials</span>
             </div>
-            <div class="test-credentials-body">
-                <div class="credential-item">
-                    <span class="credential-label">Regular Student:</span>
-                    <div class="credential-values">
-                        <code>2024-001</code>
-                        <code>password</code>
-                    </div>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="credential-item" style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 0.85rem; color: #475569; font-weight: 600;">Regular Student:</span>
+                    <div><code>2024-001</code> <code>password</code></div>
                 </div>
-                <div class="credential-item">
-                    <span class="credential-label">Irregular Student:</span>
-                    <div class="credential-values">
-                        <code>2024-003</code>
-                        <code>password</code>
-                    </div>
+                <div class="credential-item" style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 0.85rem; color: #475569; font-weight: 600;">Irregular Student:</span>
+                    <div><code>2024-003</code> <code>password</code></div>
                 </div>
             </div>
         </div>

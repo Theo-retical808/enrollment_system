@@ -3,109 +3,183 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name', 'Student Enrollment System') }}</title>
-    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700" rel="stylesheet" />
+    <title>Universidad de Dagupan - Enrollment System</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero {
+            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #333;
+            padding: 4rem 2rem;
+            background: radial-gradient(circle at top right, #eff6ff, #f8fafc);
+            position: relative;
+            overflow: hidden;
         }
-        
-        .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            padding: 3rem;
-            max-width: 500px;
-            width: 90%;
+
+        .hero-container {
+            max-width: 950px;
             text-align: center;
-        }
-        
-        .status {
-            display: inline-block;
-            background: #4caf50;
-            color: white;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            margin-bottom: 2rem;
-        }
-        
-        .logo {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 3rem;
-            line-height: 1.2;
-        }
-        
-        .buttons {
+            z-index: 10;
             display: flex;
-            gap: 1rem;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .main-logo {
+            height: 150px; 
+            width: auto;
+            margin-bottom: 2rem;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.08));
+        }
+
+        .hero-title {
+            font-size: 3.8rem; 
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.1;
+            margin-bottom: 0.75rem;
+            letter-spacing: -1.5px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem; 
+            color: #2563eb; 
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-description {
+            font-size: 1.1rem;
+            color: #64748b;
+            max-width: 600px;
+            margin-bottom: 3.5rem;
+            line-height: 1.7;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1.5rem;
             justify-content: center;
-            flex-wrap: wrap;
         }
-        
+
         .btn {
-            padding: 14px 28px;
-            border-radius: 10px;
+            padding: 1.1rem 2.8rem;
+            border-radius: 14px;
             text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
+            font-weight: 700;
             font-size: 1rem;
-            min-width: 140px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid transparent; /* Keeps both buttons the exact same size to prevent layout jumping */
         }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+        /* Default Student Button (Blue) */
+        .btn-student {
+            background: #2563eb; 
             color: white;
+            border-color: #2563eb;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
         }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+
+        /* Normal hover for Student (Gets slightly darker blue) */
+        .button-group:not(:has(.btn-professor:hover)) .btn-student:hover {
+            background: #1d4ed8;
+            border-color: #1d4ed8;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(37, 99, 235, 0.3);
         }
-        
-        .btn-secondary {
+
+        /* Default Professor Button (White/Outlined) */
+        .btn-professor {
             background: white;
-            color: #667eea;
-            border: 2px solid #667eea;
+            color: #0f172a;
+            border-color: #e2e8f0;
         }
-        
-        .btn-secondary:hover {
-            background: #667eea;
+
+        /* The Swap Effect: Student turns white/outline when Professor is hovered */
+        .button-group:has(.btn-professor:hover) .btn-student {
+            background: white;
+            color: #0f172a;
+            border-color: #e2e8f0;
+            box-shadow: none;
+            transform: translateY(0);
+        }
+
+        /* The Swap Effect: Professor turns blue when hovered */
+        .btn-professor:hover {
+            background: #2563eb;
             color: white;
-            transform: translateY(-2px);
+            border-color: #2563eb;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(37, 99, 235, 0.3);
+        }
+
+        .blob {
+            position: absolute;
+            z-index: 1;
+            filter: blur(100px);
+            opacity: 0.3;
+            border-radius: 50%;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.5rem; }
+            .hero-subtitle { font-size: 1rem; }
+            .button-group { flex-direction: column; width: 100%; }
+            .btn { width: 100%; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="status">🟢 System Online</div>
-        
-        <h1 class="logo">Student Enrollment System</h1>
-        
-        <div class="buttons">
-            <a href="{{ route('student.login') }}" class="btn btn-primary">Student Login</a>
-            <a href="{{ route('professor.login') }}" class="btn btn-secondary">Professor Login</a>
+
+    <section class="hero">
+        <div class="blob" style="width: 600px; height: 600px; background: #bfdbfe; top: -15%; right: -10%;"></div>
+        <div class="blob" style="width: 500px; height: 500px; background: #dbeafe; bottom: -15%; left: -10%;"></div>
+
+        <div class="hero-container">
+            <img src="{{ asset('images/udd_logo.PNG') }}" alt="Universidad de Dagupan Logo" class="main-logo">
+            
+            <h2 class="hero-title">Universidad de Dagupan</h2>
+            
+            <p class="hero-subtitle">
+                The official Enrollment System for Universidad de Dagupan
+            </p>
+
+            <p class="feature-description">
+                Access your courses, manage schedules, and track your academic progress all in one platform.
+            </p>
+            
+            <div class="button-group">
+                <a href="{{ route('student.login') }}" class="btn btn-student">
+                    Login as Student
+                </a>
+                <a href="{{ route('professor.login') }}" class="btn btn-professor">
+                    Professor Portal
+                </a>
+            </div>
         </div>
-    </div>
+    </section>
+
+    <footer style="padding: 2.5rem; text-align: center; color: #94a3b8; font-size: 0.95rem; background: transparent;">
+        &copy; 2026 Universidad de Dagupan. All Rights Reserved.
+    </footer>
 </body>
 </html>

@@ -162,5 +162,47 @@ class StudentDashboardController extends Controller
         return redirect()->route('student.schedule')
             ->with('success', 'Schedule has been sent to ' . $student->email);
     }
+
+    /**
+     * Show student's curriculum and completed courses.
+     */
+    public function viewCourses()
+    {
+        $student = Auth::guard('student')->user();
+        
+        // Get all courses for the student's school
+        $allCourses = \App\Models\Course::where('school_id', $student->school_id)
+            ->where('is_active', true)
+            ->orderBy('year_level')
+            ->orderBy('course_code')
+            ->get()
+            ->groupBy('year_level');
+        
+        // Get completed courses with grades
+        $completedCourses = $student->completedCourses()
+            ->withPivot('grade', 'passed', 'semester', 'academic_year')
+            ->get();
+        
+        // Get currently enrolled courses
+        $currentEnrollment = $student->getCurrentEnrollment();
+        $currentCourses = $currentEnrollment ? $currentEnrollment->courses : collect();
+        
+        // Calculate statistics
+        $totalUnitsCompleted = $completedCourses->where('pivot.passed', true)->sum('units');
+        $totalUnitsFailed = $completedCourses->where('pivot.passed', false)->sum('units');
+        $completedCount = $completedCourses->where('pivot.passed', true)->count();
+        $failedCount = $completedCourses->where('pivot.passed', false)->count();
+        
+        return view('student.courses', compact(
+            'student',
+            'allCourses',
+            'completedCourses',
+            'currentCourses',
+            'totalUnitsCompleted',
+            'totalUnitsFailed',
+            'completedCount',
+            'failedCount'
+        ));
+    }
 }
 

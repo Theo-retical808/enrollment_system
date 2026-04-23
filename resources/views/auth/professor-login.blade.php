@@ -1,20 +1,157 @@
 @extends('layouts.auth')
 
 @section('content')
+<style>
+    /* Styling isolated to match the UdD Blue theme */
+    body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background: radial-gradient(circle at top right, #eff6ff, #f8fafc);
+        color: #1e293b;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+    }
+    .auth-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding: 2rem;
+    }
+    .auth-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(12px);
+        border-radius: 24px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        width: 100%;
+        max-width: 440px;
+        padding: 3.5rem 3rem;
+    }
+    .auth-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+    }
+    .auth-logo {
+        height: 90px;
+        width: auto;
+        margin-bottom: 1.5rem;
+        filter: drop-shadow(0 4px 10px rgba(0,0,0,0.05));
+    }
+    .system-title {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin: 0 0 0.25rem 0;
+        letter-spacing: -0.5px;
+    }
+    .welcome-subtitle {
+        font-size: 1rem;
+        color: #64748b;
+        margin: 0;
+    }
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .form-label {
+        display: block;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: #475569;
+        margin-bottom: 0.5rem;
+    }
+    .form-control {
+        width: 100%;
+        padding: 1rem;
+        border-radius: 14px;
+        border: 1px solid #e2e8f0;
+        background: #f8fafc;
+        font-size: 1rem;
+        color: #0f172a;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+    }
+    .form-control:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        background: white;
+    }
+    .form-group-checkbox {
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+    }
+    .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        color: #64748b;
+        cursor: pointer;
+    }
+    .btn-primary {
+        width: 100%;
+        background: #2563eb;
+        color: white;
+        padding: 1.1rem;
+        border-radius: 14px;
+        border: none;
+        font-weight: 700;
+        font-size: 1.05rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+        background: #1d4ed8;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+    }
+    .alert-danger {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #ef4444;
+        padding: 1rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        gap: 0.75rem;
+        align-items: flex-start;
+        font-size: 0.9rem;
+    }
+    .alert-icon {
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+    .auth-footer {
+        margin-top: 2rem;
+        text-align: center;
+    }
+    .footer-text {
+        color: #64748b;
+        font-size: 0.95rem;
+        margin: 0;
+    }
+    .footer-link {
+        color: #2563eb;
+        font-weight: 700;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    .footer-link:hover {
+        color: #1d4ed8;
+        text-decoration: underline;
+    }
+</style>
+
 <div class="auth-container">
     <div class="auth-card">
         <div class="auth-header">
-            <div class="logo-section">
-                <div class="logo-icon">
-                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="48" height="48" rx="12" fill="#7c3aed"/>
-                        <path d="M24 16C20.69 16 18 18.69 18 22C18 25.31 20.69 28 24 28C27.31 28 30 25.31 30 22C30 18.69 27.31 16 24 16ZM24 26C21.79 26 20 24.21 20 22C20 19.79 21.79 18 24 18C26.21 18 28 19.79 28 22C28 24.21 26.21 26 24 26ZM32 32V30C32 27.79 27.97 26 24 26C20.03 26 16 27.79 16 30V32H32Z" fill="white"/>
-                    </svg>
-                </div>
-                <h1 class="system-title">Professor Review System</h1>
-            </div>
-            <h2 class="welcome-title">Welcome back</h2>
-            <p class="welcome-subtitle">Please enter your details to sign in</p>
+            <img src="{{ asset('images/udd_logo.PNG') }}" alt="Universidad de Dagupan Logo" class="auth-logo">
+            
+            <h1 class="system-title">Professor Portal</h1>
+            <p class="welcome-subtitle">Sign in to manage your classes</p>
         </div>
 
         @if ($errors->any())
@@ -43,7 +180,7 @@
                     value="{{ old('professor_id') }}" 
                     required 
                     autofocus
-                    placeholder="Enter your professor ID"
+                    placeholder="Enter your ID (e.g., P-12345)"
                 >
             </div>
 
@@ -55,7 +192,7 @@
                     class="form-control @error('password') is-invalid @enderror" 
                     name="password" 
                     required
-                    placeholder="Enter your password"
+                    placeholder="••••••••"
                 >
             </div>
 
@@ -67,7 +204,7 @@
             </div>
 
             <button type="submit" class="btn btn-primary btn-block">
-                Sign in
+                Access Portal
             </button>
         </form>
 
