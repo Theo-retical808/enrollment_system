@@ -5,11 +5,7 @@
 @section('content')
 <style>
     :root {
-        /* Light Mode Colors */
-        --text-main: #0f172a;
-        --text-muted: #64748b;
-        --border-light: #f1f5f9;
-        
+        /* Dashboard-specific light mode colors */
         --sky-bg: #e0f2fe;
         --sky-border: #bae6fd;
         --sky-text: #0369a1;
@@ -38,12 +34,8 @@
         --card-border: #e2e8f0;
     }
 
-    /* Dark Mode Colors (Activates when Theo's toggle is flipped) */
-    .dark, [data-theme="dark"], [data-bs-theme="dark"] {
-        --text-main: #f8fafc;
-        --text-muted: #94a3b8;
-        --border-light: #334155;
-        
+    /* Dark Mode Colors */
+    [data-theme="dark"] {
         --sky-bg: #0c4a6e;
         --sky-border: #075985;
         --sky-text: #bae6fd;
@@ -72,11 +64,44 @@
         --card-border: #334155;
     }
 
-    /* Ensures the main .card class turns dark too */
-    .dark .card, [data-theme="dark"] .card {
+    /* Ensures cards turn dark */
+    [data-theme="dark"] .card {
         background-color: var(--card-bg) !important;
         border-color: var(--card-border) !important;
         color: var(--text-main) !important;
+    }
+
+    /* LMS Stat Card */
+    .lms-stat-card {
+        background: var(--bg-white);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.1rem 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+    .lms-stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .lms-stat-content .label {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+        display: block;
+    }
+    .lms-stat-content .value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
     }
 
     /* LMS Specific Hero Banner Styles - Exact Match */
@@ -177,36 +202,16 @@
 </div>
 
 <style>
-    .lms-stat-card {
-        background: var(--bg-white);
-        border: 1px solid var(--border-color);
-        border-radius: 12px; /* Slightly tighter corners */
-        padding: 1.1rem 1.25rem; /* Tightened padding */
-        display: flex;
-        align-items: center;
-        gap: 0.85rem;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    /* Dark Mode Colors for dashboard-specific elements */
+    [data-theme="dark"] .lms-stat-card {
+        background: var(--bg-white) !important;
+        border-color: var(--border-color) !important;
     }
-    .lms-stat-icon {
-        width: 48px;
-        height: 48px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    [data-theme="dark"] .lms-stat-content .label {
+        color: var(--text-secondary) !important;
     }
-    .lms-stat-content .label {
-        font-size: 0.85rem;
-        color: var(--text-secondary);
-        font-weight: 500;
-        margin-bottom: 0.25rem;
-        display: block;
-    }
-    .lms-stat-content .value {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--text-primary);
-        margin: 0;
+    [data-theme="dark"] .lms-stat-content .value {
+        color: var(--text-primary) !important;
     }
 </style>
 

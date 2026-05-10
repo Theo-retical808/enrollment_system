@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'payment.required' => \App\Http\Middleware\CheckPaymentStatus::class,
             'student.auth' => \App\Http\Middleware\StudentAuth::class,
             'professor.auth' => \App\Http\Middleware\ProfessorAuth::class,
+            'admin.auth' => \App\Http\Middleware\AdminAuth::class,
             'rate.limit.enrollment' => \App\Http\Middleware\RateLimitEnrollment::class,
             'rate.limit.login' => \App\Http\Middleware\RateLimitLogin::class,
             'sanitize.input' => \App\Http\Middleware\SanitizeInput::class,
@@ -83,7 +84,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 ], 401);
             }
 
-            return redirect()->route('student.login')
+            return redirect()->route('login')
                 ->with('error', 'Please log in to continue.');
         });
 

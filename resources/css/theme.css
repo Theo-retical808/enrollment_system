@@ -1,0 +1,241 @@
+/* ============================================
+   THEME VARIABLES - Light & Dark Mode
+   Central place to control all colors across the app
+   ============================================ */
+
+:root {
+    /* Layout */
+    --sidebar-width: 260px;
+    --topbar-height: 64px;
+
+    /* Primary Brand */
+    --udd-blue: #2563eb;
+    --udd-blue-dark: #1d4ed8;
+    --udd-blue-light: #eff6ff;
+    --lms-blue: #2f3b94;
+
+    /* Backgrounds */
+    --primary-bg: #f9fafb;
+    --bg-white: #ffffff;
+    --bg-primary: #f8fafc;
+
+    /* Text */
+    --text-primary: #111827;
+    --text-secondary: #4b5563;
+    --text-muted: #9ca3af;
+    --text-main: #0f172a;
+    --text-inverse: #ffffff;
+
+    /* Borders */
+    --border-color: #e5e7eb;
+    --border-light: #f3f4f6;
+    --border-main: #e2e8f0;
+
+    /* Interactive */
+    --hover-bg: #f3f4f6;
+    --active-bg: #eff6ff;
+    --active-text: #2563eb;
+
+    /* Navigation */
+    --nav-link-color: #4b5563;
+    --nav-link-icon: #6b7280;
+    --nav-active-bg: #f3f4f6;
+    --nav-active-text: #111827;
+    --nav-hover-bg: #f9fafb;
+    --logout-color: #dc2626;
+    --logout-hover-bg: #fef2f2;
+
+    /* Status Colors */
+    --status-success-bg: #dcfce7;
+    --status-success-text: #166534;
+    --status-danger-bg: #fef2f2;
+    --status-danger-text: #991b1b;
+    --status-warning-bg: #fff7ed;
+    --status-warning-text: #92400e;
+    --status-info-bg: #eff6ff;
+    --status-info-text: #1e40af;
+
+    /* Shadows */
+    --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+    /* Radii */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+
+    /* Auth Page */
+    --auth-bg: #f8fafc;
+    --auth-gradient-start: #eff6ff;
+    --auth-gradient-end: #f8fafc;
+    --auth-card-bg: white;
+    --auth-card-border: rgba(255, 255, 255, 0.5);
+    --auth-card-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --auth-text-primary: #1f2937;
+    --auth-text-secondary: #6b7280;
+    --auth-text-muted: #9ca3af;
+    --auth-input-bg: white;
+    --auth-input-border: #e5e7eb;
+    --auth-input-focus-border: #2563eb;
+    --auth-footer-border: #f3f4f6;
+    --auth-cred-bg: #f9fafb;
+    --auth-cred-border: #e5e7eb;
+    --auth-cred-code-bg: white;
+    --auth-cred-code-border: #e5e7eb;
+    --auth-cred-code-color: #2563eb;
+    --auth-alert-bg: #fef2f2;
+    --auth-alert-border: #fecaca;
+    --auth-alert-color: #991b1b;
+
+    /* Admin Page */
+    --admin-bg: #f1f5f9;
+    --admin-card-bg: white;
+    --admin-nav-bg: #1e293b;
+    --admin-text-primary: #1e293b;
+    --admin-text-secondary: #64748b;
+    --admin-text-muted: #94a3b8;
+    --admin-border: #e2e8f0;
+    --admin-border-light: #f1f5f9;
+    --admin-hover-bg: #f8fafc;
+    --admin-table-header-bg: #f8fafc;
+    --admin-input-bg: white;
+    --admin-input-border: #e2e8f0;
+
+    /* Dashboard-specific */
+    --sky-bg: #e0f2fe;
+    --sky-border: #bae6fd;
+    --sky-text: #0369a1;
+    --blue-bg: #f0f9ff;
+    --blue-border: #e0f2fe;
+    --blue-text: #075985;
+    --reg-bg: #eff6ff;
+    --reg-border: #bfdbfe;
+    --reg-text: #1d4ed8;
+    --irreg-bg: #fffbeb;
+    --irreg-border: #fef3c7;
+    --irreg-text: #92400e;
+    --success-bg: #dcfce7;
+    --success-border: #059669;
+    --success-text: #166534;
+    --danger-bg: #fef2f2;
+    --danger-border: #ef4444;
+    --danger-text: #991b1b;
+    --card-bg: #f8fafc;
+    --card-border: #e2e8f0;
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+[data-theme="dark"] {
+    /* Backgrounds */
+    --primary-bg: #0f172a;
+    --bg-white: #1e293b;
+    --bg-primary: #0f172a;
+
+    /* Text */
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --text-main: #f8fafc;
+    --text-inverse: #0f172a;
+
+    /* Borders */
+    --border-color: #334155;
+    --border-light: #1e293b;
+    --border-main: #334155;
+
+    /* Interactive */
+    --hover-bg: #334155;
+    --active-bg: #1e3a8a;
+    --active-text: #93c5fd;
+
+    /* Navigation */
+    --nav-link-color: #94a3b8;
+    --nav-link-icon: #64748b;
+    --nav-active-bg: #334155;
+    --nav-active-text: #f1f5f9;
+    --nav-hover-bg: #1e293b;
+    --logout-color: #fca5a5;
+    --logout-hover-bg: rgba(239, 68, 68, 0.1);
+
+    /* Status Colors */
+    --status-success-bg: #064e3b;
+    --status-success-text: #a7f3d0;
+    --status-danger-bg: #7f1d1d;
+    --status-danger-text: #fecaca;
+    --status-warning-bg: #78350f;
+    --status-warning-text: #fde68a;
+    --status-info-bg: #1e3a8a;
+    --status-info-text: #bfdbfe;
+
+    /* Brand */
+    --udd-blue-light: #1e3a8a;
+    --lms-blue: #1e3a8a;
+
+    /* Shadows */
+    --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+
+    /* Auth Page */
+    --auth-bg: #0f172a;
+    --auth-gradient-start: #0f172a;
+    --auth-gradient-end: #1e293b;
+    --auth-card-bg: #1e293b;
+    --auth-card-border: #334155;
+    --auth-card-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+    --auth-text-primary: #f1f5f9;
+    --auth-text-secondary: #94a3b8;
+    --auth-text-muted: #64748b;
+    --auth-input-bg: #0f172a;
+    --auth-input-border: #334155;
+    --auth-input-focus-border: #3b82f6;
+    --auth-footer-border: #334155;
+    --auth-cred-bg: #0f172a;
+    --auth-cred-border: #334155;
+    --auth-cred-code-bg: #334155;
+    --auth-cred-code-border: #475569;
+    --auth-cred-code-color: #93c5fd;
+    --auth-alert-bg: #7f1d1d;
+    --auth-alert-border: #991b1b;
+    --auth-alert-color: #fecaca;
+
+    /* Admin Page */
+    --admin-bg: #0f172a;
+    --admin-card-bg: #1e293b;
+    --admin-nav-bg: #0f172a;
+    --admin-text-primary: #f1f5f9;
+    --admin-text-secondary: #94a3b8;
+    --admin-text-muted: #64748b;
+    --admin-border: #334155;
+    --admin-border-light: #1e293b;
+    --admin-hover-bg: #334155;
+    --admin-table-header-bg: #0f172a;
+    --admin-input-bg: #0f172a;
+    --admin-input-border: #334155;
+
+    /* Dashboard-specific */
+    --sky-bg: #0c4a6e;
+    --sky-border: #075985;
+    --sky-text: #bae6fd;
+    --blue-bg: #1e3a8a;
+    --blue-border: #1e40af;
+    --blue-text: #bfdbfe;
+    --reg-bg: #1e3a8a;
+    --reg-border: #1e40af;
+    --reg-text: #bfdbfe;
+    --irreg-bg: #78350f;
+    --irreg-border: #92400e;
+    --irreg-text: #fde68a;
+    --success-bg: #064e3b;
+    --success-border: #059669;
+    --success-text: #6ee7b7;
+    --danger-bg: #7f1d1d;
+    --danger-border: #ef4444;
+    --danger-text: #fca5a5;
+    --card-bg: #1e293b;
+    --card-border: #334155;
+}
