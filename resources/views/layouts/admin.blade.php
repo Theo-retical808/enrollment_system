@@ -33,7 +33,12 @@
         </div>
         <div class="nav-links">
             <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">Dashboard</a>
-            <a href="{{ route('admin.accounts') }}" class="{{ request()->routeIs('admin.accounts') ? 'active' : '' }}">Accounts</a>
+            <a href="{{ route('admin.professors.index') }}" class="{{ request()->routeIs('admin.professors.*') ? 'active' : '' }}">Professors</a>
+            <a href="{{ route('admin.students.index') }}" class="{{ request()->routeIs('admin.students.*') ? 'active' : '' }}">Students</a>
+            <a href="{{ route('admin.courses.index') }}" class="{{ request()->routeIs('admin.courses.*') ? 'active' : '' }}">Courses</a>
+            <a href="{{ route('admin.assignments.index') }}" class="{{ request()->routeIs('admin.assignments.*') || request()->routeIs('admin.enrollment-assistants.*') ? 'active' : '' }}">Assignments</a>
+            <a href="{{ route('admin.schedules.index') }}" class="{{ request()->routeIs('admin.schedules.*') ? 'active' : '' }}">Schedules</a>
+            <a href="{{ route('admin.curriculum.index') }}" class="{{ request()->routeIs('admin.curriculum.*') ? 'active' : '' }}">Curriculum</a>
             <a href="{{ route('admin.payments') }}" class="{{ request()->routeIs('admin.payments') ? 'active' : '' }}">Payments</a>
             <a href="{{ route('admin.enrollments') }}" class="{{ request()->routeIs('admin.enrollments') ? 'active' : '' }}">Enrollments</a>
         </div>

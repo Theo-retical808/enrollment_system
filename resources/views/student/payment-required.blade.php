@@ -52,15 +52,11 @@
                 Pay via Online Portal
             </a>
             
-            <form method="POST" action="{{ route('student.payment.simulate') }}">
-                @csrf
-                <button type="submit" class="btn" style="background: white; border: 1px solid #e5e7eb; color: #4b5563; width: 100%; padding: 0.8rem; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 10px;">
-                    <i data-lucide="play-circle" style="width: 18px; height: 18px;"></i>
-                    Simulate Payment (Demo)
-                </button>
-            </form>
+            <p style="color: #6b7280; font-size: 0.85rem; text-align: center; margin-top: 0.5rem;">
+                Please visit the admin/cashier's office to process your payment. Once confirmed by the admin, you will be able to proceed with enrollment.
+            </p>
             
-            <a href="{{ route('student.dashboard') }}" style="color: #6b7280; font-size: 0.9rem; margin-top: 1rem; text-decoration: none;">
+            <a href="{{ route('student.dashboard') }}" style="color: #6b7280; font-size: 0.9rem; margin-top: 1rem; text-decoration: none; text-align: center;">
                 ← Back to Dashboard
             </a>
         </div>

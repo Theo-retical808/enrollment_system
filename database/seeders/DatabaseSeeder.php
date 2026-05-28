@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
             StudentSeeder::class,
             ComprehensiveCurriculumSeeder::class,
             AdminSeeder::class,
+            CourseScheduleSeeder::class,
+            CurriculumTemplateSeeder::class,
         ]);
     }
 }

@@ -131,6 +131,61 @@ class AdminDashboardController extends Controller
     }
 
     /**
+     * Manually add a payment record.
+     */
+    public function storePayment(Request $request)
+    {
+        $request->validate([
+            'student_id' => 'required|string',
+            'amount' => 'required|numeric|min:0.01',
+            'payment_type' => 'required|in:enrollment_fee,tuition,miscellaneous',
+            'semester' => 'required|in:1st Semester,2nd Semester,Summer',
+        ]);
+
+        // Find the student by student_id (the student number)
+        $student = Student::where('student_id', $request->student_id)->first();
+
+        if (!$student) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', "Student with ID '{$request->student_id}' not found.");
+        }
+
+        $admin = Auth::guard('admin')->user();
+        $now = now();
+
+        // Use the semester selected by admin
+        $semester = $request->semester;
+
+        // Determine academic year based on current date
+        $month = $now->month;
+        $academicYear = $month >= 6 ? $now->year . '-' . ($now->year + 1) : ($now->year - 1) . '-' . $now->year;
+
+        $payment = Payment::create([
+            'student_id' => $student->id,
+            'amount' => $request->amount,
+            'payment_type' => $request->payment_type,
+            'status' => 'paid',
+            'semester' => $semester,
+            'academic_year' => $academicYear,
+            'paid_at' => $now,
+        ]);
+
+        Log::info('Payment manually added by admin', [
+            'payment_id' => $payment->id,
+            'student_id' => $student->student_id,
+            'amount' => $payment->amount,
+            'payment_type' => $payment->payment_type,
+            'paid_at' => $now->toDateTimeString(),
+            'admin_id' => $admin->id,
+        ]);
+
+        $typeLabel = ucfirst(str_replace('_', ' ', $request->payment_type));
+        return redirect()->route('admin.payments')
+            ->with('success', "Payment of ₱" . number_format($request->amount, 2) . " ({$typeLabel}) recorded for {$student->full_name} on {$now->format('M d, Y h:i A')}.");
+    }
+
+    /**
      * Confirm a payment.
      */
     public function confirmPayment(Request $request, $paymentId)

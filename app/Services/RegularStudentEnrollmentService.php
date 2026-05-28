@@ -5,7 +5,8 @@ namespace App\Services;
 use App\Models\Student;
 use App\Models\Enrollment;
 use App\Models\Course;
-use App\Models\School;
+use App\Models\CurriculumTemplate;
+use App\Models\CourseSchedule;
 use Illuminate\Support\Collection;
 
 class RegularStudentEnrollmentService
@@ -22,15 +23,15 @@ class RegularStudentEnrollmentService
      */
     public function createAutomaticEnrollment(Student $student): Enrollment
     {
-        // Check if student already has an enrollment for current semester
         $currentSemester = $this->paymentService->getCurrentSemester();
         $currentAcademicYear = $this->paymentService->getCurrentAcademicYear();
-        
+
+        // Check if student already has an enrollment for current semester
         $existingEnrollment = $student->enrollments()
             ->where('semester', $currentSemester)
             ->where('academic_year', $currentAcademicYear)
             ->first();
-        
+
         if ($existingEnrollment) {
             return $existingEnrollment;
         }
@@ -44,28 +45,73 @@ class RegularStudentEnrollmentService
             'total_units' => 0,
         ]);
 
-        // Assign predefined schedule based on school and year level
-        $this->assignPredefinedSchedule($enrollment);
+        // Assign schedule from curriculum templates
+        $this->assignFromCurriculumTemplate($enrollment);
 
         return $enrollment;
     }
 
     /**
-     * Assign predefined schedule based on student's school and year level.
+     * Assign schedule from curriculum_templates table.
+     * Falls back to hardcoded templates if no curriculum is defined.
      */
-    protected function assignPredefinedSchedule(Enrollment $enrollment): void
+    protected function assignFromCurriculumTemplate(Enrollment $enrollment): void
     {
         $student = $enrollment->student;
-        $courses = $this->getPredefinedCourses($student);
-        
-        foreach ($courses as $courseData) {
-            $enrollment->courses()->attach($courseData['course']->id, [
-                'schedule_day' => $courseData['schedule_day'],
-                'start_time' => $courseData['start_time'],
-                'end_time' => $courseData['end_time'],
-                'room' => $courseData['room'],
-                'instructor' => $courseData['instructor'],
-            ]);
+        $currentSemester = $this->paymentService->getCurrentSemester();
+
+        // Try to get curriculum template entries for this student's school/year/semester
+        $templates = CurriculumTemplate::where('school_id', $student->school_id)
+            ->where('year_level', $student->year_level)
+            ->where('semester', $currentSemester)
+            ->where('is_active', true)
+            ->with(['course', 'courseSchedule.professor'])
+            ->get();
+
+        if ($templates->isNotEmpty()) {
+            // Use curriculum templates
+            foreach ($templates as $template) {
+                $schedule = $template->courseSchedule;
+
+                if ($schedule) {
+                    // Use the linked schedule
+                    $enrollment->courses()->attach($template->course_id, [
+                        'schedule_day' => $schedule->day,
+                        'start_time' => $schedule->start_time,
+                        'end_time' => $schedule->end_time,
+                        'room' => $schedule->room,
+                        'instructor' => $schedule->professor->full_name,
+                    ]);
+                } else {
+                    // No specific schedule linked — find any available schedule for this course
+                    $availableSchedule = CourseSchedule::where('course_id', $template->course_id)
+                        ->where('is_active', true)
+                        ->with('professor')
+                        ->first();
+
+                    if ($availableSchedule) {
+                        $enrollment->courses()->attach($template->course_id, [
+                            'schedule_day' => $availableSchedule->day,
+                            'start_time' => $availableSchedule->start_time,
+                            'end_time' => $availableSchedule->end_time,
+                            'room' => $availableSchedule->room,
+                            'instructor' => $availableSchedule->professor->full_name,
+                        ]);
+                    } else {
+                        // No schedule at all — attach with TBA
+                        $enrollment->courses()->attach($template->course_id, [
+                            'schedule_day' => 'TBA',
+                            'start_time' => '00:00',
+                            'end_time' => '00:00',
+                            'room' => 'TBA',
+                            'instructor' => 'TBA',
+                        ]);
+                    }
+                }
+            }
+        } else {
+            // Fallback: use hardcoded schedule templates
+            $this->assignFallbackSchedule($enrollment);
         }
 
         // Update total units
@@ -74,82 +120,55 @@ class RegularStudentEnrollmentService
     }
 
     /**
-     * Get predefined courses for a student based on school and year level.
+     * Fallback: assign schedule from hardcoded templates when no curriculum is defined.
      */
-    protected function getPredefinedCourses(Student $student): array
+    protected function assignFallbackSchedule(Enrollment $enrollment): void
     {
-        // This would typically come from a curriculum table
-        // For now, we'll create a basic schedule based on school and year level
-        
-        $schoolCode = $student->school->code ?? 'DEFAULT';
+        $student = $enrollment->student;
+        $schoolCode = $student->school->code ?? 'CS';
         $yearLevel = $student->year_level;
-        
-        return $this->getScheduleTemplate($schoolCode, $yearLevel);
-    }
 
-    /**
-     * Get schedule template based on school and year level.
-     */
-    protected function getScheduleTemplate(string $schoolCode, int $yearLevel): array
-    {
-        // Sample schedule templates - in a real system, this would come from database
         $templates = [
-            'CS' => [ // Computer Science
+            'CS' => [
                 1 => [
-                    ['course_code' => 'CS101', 'schedule_day' => 'Monday', 'start_time' => '08:00', 'end_time' => '10:00', 'room' => 'CS-101', 'instructor' => 'Prof. Smith'],
-                    ['course_code' => 'MATH101', 'schedule_day' => 'Tuesday', 'start_time' => '10:00', 'end_time' => '12:00', 'room' => 'MATH-201', 'instructor' => 'Prof. Johnson'],
-                    ['course_code' => 'ENGL101', 'schedule_day' => 'Wednesday', 'start_time' => '14:00', 'end_time' => '16:00', 'room' => 'ENG-301', 'instructor' => 'Prof. Davis'],
-                    ['course_code' => 'PE101', 'schedule_day' => 'Thursday', 'start_time' => '16:00', 'end_time' => '18:00', 'room' => 'GYM-A', 'instructor' => 'Coach Wilson'],
-                    ['course_code' => 'HIST101', 'schedule_day' => 'Friday', 'start_time' => '08:00', 'end_time' => '10:00', 'room' => 'HIST-101', 'instructor' => 'Prof. Brown'],
+                    ['course_code' => 'CS101', 'schedule_day' => 'Monday', 'start_time' => '08:00', 'end_time' => '09:30', 'room' => 'CS-101', 'instructor' => 'Prof. Smith'],
+                    ['course_code' => 'MATH101', 'schedule_day' => 'Tuesday', 'start_time' => '08:00', 'end_time' => '09:30', 'room' => 'AS-401', 'instructor' => 'Prof. Wilson'],
+                    ['course_code' => 'ENGL101', 'schedule_day' => 'Monday', 'start_time' => '10:00', 'end_time' => '11:30', 'room' => 'ENG-205', 'instructor' => 'Prof. Martinez'],
+                    ['course_code' => 'PE101', 'schedule_day' => 'Friday', 'start_time' => '10:00', 'end_time' => '11:30', 'room' => 'Gym A', 'instructor' => 'Prof. Wilson'],
+                    ['course_code' => 'HIST101', 'schedule_day' => 'Wednesday', 'start_time' => '08:00', 'end_time' => '09:30', 'room' => 'AS-403', 'instructor' => 'Prof. Wilson'],
                 ],
                 2 => [
-                    ['course_code' => 'CS201', 'schedule_day' => 'Monday', 'start_time' => '10:00', 'end_time' => '12:00', 'room' => 'CS-102', 'instructor' => 'Prof. Anderson'],
-                    ['course_code' => 'MATH201', 'schedule_day' => 'Tuesday', 'start_time' => '08:00', 'end_time' => '10:00', 'room' => 'MATH-202', 'instructor' => 'Prof. Taylor'],
-                    ['course_code' => 'PHYS101', 'schedule_day' => 'Wednesday', 'start_time' => '10:00', 'end_time' => '12:00', 'room' => 'PHYS-101', 'instructor' => 'Prof. Miller'],
-                    ['course_code' => 'CS202', 'schedule_day' => 'Thursday', 'start_time' => '14:00', 'end_time' => '16:00', 'room' => 'CS-103', 'instructor' => 'Prof. Garcia'],
-                    ['course_code' => 'ENGL201', 'schedule_day' => 'Friday', 'start_time' => '10:00', 'end_time' => '12:00', 'room' => 'ENG-302', 'instructor' => 'Prof. Martinez'],
+                    ['course_code' => 'CS202', 'schedule_day' => 'Wednesday', 'start_time' => '08:00', 'end_time' => '09:30', 'room' => 'CS-104', 'instructor' => 'Prof. Smith'],
+                    ['course_code' => 'MATH201', 'schedule_day' => 'Tuesday', 'start_time' => '08:00', 'end_time' => '09:30', 'room' => 'AS-402', 'instructor' => 'Prof. Wilson'],
+                    ['course_code' => 'STAT101', 'schedule_day' => 'Thursday', 'start_time' => '08:00', 'end_time' => '09:30', 'room' => 'AS-404', 'instructor' => 'Prof. Wilson'],
+                    ['course_code' => 'BUS101', 'schedule_day' => 'Monday', 'start_time' => '13:00', 'end_time' => '14:30', 'room' => 'BUS-301', 'instructor' => 'Prof. Davis'],
+                    ['course_code' => 'ACCT101', 'schedule_day' => 'Thursday', 'start_time' => '10:00', 'end_time' => '11:30', 'room' => 'BUS-304', 'instructor' => 'Prof. Davis'],
                 ],
-            ],
-            'ENG' => [ // Engineering
-                1 => [
-                    ['course_code' => 'ENG101', 'schedule_day' => 'Monday', 'start_time' => '08:00', 'end_time' => '10:00', 'room' => 'ENG-101', 'instructor' => 'Prof. Lee'],
-                    ['course_code' => 'MATH101', 'schedule_day' => 'Tuesday', 'start_time' => '10:00', 'end_time' => '12:00', 'room' => 'MATH-101', 'instructor' => 'Prof. Kim'],
-                    ['course_code' => 'PHYS101', 'schedule_day' => 'Wednesday', 'start_time' => '08:00', 'end_time' => '10:00', 'room' => 'PHYS-101', 'instructor' => 'Prof. Chen'],
-                    ['course_code' => 'CHEM101', 'schedule_day' => 'Thursday', 'start_time' => '14:00', 'end_time' => '16:00', 'room' => 'CHEM-101', 'instructor' => 'Prof. Wang'],
-                    ['course_code' => 'DRAW101', 'schedule_day' => 'Friday', 'start_time' => '10:00', 'end_time' => '12:00', 'room' => 'DRAW-101', 'instructor' => 'Prof. Liu'],
-                ],
-            ],
-            'BUS' => [ // Business
-                1 => [
-                    ['course_code' => 'BUS101', 'schedule_day' => 'Monday', 'start_time' => '10:00', 'end_time' => '12:00', 'room' => 'BUS-101', 'instructor' => 'Prof. Adams'],
-                    ['course_code' => 'ECON101', 'schedule_day' => 'Tuesday', 'start_time' => '14:00', 'end_time' => '16:00', 'room' => 'ECON-101', 'instructor' => 'Prof. Clark'],
-                    ['course_code' => 'ACCT101', 'schedule_day' => 'Wednesday', 'start_time' => '08:00', 'end_time' => '10:00', 'room' => 'ACCT-101', 'instructor' => 'Prof. Lewis'],
-                    ['course_code' => 'STAT101', 'schedule_day' => 'Thursday', 'start_time' => '10:00', 'end_time' => '12:00', 'room' => 'STAT-101', 'instructor' => 'Prof. Hall'],
-                    ['course_code' => 'BENGL101', 'schedule_day' => 'Friday', 'start_time' => '14:00', 'end_time' => '16:00', 'room' => 'ENG-201', 'instructor' => 'Prof. Young'],
+                3 => [
+                    ['course_code' => 'CS301', 'schedule_day' => 'Tuesday', 'start_time' => '08:00', 'end_time' => '09:30', 'room' => 'CS-103', 'instructor' => 'Prof. Smith'],
+                    ['course_code' => 'CS302', 'schedule_day' => 'Monday', 'start_time' => '13:00', 'end_time' => '14:30', 'room' => 'CS-108', 'instructor' => 'Prof. Garcia'],
+                    ['course_code' => 'ECON101', 'schedule_day' => 'Friday', 'start_time' => '08:00', 'end_time' => '09:30', 'room' => 'BUS-305', 'instructor' => 'Prof. Davis'],
+                    ['course_code' => 'BUS201', 'schedule_day' => 'Wednesday', 'start_time' => '08:00', 'end_time' => '09:30', 'room' => 'BUS-604', 'instructor' => 'Prof. Davis'],
+                    ['course_code' => 'BUS202', 'schedule_day' => 'Thursday', 'start_time' => '08:00', 'end_time' => '09:30', 'room' => 'BUS-605', 'instructor' => 'Prof. Davis'],
                 ],
             ],
         ];
 
-        $schoolTemplate = $templates[$schoolCode] ?? $templates['CS']; // Default to CS if school not found
-        $yearTemplate = $schoolTemplate[$yearLevel] ?? $schoolTemplate[1]; // Default to year 1 if year not found
+        $schoolTemplate = $templates[$schoolCode] ?? $templates['CS'];
+        $yearTemplate = $schoolTemplate[$yearLevel] ?? $schoolTemplate[1];
 
-        // Convert course codes to actual course objects
-        $scheduleData = [];
         foreach ($yearTemplate as $courseInfo) {
             $course = Course::where('course_code', $courseInfo['course_code'])->first();
             if ($course) {
-                $scheduleData[] = [
-                    'course' => $course,
+                $enrollment->courses()->attach($course->id, [
                     'schedule_day' => $courseInfo['schedule_day'],
                     'start_time' => $courseInfo['start_time'],
                     'end_time' => $courseInfo['end_time'],
                     'room' => $courseInfo['room'],
                     'instructor' => $courseInfo['instructor'],
-                ];
+                ]);
             }
         }
-
-        return $scheduleData;
     }
 
     /**
@@ -159,7 +178,7 @@ class RegularStudentEnrollmentService
     {
         $currentSemester = $this->paymentService->getCurrentSemester();
         $currentAcademicYear = $this->paymentService->getCurrentAcademicYear();
-        
+
         return $student->enrollments()
             ->where('semester', $currentSemester)
             ->where('academic_year', $currentAcademicYear)
@@ -175,22 +194,30 @@ class RegularStudentEnrollmentService
             return false;
         }
 
-        // Assign professor for review (simple assignment based on school)
-        $professor = $enrollment->student->school->professors()->where('status', 'active')->first();
-        
-        // If no professor found in the school, get any active professor
+        // Assign an enrollment-assistant professor for review (prefer same school)
+        $professor = $enrollment->student->school->professors()
+            ->where('status', 'active')
+            ->where('can_assist_enrollment', true)
+            ->first();
+
+        // Fallback: any enrollment assistant
+        if (!$professor) {
+            $professor = \App\Models\Professor::where('status', 'active')
+                ->where('can_assist_enrollment', true)
+                ->first();
+        }
+
+        // Last fallback: any active professor
         if (!$professor) {
             $professor = \App\Models\Professor::where('status', 'active')->first();
         }
-        
-        // Log for debugging
-        \Log::info('Submitting enrollment for approval', [
+
+        \Illuminate\Support\Facades\Log::info('Submitting enrollment for approval', [
             'enrollment_id' => $enrollment->id,
             'student_id' => $enrollment->student_id,
             'professor_id' => $professor?->id,
-            'school_id' => $enrollment->student->school_id,
         ]);
-        
+
         $enrollment->update([
             'status' => 'submitted',
             'submitted_at' => now(),

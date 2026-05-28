@@ -56,7 +56,7 @@
                 <tr>
                     <td>
                         <strong>{{ $enrollment->student->full_name ?? 'N/A' }}</strong><br>
-                        <span style="color: #64748b; font-size: 0.75rem;">{{ $enrollment->student->student_id ?? '' }}</span>
+                        <span style="color: var(--admin-text-secondary); font-size: 0.75rem;">{{ $enrollment->student->student_id ?? '' }}</span>
                     </td>
                     <td>
                         @if($enrollment->status === 'approved')
@@ -69,10 +69,10 @@
                             <span class="badge badge-secondary">{{ ucfirst($enrollment->status) }}</span>
                         @endif
                     </td>
-                    <td style="font-size: 0.8rem; color: #64748b;">{{ $enrollment->created_at->format('M d, Y') }}</td>
+                    <td style="font-size: 0.8rem; color: var(--admin-text-secondary);">{{ $enrollment->created_at->format('M d, Y') }}</td>
                 </tr>
                 @empty
-                <tr><td colspan="3" style="text-align: center; color: #94a3b8;">No enrollments yet</td></tr>
+                <tr><td colspan="3" style="text-align: center; color: var(--admin-text-muted);">No enrollments yet</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -96,7 +96,7 @@
                 <tr>
                     <td>
                         <strong>{{ $payment->student->full_name ?? 'N/A' }}</strong><br>
-                        <span style="color: #64748b; font-size: 0.75rem;">{{ $payment->student->student_id ?? '' }}</span>
+                        <span style="color: var(--admin-text-secondary); font-size: 0.75rem;">{{ $payment->student->student_id ?? '' }}</span>
                     </td>
                     <td>₱{{ number_format($payment->amount, 2) }}</td>
                     <td>
@@ -110,7 +110,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="3" style="text-align: center; color: #94a3b8;">No payments yet</td></tr>
+                <tr><td colspan="3" style="text-align: center; color: var(--admin-text-muted);">No payments yet</td></tr>
                 @endforelse
             </tbody>
         </table>

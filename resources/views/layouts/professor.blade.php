@@ -49,6 +49,14 @@
                     <i data-lucide="layout-dashboard" style="width: 20px; height: 20px;"></i>
                     Dashboard
                 </a>
+                <a href="{{ route('professor.schedule') }}" class="nav-link {{ request()->routeIs('professor.schedule') ? 'active' : '' }}">
+                    <i data-lucide="calendar" style="width: 20px; height: 20px;"></i>
+                    My Schedule
+                </a>
+                <a href="{{ route('professor.grading') }}" class="nav-link {{ request()->routeIs('professor.grading*') ? 'active' : '' }}">
+                    <i data-lucide="clipboard-check" style="width: 20px; height: 20px;"></i>
+                    Grading
+                </a>
                 
                 <div style="flex-grow: 1;"></div>
                 

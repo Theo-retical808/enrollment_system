@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Professor extends Authenticatable
@@ -20,16 +21,18 @@ class Professor extends Authenticatable
         'last_name',
         'school_id',
         'status',
-    ];
-
-    protected $hidden = [
-        'password',
-        'remember_token',
+        'can_assist_enrollment',
     ];
 
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'can_assist_enrollment' => 'boolean',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
     ];
 
     /**
@@ -38,6 +41,24 @@ class Professor extends Authenticatable
     public function school(): BelongsTo
     {
         return $this->belongsTo(School::class);
+    }
+
+    /**
+     * Get the course schedules assigned to the professor.
+     */
+    public function schedules(): HasMany
+    {
+        return $this->hasMany(CourseSchedule::class);
+    }
+
+    /**
+     * Get the courses assigned to the professor.
+     */
+    public function courses(): BelongsToMany
+    {
+        return $this->belongsToMany(Course::class, 'course_professor')
+            ->withPivot('role')
+            ->withTimestamps();
     }
 
     /**

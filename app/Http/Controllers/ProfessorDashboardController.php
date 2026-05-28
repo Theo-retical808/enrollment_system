@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CourseSchedule;
 use App\Models\Enrollment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,6 +34,30 @@ class ProfessorDashboardController extends Controller
             ->get();
         
         return view('professor.dashboard', compact('pendingEnrollments', 'recentlyReviewed'));
+    }
+
+    /**
+     * Display the professor's assigned schedule.
+     */
+    public function mySchedule()
+    {
+        $professor = Auth::guard('professor')->user();
+
+        $dayOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+        $schedules = CourseSchedule::where('professor_id', $professor->id)
+            ->where('is_active', true)
+            ->with('course')
+            ->orderBy('start_time')
+            ->get()
+            ->sortBy(function ($schedule) use ($dayOrder) {
+                return array_search($schedule->day, $dayOrder);
+            });
+
+        // Group by day for display
+        $schedulesByDay = $schedules->groupBy('day');
+
+        return view('professor.schedule', compact('schedules', 'schedulesByDay'));
     }
 
     /**

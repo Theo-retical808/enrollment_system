@@ -171,7 +171,7 @@
     </div>
 
     <!-- Final Decision Form -->
-    <div class="card" style="background: var(--bg-primary);">
+    <div class="card">
         <div class="flex items-center gap-3 mb-6">
             <i data-lucide="gavel" class="text-muted"></i>
             <h3 class="text-main font-extrabold" style="font-size: 1.25rem;">Final Decision</h3>
@@ -179,22 +179,27 @@
         
         <form id="reviewForm" method="POST" action="{{ route('professor.approve', $enrollment->id) }}">
             @csrf
-            <div class="mb-8">
-                <label for="review_comments" class="form-label" style="margin-bottom: 0.75rem;">REVIEWER COMMENTS (OPTIONAL)</label>
+            <div style="margin-bottom: 1.5rem;">
+                <label for="review_comments" style="display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 0.75rem;">Reviewer Comments (Optional)</label>
                 <textarea 
                     id="review_comments" 
                     name="review_comments" 
                     rows="4" 
-                    class="form-control"
-                    placeholder="Provide feedback to the student regarding their schedule selection..."></textarea>
+                    placeholder="Provide feedback to the student regarding their schedule selection..."
+                    style="width: 100%; padding: 1rem 1.25rem; border-radius: 12px; border: 2px solid var(--border-light); background: var(--bg-primary); color: var(--text-main); font-size: 0.9rem; font-family: inherit; resize: vertical; transition: border-color 0.2s; outline: none;"
+                    onfocus="this.style.borderColor='var(--udd-blue)'"
+                    onblur="this.style.borderColor='var(--border-light)'"
+                ></textarea>
             </div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-                <button type="submit" name="action" value="approve" class="btn btn-primary" style="background: var(--status-success-text); padding: 1.5rem;">
+                <button type="submit" name="action" value="approve" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 1.25rem; border-radius: 12px; border: none; background: #16a34a; color: white; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s;"
+                    onmouseover="this.style.background='#15803d'" onmouseout="this.style.background='#16a34a'">
                     <i data-lucide="check-circle" style="width: 20px;"></i>
                     Approve Schedule
                 </button>
-                <button type="submit" name="action" value="reject" class="btn" style="background: var(--status-danger-text); color: white; padding: 1.5rem;">
+                <button type="submit" name="action" value="reject" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 1.25rem; border-radius: 12px; border: none; background: #dc2626; color: white; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s;"
+                    onmouseover="this.style.background='#b91c1c'" onmouseout="this.style.background='#dc2626'">
                     <i data-lucide="x-circle" style="width: 20px;"></i>
                     Reject Submission
                 </button>

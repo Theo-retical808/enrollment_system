@@ -99,6 +99,24 @@ class Course extends Model
     }
 
     /**
+     * Get the schedules for this course.
+     */
+    public function schedules(): HasMany
+    {
+        return $this->hasMany(CourseSchedule::class);
+    }
+
+    /**
+     * Get the professors assigned to this course.
+     */
+    public function professors(): BelongsToMany
+    {
+        return $this->belongsToMany(Professor::class, 'course_professor')
+            ->withPivot('role')
+            ->withTimestamps();
+    }
+
+    /**
      * Get the petitions for this course.
      */
     public function petitions(): HasMany

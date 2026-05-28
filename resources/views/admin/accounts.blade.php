@@ -37,9 +37,9 @@
         <tbody>
             @foreach($admins as $admin)
             <tr>
-                <td><code style="background: #fef3c7; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;">{{ $admin->admin_id }}</code></td>
+                <td><code class="id-badge id-badge-admin">{{ $admin->admin_id }}</code></td>
                 <td><strong>{{ $admin->full_name }}</strong></td>
-                <td style="color: #64748b;">{{ $admin->email }}</td>
+                <td style="color: var(--admin-text-secondary);">{{ $admin->email }}</td>
                 <td>
                     @if($admin->status === 'active')
                         <span class="badge badge-success">Active</span>
@@ -74,9 +74,9 @@
         <tbody>
             @foreach($professors as $professor)
             <tr>
-                <td><code style="background: #dbeafe; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;">{{ $professor->professor_id }}</code></td>
+                <td><code class="id-badge id-badge-professor">{{ $professor->professor_id }}</code></td>
                 <td><strong>{{ $professor->full_name }}</strong></td>
-                <td style="color: #64748b;">{{ $professor->email }}</td>
+                <td style="color: var(--admin-text-secondary);">{{ $professor->email }}</td>
                 <td>{{ $professor->school->name ?? 'N/A' }}</td>
                 <td>
                     @if($professor->status === 'active')
@@ -113,9 +113,9 @@
         <tbody>
             @foreach($students as $student)
             <tr>
-                <td><code style="background: #dcfce7; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;">{{ $student->student_id }}</code></td>
+                <td><code class="id-badge id-badge-student">{{ $student->student_id }}</code></td>
                 <td><strong>{{ $student->full_name }}</strong></td>
-                <td style="color: #64748b;">{{ $student->email }}</td>
+                <td style="color: var(--admin-text-secondary);">{{ $student->email }}</td>
                 <td>{{ $student->school->name ?? 'N/A' }}</td>
                 <td>Year {{ $student->year_level }}</td>
                 <td>

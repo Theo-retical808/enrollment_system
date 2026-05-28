@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Student;
 use App\Models\Enrollment;
 use App\Models\Course;
+use App\Models\CourseSchedule;
 use App\Models\Petition;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Builder;
@@ -285,33 +286,29 @@ class IrregularStudentEnrollmentService
      */
     public function getCourseScheduleOptions(Course $course): array
     {
-        // In a real system, this would come from a course_schedules table
-        // For now, return mock schedule options
-        return [
-            [
-                'schedule_day' => 'Monday',
-                'start_time' => '08:00',
-                'end_time' => '10:00',
-                'room' => 'Room 101',
-                'instructor' => 'Prof. Smith',
-                'available_slots' => 30,
-            ],
-            [
-                'schedule_day' => 'Wednesday',
-                'start_time' => '14:00',
-                'end_time' => '16:00',
-                'room' => 'Room 102',
-                'instructor' => 'Prof. Johnson',
-                'available_slots' => 25,
-            ],
-            [
-                'schedule_day' => 'Friday',
-                'start_time' => '10:00',
-                'end_time' => '12:00',
-                'room' => 'Room 103',
-                'instructor' => 'Prof. Davis',
-                'available_slots' => 20,
-            ],
-        ];
+        // Pull real schedule data from course_schedules table
+        $schedules = CourseSchedule::where('course_id', $course->id)
+            ->where('is_active', true)
+            ->with('professor')
+            ->orderBy('day')
+            ->orderBy('start_time')
+            ->get();
+
+        if ($schedules->isEmpty()) {
+            return [];
+        }
+
+        return $schedules->map(function ($schedule) {
+            return [
+                'id' => $schedule->id,
+                'schedule_day' => $schedule->day,
+                'start_time' => $schedule->start_time,
+                'end_time' => $schedule->end_time,
+                'room' => $schedule->room,
+                'instructor' => $schedule->professor->full_name,
+                'available_slots' => $schedule->available_slots,
+                'max_students' => $schedule->max_students,
+            ];
+        })->toArray();
     }
 }

@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\ProfessorAuthController;
 use App\Http\Controllers\StudentDashboardController;
 use App\Http\Controllers\ProfessorDashboardController;
 use App\Http\Controllers\ProfessorReviewController;
+use App\Http\Controllers\ProfessorGradingController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RegularEnrollmentController;
 use App\Http\Controllers\IrregularEnrollmentController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\AuditReportController;
 use App\Http\Controllers\CourseManagementController;
 use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\AdminManagementController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -61,7 +63,6 @@ Route::prefix('student')->name('student.')->middleware('student.auth')->group(fu
     
     // Payment routes
     Route::get('payment/required', [PaymentController::class, 'paymentRequired'])->name('payment.required');
-    Route::post('payment/simulate', [PaymentController::class, 'simulatePayment'])->name('payment.simulate');
     Route::get('payment/status', [PaymentController::class, 'checkStatus'])->name('payment.status');
     
     // Enrollment routes (require payment)
@@ -102,6 +103,9 @@ Route::prefix('student')->name('student.')->middleware('student.auth')->group(fu
 // Professor Protected Routes
 Route::prefix('professor')->name('professor.')->middleware('professor.auth')->group(function () {
     Route::get('dashboard', [ProfessorDashboardController::class, 'index'])->name('dashboard');
+    Route::get('schedule', [ProfessorDashboardController::class, 'mySchedule'])->name('schedule');
+    Route::get('grading', [ProfessorGradingController::class, 'index'])->name('grading');
+    Route::post('grading/submit', [ProfessorGradingController::class, 'submitGrade'])->name('grading.submit');
     Route::get('review/{enrollment}', [ProfessorDashboardController::class, 'reviewSchedule'])->name('review');
     Route::post('review/{enrollment}/process', [ProfessorReviewController::class, 'processReview'])->name('approve');
     Route::get('review/{enrollment}/status', [ProfessorReviewController::class, 'getReviewStatus'])->name('review.status');
@@ -118,8 +122,52 @@ Route::prefix('admin')->name('admin.')->middleware('admin.auth')->group(function
     Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('accounts', [AdminDashboardController::class, 'accounts'])->name('accounts');
     Route::get('payments', [AdminDashboardController::class, 'payments'])->name('payments');
+    Route::post('payments/store', [AdminDashboardController::class, 'storePayment'])->name('payments.store');
     Route::post('payments/{payment}/confirm', [AdminDashboardController::class, 'confirmPayment'])->name('payments.confirm');
     Route::post('payments/{payment}/reject', [AdminDashboardController::class, 'rejectPayment'])->name('payments.reject');
     Route::get('enrollments', [AdminDashboardController::class, 'enrollments'])->name('enrollments');
     Route::post('enrollments/{enrollment}/override', [AdminDashboardController::class, 'overrideEnrollment'])->name('enrollments.override');
+
+    // Professor Management
+    Route::get('professors', [AdminManagementController::class, 'professors'])->name('professors.index');
+    Route::get('professors/create', [AdminManagementController::class, 'createProfessor'])->name('professors.create');
+    Route::post('professors', [AdminManagementController::class, 'storeProfessor'])->name('professors.store');
+    Route::get('professors/{professor}/edit', [AdminManagementController::class, 'editProfessor'])->name('professors.edit');
+    Route::put('professors/{professor}', [AdminManagementController::class, 'updateProfessor'])->name('professors.update');
+    Route::delete('professors/{professor}', [AdminManagementController::class, 'destroyProfessor'])->name('professors.destroy');
+
+    // Student Management
+    Route::get('students', [AdminManagementController::class, 'students'])->name('students.index');
+    Route::get('students/create', [AdminManagementController::class, 'createStudent'])->name('students.create');
+    Route::post('students', [AdminManagementController::class, 'storeStudent'])->name('students.store');
+    Route::get('students/{student}/edit', [AdminManagementController::class, 'editStudent'])->name('students.edit');
+    Route::put('students/{student}', [AdminManagementController::class, 'updateStudent'])->name('students.update');
+    Route::delete('students/{student}', [AdminManagementController::class, 'destroyStudent'])->name('students.destroy');
+
+    // Course Management
+    Route::get('courses', [AdminManagementController::class, 'courses'])->name('courses.index');
+    Route::get('courses/create', [AdminManagementController::class, 'createCourse'])->name('courses.create');
+    Route::post('courses', [AdminManagementController::class, 'storeCourse'])->name('courses.store');
+    Route::get('courses/{course}/edit', [AdminManagementController::class, 'editCourse'])->name('courses.edit');
+    Route::put('courses/{course}', [AdminManagementController::class, 'updateCourse'])->name('courses.update');
+    Route::delete('courses/{course}', [AdminManagementController::class, 'destroyCourse'])->name('courses.destroy');
+
+    // Course-Professor Assignments
+    Route::get('assignments', [AdminManagementController::class, 'assignments'])->name('assignments.index');
+    Route::post('assignments/assign', [AdminManagementController::class, 'assignProfessor'])->name('assignments.assign');
+    Route::post('assignments/unassign', [AdminManagementController::class, 'unassignProfessor'])->name('assignments.unassign');
+
+    // Enrollment Assistants
+    Route::get('enrollment-assistants', [AdminManagementController::class, 'enrollmentAssistants'])->name('enrollment-assistants.index');
+    Route::post('enrollment-assistants/{professor}/toggle', [AdminManagementController::class, 'toggleEnrollmentAssistant'])->name('enrollment-assistants.toggle');
+
+    // Course Schedules
+    Route::get('schedules', [AdminManagementController::class, 'schedules'])->name('schedules.index');
+    Route::post('schedules', [AdminManagementController::class, 'storeSchedule'])->name('schedules.store');
+    Route::delete('schedules/{schedule}', [AdminManagementController::class, 'destroySchedule'])->name('schedules.destroy');
+
+    // Curriculum Templates (Default Regular Schedules)
+    Route::get('curriculum', [AdminManagementController::class, 'curriculum'])->name('curriculum.index');
+    Route::post('curriculum', [AdminManagementController::class, 'storeCurriculum'])->name('curriculum.store');
+    Route::delete('curriculum/{template}', [AdminManagementController::class, 'destroyCurriculum'])->name('curriculum.destroy');
 });
