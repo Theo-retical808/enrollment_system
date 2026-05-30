@@ -34,7 +34,7 @@ class RateLimitLogin
 
             return redirect()->back()
                 ->withErrors([
-                    'student_id' => 'Too many login attempts. Please try again in ' . ceil($seconds / 60) . ' minute(s).',
+                    'user_id' => 'Too many login attempts. Please try again in ' . ceil($seconds / 60) . ' minute(s).',
                 ])
                 ->withInput($request->except('password'));
         }
@@ -53,12 +53,12 @@ class RateLimitLogin
 
     /**
      * Resolve the request signature for rate limiting.
-     * Uses IP address and student_id/professor_id if provided.
+     * Uses IP address and the unified login user_id if provided.
      */
     protected function resolveRequestSignature(Request $request): string
     {
-        $identifier = $request->input('student_id') ?? $request->input('professor_id') ?? 'guest';
-        
+        $identifier = $request->input('user_id') ?? 'guest';
+
         return 'login_' . $identifier . '_' . $request->ip();
     }
 }
