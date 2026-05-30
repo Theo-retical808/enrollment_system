@@ -66,10 +66,7 @@
             </button>
         </form>
 
-        <div class="role-info">
-            <p><strong>Auto-detection:</strong> Your role is determined by your ID format.</p>
-            <p>Students: <code>2024-001</code> &nbsp; Professors: <code>PROF001</code> &nbsp; Admins: <code>ADMIN001</code></p>
-        </div>
+
     </div>
 
     <div class="test-credentials" style="display: none;">
