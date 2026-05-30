@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     @vite(['resources/css/theme.css', 'resources/css/layout.css', 'resources/css/admin.css'])
 </head>
 <body class="admin-page">
@@ -29,7 +30,6 @@
         <div class="nav-brand">
             <img src="{{ asset('images/udd_logo.PNG') }}" alt="UDD Logo">
             <span>Admin Panel</span>
-            <span class="nav-badge">Admin</span>
         </div>
         <div class="nav-links">
             <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">Dashboard</a>
@@ -43,8 +43,10 @@
             <a href="{{ route('admin.enrollments') }}" class="{{ request()->routeIs('admin.enrollments') ? 'active' : '' }}">Enrollments</a>
         </div>
         <div class="nav-user">
-            <button onclick="toggleTheme()" class="theme-toggle" title="Toggle theme">🌓</button>
-            <span>{{ Auth::guard('admin')->user()->full_name }}</span>
+            <div class="theme-btn" onclick="toggleTheme()" title="Toggle appearance">
+                <i data-lucide="moon" class="icon-moon"></i>
+                <i data-lucide="sun" class="icon-sun"></i>
+            </div>
             <form method="POST" action="{{ route('logout') }}" style="display:inline;">
                 @csrf
                 <button type="submit" class="btn-logout">Logout</button>
@@ -62,5 +64,8 @@
 
         @yield('content')
     </div>
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 </html>

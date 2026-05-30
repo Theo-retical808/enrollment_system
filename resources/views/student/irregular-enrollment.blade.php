@@ -10,20 +10,19 @@
 @endsection
 
 @section('content')
-<div style="padding: 2rem 0;">
-    <div class="card">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-            <div>
-                <h1 style="color: #4f46e5; margin-bottom: 0.5rem;">Irregular Student Enrollment</h1>
-                <p style="color: #6b7280;">Select your courses manually and build your custom schedule.</p>
-            </div>
-            <div style="text-align: right;">
-                <div style="background: #fef3c7; padding: 0.75rem 1rem; border-radius: 0.5rem; border: 1px solid #fcd34d; margin-bottom: 0.5rem;">
-                    <p style="color: #d97706; font-weight: 600; margin: 0;">Irregular Student</p>
-                </div>
-                <p style="color: #6b7280; font-size: 0.875rem;">Status: {{ ucfirst($enrollment->status) }}</p>
-            </div>
+<div style="max-width: 1200px; margin: 0 auto; padding: 2rem 0;">
+    <div style="margin-bottom: 2.5rem; display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+            <h1 style="color: var(--text-main); font-size: 2.2rem; font-weight: 900; margin-bottom: 0.5rem; letter-spacing: -0.02em;">Irregular Student Enrollment</h1>
+            <p style="color: var(--text-muted); font-size: 1.05rem; margin: 0; font-weight: 500;">Select your courses manually and build your custom schedule.</p>
         </div>
+        <div style="text-align: right;">
+            <div style="background: var(--irreg-bg); padding: 0.5rem 1rem; border-radius: 12px; border: 1px solid var(--irreg-border); margin-bottom: 0.5rem; display: inline-block;">
+                <p style="color: var(--irreg-text); font-weight: 700; margin: 0; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em;">Irregular Student</p>
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.85rem; font-weight: 600;">Status: {{ ucfirst($enrollment->status) }}</p>
+        </div>
+    </div>
 
         @if(session('success'))
             <div class="alert alert-success">
@@ -129,24 +128,26 @@
                     </p>
                 </div>
                 
-                <div style="overflow-x: auto; background: white; border-radius: 0.5rem; border: 1px solid #e5e7eb;">
+                <div style="overflow-x: auto; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-light); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
                     <table style="width: 100%; border-collapse: collapse;">
                         <thead>
-                            <tr style="background: #f9fafb;">
-                                <th style="padding: 1rem; text-align: left; border-bottom: 1px solid #e5e7eb;">Course Code</th>
-                                <th style="padding: 1rem; text-align: left; border-bottom: 1px solid #e5e7eb;">Course Title</th>
-                                <th style="padding: 1rem; text-align: left; border-bottom: 1px solid #e5e7eb;">Units</th>
-                                <th style="padding: 1rem; text-align: left; border-bottom: 1px solid #e5e7eb;">Prerequisites</th>
-                                <th style="padding: 1rem; text-align: left; border-bottom: 1px solid #e5e7eb;">Action</th>
+                            <tr style="background: var(--bg-main); border-bottom: 1px solid var(--border-light);">
+                                <th style="padding: 1rem; text-align: left; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">Course Code</th>
+                                <th style="padding: 1rem; text-align: left; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">Course Title</th>
+                                <th style="padding: 1rem; text-align: left; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">Units</th>
+                                <th style="padding: 1rem; text-align: left; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">Prerequisites</th>
+                                <th style="padding: 1rem; text-align: left; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($availableCourses as $course)
-                            <tr style="border-bottom: 1px solid #f3f4f6;">
-                                <td style="padding: 1rem; font-weight: 600; color: #4f46e5;">{{ $course->course_code }}</td>
-                                <td style="padding: 1rem;">{{ $course->title }}</td>
-                                <td style="padding: 1rem; text-align: center;">{{ $course->units }}</td>
-                                <td style="padding: 1rem;">
+                            <tr style="border-bottom: 1px solid var(--border-light);">
+                                <td style="padding: 1rem; font-weight: 800; color: var(--text-primary);">{{ $course->course_code }}</td>
+                                <td style="padding: 1rem; color: var(--text-main); font-weight: 500;">{{ $course->title }}</td>
+                                <td style="padding: 1rem; text-align: center; color: var(--text-main); font-weight: 700;">
+                                    <span style="background: var(--bg-main); padding: 4px 10px; border-radius: 20px;">{{ $course->units }}</span>
+                                </td>
+                                <td style="padding: 1rem; color: var(--text-muted); font-size: 0.9rem;">
                                     @if($course->prerequisites->count() > 0)
                                         {{ $course->prerequisites->pluck('course_code')->join(', ') }}
                                     @else
@@ -155,10 +156,10 @@
                                 </td>
                                 <td style="padding: 1rem;">
                                     <button onclick="validateAndShowScheduleModal({{ $course->id }}, '{{ $course->course_code }}', '{{ $course->title }}', {{ $course->units }})" 
-                                            class="btn btn-primary course-add-btn" 
+                                            class="btn course-add-btn" 
                                             data-course-id="{{ $course->id }}"
                                             data-schedule-url="{{ route('student.enrollment.irregular.course-schedules', $course->id) }}"
-                                            style="padding: 0.5rem 1rem; font-size: 0.875rem;">
+                                            style="padding: 0.5rem 1rem; font-size: 0.85rem; font-weight: 700; background: var(--reg-text); color: white; border-radius: 8px; border: none; cursor: pointer;">
                                         Add Course
                                     </button>
                                     <div id="course-validation-{{ $course->id }}" class="course-validation-feedback" style="margin-top: 0.5rem; display: none;">
@@ -189,31 +190,33 @@
             
             <div id="selected-courses">
                 @if($enrollment->courses->count() > 0)
-                    <div style="overflow-x: auto; background: white; border-radius: 0.5rem; border: 1px solid #e5e7eb;">
+                    <div style="overflow-x: auto; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-light); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
                         <table style="width: 100%; border-collapse: collapse;">
                             <thead>
-                                <tr style="background: #4f46e5; color: white;">
-                                    <th style="padding: 1rem; text-align: left;">Course Code</th>
-                                    <th style="padding: 1rem; text-align: left;">Course Title</th>
-                                    <th style="padding: 1rem; text-align: left;">Units</th>
-                                    <th style="padding: 1rem; text-align: left;">Day</th>
-                                    <th style="padding: 1rem; text-align: left;">Time</th>
-                                    <th style="padding: 1rem; text-align: left;">Room</th>
-                                    <th style="padding: 1rem; text-align: left;">Action</th>
+                                <tr style="background: var(--reg-text); color: white;">
+                                    <th style="padding: 1rem; text-align: left; font-size: 0.85rem; text-transform: uppercase;">Course Code</th>
+                                    <th style="padding: 1rem; text-align: left; font-size: 0.85rem; text-transform: uppercase;">Course Title</th>
+                                    <th style="padding: 1rem; text-align: left; font-size: 0.85rem; text-transform: uppercase;">Units</th>
+                                    <th style="padding: 1rem; text-align: left; font-size: 0.85rem; text-transform: uppercase;">Day</th>
+                                    <th style="padding: 1rem; text-align: left; font-size: 0.85rem; text-transform: uppercase;">Time</th>
+                                    <th style="padding: 1rem; text-align: left; font-size: 0.85rem; text-transform: uppercase;">Room</th>
+                                    <th style="padding: 1rem; text-align: left; font-size: 0.85rem; text-transform: uppercase;">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($enrollment->courses as $course)
-                                <tr style="border-bottom: 1px solid #f3f4f6;" data-course-id="{{ $course->id }}">
-                                    <td style="padding: 1rem; font-weight: 600; color: #4f46e5;">{{ $course->course_code }}</td>
-                                    <td style="padding: 1rem;">{{ $course->title }}</td>
-                                    <td style="padding: 1rem; text-align: center;">{{ $course->units }}</td>
-                                    <td style="padding: 1rem;">{{ $course->pivot->schedule_day }}</td>
-                                    <td style="padding: 1rem;">
+                                <tr style="border-bottom: 1px solid var(--border-light);" data-course-id="{{ $course->id }}">
+                                    <td style="padding: 1rem; font-weight: 800; color: var(--reg-text);">{{ $course->course_code }}</td>
+                                    <td style="padding: 1rem; color: var(--text-main); font-weight: 500;">{{ $course->title }}</td>
+                                    <td style="padding: 1rem; text-align: center; color: var(--text-main); font-weight: 700;">
+                                        <span style="background: var(--bg-main); padding: 4px 10px; border-radius: 20px;">{{ $course->units }}</span>
+                                    </td>
+                                    <td style="padding: 1rem; color: var(--text-muted); font-weight: 600;">{{ $course->pivot->schedule_day }}</td>
+                                    <td style="padding: 1rem; color: var(--text-muted); font-size: 0.9rem;">
                                         {{ date('g:i A', strtotime($course->pivot->start_time)) }} - 
                                         {{ date('g:i A', strtotime($course->pivot->end_time)) }}
                                     </td>
-                                    <td style="padding: 1rem;">{{ $course->pivot->room }}</td>
+                                    <td style="padding: 1rem; color: var(--text-muted); font-weight: 600;">{{ $course->pivot->room }}</td>
                                     <td style="padding: 1rem;">
                                         <button onclick="removeCourse({{ $course->id }})" 
                                                 class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">
@@ -242,23 +245,23 @@
             </div>
 
             @if($petitions->count() > 0)
-                <div style="overflow-x: auto; background: white; border-radius: 0.5rem; border: 1px solid #e5e7eb;">
+                <div style="overflow-x: auto; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-light); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
                     <table style="width: 100%; border-collapse: collapse;">
                         <thead>
-                            <tr style="background: #f9fafb;">
-                                <th style="padding: 1rem; text-align: left; border-bottom: 1px solid #e5e7eb;">Course</th>
-                                <th style="padding: 1rem; text-align: left; border-bottom: 1px solid #e5e7eb;">Status</th>
-                                <th style="padding: 1rem; text-align: left; border-bottom: 1px solid #e5e7eb;">Submitted</th>
-                                <th style="padding: 1rem; text-align: left; border-bottom: 1px solid #e5e7eb;">Reviewer</th>
-                                <th style="padding: 1rem; text-align: left; border-bottom: 1px solid #e5e7eb;">Comments</th>
+                            <tr style="background: var(--bg-main); border-bottom: 1px solid var(--border-light);">
+                                <th style="padding: 1rem; text-align: left; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">Course</th>
+                                <th style="padding: 1rem; text-align: left; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">Status</th>
+                                <th style="padding: 1rem; text-align: left; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">Submitted</th>
+                                <th style="padding: 1rem; text-align: left; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">Reviewer</th>
+                                <th style="padding: 1rem; text-align: left; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">Comments</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($petitions as $petition)
-                            <tr style="border-bottom: 1px solid #f3f4f6;">
+                            <tr style="border-bottom: 1px solid var(--border-light);">
                                 <td style="padding: 1rem;">
-                                    <strong>{{ $petition->course->course_code }}</strong><br>
-                                    <small style="color: #6b7280;">{{ $petition->course->title }}</small>
+                                    <strong style="color: var(--text-main);">{{ $petition->course->course_code }}</strong><br>
+                                    <small style="color: var(--text-muted);">{{ $petition->course->title }}</small>
                                 </td>
                                 <td style="padding: 1rem;">
                                     <span style="padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.875rem; font-weight: 500;
@@ -333,12 +336,12 @@
                 </form>
             @endif
             
-            <a href="{{ route('student.dashboard') }}" class="btn btn-secondary" style="padding: 0.75rem 2rem;">
+            <a href="{{ route('student.dashboard') }}" class="btn btn-secondary" style="background: transparent; color: var(--text-muted); border: none; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: color 0.2s;" onmouseover="this.style.color='var(--text-main)';" onmouseout="this.style.color='var(--text-muted)';">
+                <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
                 Back to Dashboard
             </a>
         </div>
     </div>
-</div>
 
 <!-- Schedule Selection Modal -->
 <div id="scheduleModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">

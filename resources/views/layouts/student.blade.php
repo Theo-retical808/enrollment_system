@@ -28,15 +28,15 @@
     <!-- Top Navigation -->
     <header class="top-nav">
         <div class="logo">
-            <img src="{{ asset('images/udd_logo.PNG') }}" alt="UDD Logo" style="height: 32px; width: auto;">
-            <span>Enrollment System</span>
+            <img src="{{ asset('images/udd_logo.PNG') }}" alt="UDD Logo" style="height: 60px; width: auto;">
+            <span style="font-size: 1.35rem; font-weight: 800;">Enrollment System</span>
         </div>
         <div class="user-actions">
             <div class="theme-btn" onclick="toggleTheme()" title="Toggle appearance">
                 <i data-lucide="moon" class="icon-moon"></i>
                 <i data-lucide="sun" class="icon-sun"></i>
             </div>
-            <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::guard('student')->user()->full_name ?? 'Student') }}&background=2f3b94&color=fff" alt="User Avatar" class="avatar">
+            <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::guard('student')->user()->full_name ?? 'Student') }}&background=2f3b94&color=fff&length=1" alt="User Avatar" class="avatar">
         </div>
     </header>
 

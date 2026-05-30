@@ -12,6 +12,7 @@
         --card-border: var(--border-light);
         --grad-start: var(--accent-blue);
         --grad-end: var(--accent-blue-text);
+        
         /* Status / state colors (light defaults) */
         --status-success-bg: #f0fdf4;
         --status-success-border: #dcfce7;
@@ -28,6 +29,34 @@
         --status-default-bg: #f8fafc;
         --status-default-border: #f1f5f9;
         --status-default-text: #0f172a;
+        
+        /* Table rows */
+        --table-row-border: #f1f5f9;
+        
+        /* Currently enrolled cards */
+        --enrolled-card-bg: white;
+    }
+
+    [data-theme="dark"] {
+        /* Status / state colors (dark overrides) */
+        --status-success-bg: #064e3b;
+        --status-success-border: #059669;
+        --status-success-text: #6ee7b7;
+
+        --status-failed-bg: #7f1d1d;
+        --status-failed-border: #ef4444;
+        --status-failed-text: #fca5a5;
+
+        --status-enrolled-bg: #0c4a6e;
+        --status-enrolled-border: #075985;
+        --status-enrolled-text: #bae6fd;
+
+        --status-default-bg: #1e293b;
+        --status-default-border: #334155;
+        --status-default-text: #f8fafc;
+        
+        --table-row-border: #334155;
+        --enrolled-card-bg: #1e293b;
     }
 </style>
 
@@ -38,8 +67,8 @@
     </div>
 
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
-        <div class="card" style="padding:1.1rem 1.25rem; display: flex; align-items: center; gap: 0.85rem; border: none; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); border-radius: 12px;">
-            <div style="background: #ecfdf5; color: #10b981; padding: 0.8rem; border-radius: 12px;">
+        <div class="card" style="padding:1.1rem 1.25rem; display: flex; align-items: center; gap: 0.85rem; border: 1px solid var(--card-border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); border-radius: 12px; background: var(--card-bg);">
+            <div style="background: var(--status-success-bg); color: var(--status-success-text); padding: 0.8rem; border-radius: 12px;">
                 <i data-lucide="check-circle" style="width: 24px; height: 24px;"></i>
             </div>
             <div>
@@ -48,8 +77,8 @@
             </div>
         </div>
 
-        <div class="card" style="padding:1.1rem 1.25rem; display: flex; align-items: center; gap: 0.85rem; border: none; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); border-radius: 12px;">
-            <div style="background: #fef2f2; color: #ef4444; padding: 0.8rem; border-radius: 12px;">
+        <div class="card" style="padding:1.1rem 1.25rem; display: flex; align-items: center; gap: 0.85rem; border: 1px solid var(--card-border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); border-radius: 12px; background: var(--card-bg);">
+            <div style="background: var(--status-failed-bg); color: var(--status-failed-text); padding: 0.8rem; border-radius: 12px;">
                 <i data-lucide="book-open" style="width: 24px; height: 24px;"></i>
             </div>
             <div>
@@ -58,8 +87,8 @@
             </div>
         </div>
 
-        <div class="card" style="padding:1.5rem; display: flex; align-items: center; gap: 1rem; border: none; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
-            <div style="background: #eff6ff; color: #3b82f6; padding: 0.8rem; border-radius: 12px;">
+        <div class="card" style="padding:1.5rem; display: flex; align-items: center; gap: 1rem; border: 1px solid var(--card-border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); background: var(--card-bg);">
+            <div style="background: var(--status-enrolled-bg); color: var(--status-enrolled-text); padding: 0.8rem; border-radius: 12px;">
                 <i data-lucide="clock" style="width: 24px; height: 24px;"></i>
             </div>
             <div>
@@ -72,7 +101,7 @@
     @if($currentCourses->count() > 0)
     <div style="margin-bottom: 2rem;">
         <h2 style="font-size: 1.15rem; font-weight: 800; color: var(--text-main); margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;">
-            <i data-lucide="layout-grid" style="color: #6366f1; width: 20px; height: 20px;"></i>
+            <i data-lucide="layout-grid" style="color: var(--grad-start); width: 20px; height: 20px;"></i>
             Currently Enrolled
         </h2>
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem;">
@@ -80,26 +109,26 @@
                 @php
                     $prefix = substr($course->course_code, 0, 2);
                     $theme = match($prefix) {
-                        'CS' => ['icon' => 'code-2', 'color' => '#2563eb', 'bg' => '#eff6ff'],
-                        'MATH' => ['icon' => 'variable', 'color' => '#db2777', 'bg' => '#fdf2f8'],
-                        'PHYS' => ['icon' => 'atom', 'color' => '#7c3aed', 'bg' => '#f5f3ff'],
-                        'ENGL' => ['icon' => 'languages', 'color' => '#ea580c', 'bg' => '#fff7ed'],
-                        default => ['icon' => 'book', 'color' => '#4b5563', 'bg' => '#f8fafc'],
+                        'CS' => ['icon' => 'code-2', 'color' => '#2563eb', 'bg' => 'rgba(37, 99, 235, 0.1)'],
+                        'MATH' => ['icon' => 'variable', 'color' => '#db2777', 'bg' => 'rgba(219, 39, 119, 0.1)'],
+                        'PHYS' => ['icon' => 'atom', 'color' => '#7c3aed', 'bg' => 'rgba(124, 58, 237, 0.1)'],
+                        'ENGL' => ['icon' => 'languages', 'color' => '#ea580c', 'bg' => 'rgba(234, 88, 12, 0.1)'],
+                        default => ['icon' => 'book', 'color' => '#64748b', 'bg' => 'rgba(100, 116, 139, 0.1)'],
                     };
                 @endphp
-                <div class="card" style="padding: 0; overflow: hidden; border: 1px solid #e2e8f0; border-radius: 14px; transition: all 0.3s ease; background: white;" onmouseover="this.style.borderColor='{{ $theme['color'] }}'; this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='#e2e8f0'; this.style.transform='translateY(0)';">
-                    <div style="padding: 1rem 1.25rem; border-bottom: 1px solid #f1f5f9; background: {{ $theme['bg'] }}; display: flex; justify-content: space-between; align-items: center;">
+                <div class="card" style="padding: 0; overflow: hidden; border: 1px solid var(--card-border); border-radius: 14px; transition: all 0.3s ease; background: var(--enrolled-card-bg);" onmouseover="this.style.borderColor='{{ $theme['color'] }}'; this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='var(--card-border)'; this.style.transform='translateY(0)';">
+                    <div style="padding: 1rem 1.25rem; border-bottom: 1px solid var(--card-border); background: {{ $theme['bg'] }}; display: flex; justify-content: space-between; align-items: center;">
                         <div style="display: flex; align-items: center; gap: 8px;">
-                            <div style="width: 28px; height: 28px; background: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: {{ $theme['color'] }}; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <div style="width: 28px; height: 28px; background: var(--card-bg); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: {{ $theme['color'] }}; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                                 <i data-lucide="{{ $theme['icon'] }}" style="width: 16px; height: 16px;"></i>
                             </div>
                             <span style="font-weight: 800; color: {{ $theme['color'] }}; font-size: 0.9rem;">{{ $course->course_code }}</span>
                         </div>
-                        <span style="font-size: 0.65rem; font-weight: 700; color: #94a3b8; text-transform: uppercase;">Yr {{ $course->year_level }}</span>
+                        <span style="font-size: 0.65rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Yr {{ $course->year_level }}</span>
                     </div>
                     <div style="padding: 1rem 1.25rem;">
-                        <h3 style="font-size: 1rem; font-weight: 700; color: #1e293b; margin-bottom: 0.75rem; line-height: 1.4; min-height: 2.8rem;">{{ $course->title }}</h3>
-                        <div style="display: flex; align-items: center; gap: 6px; color: #64748b; font-size: 0.8rem; font-weight: 500;">
+                        <h3 style="font-size: 1rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.75rem; line-height: 1.4; min-height: 2.8rem;">{{ $course->title }}</h3>
+                        <div style="display: flex; align-items: center; gap: 6px; color: var(--text-muted); font-size: 0.8rem; font-weight: 500;">
                             <i data-lucide="layers-2" style="width: 14px; height: 14px; opacity: 0.7;"></i>
                             {{ $course->units }} Units
                         </div>
@@ -129,27 +158,27 @@
                 </thead>
                 <tbody>
                     @foreach($completedCourses->sortByDesc('pivot.academic_year') as $course)
-                        <tr style="border-bottom: 1px solid #f1f5f9;">
-                            <td style="padding: 1rem; font-weight: 600; color: #0f172a;">{{ $course->course_code }}</td>
-                            <td style="padding: 1rem; color: #475569;">{{ $course->title }}</td>
-                            <td style="padding: 1rem; color: #475569;">{{ $course->units }}</td>
+                        <tr style="border-bottom: 1px solid var(--table-row-border);">
+                            <td style="padding: 1rem; font-weight: 600; color: var(--text-main);">{{ $course->course_code }}</td>
+                            <td style="padding: 1rem; color: var(--text-muted);">{{ $course->title }}</td>
+                            <td style="padding: 1rem; color: var(--text-muted);">{{ $course->units }}</td>
                             <td style="padding: 1rem;">
-                                <span style="font-weight: 700; color: {{ $course->pivot->passed ? '#059669' : '#dc2626' }};">
+                                <span style="font-weight: 700; color: {{ $course->pivot->passed ? 'var(--status-success-text)' : 'var(--status-failed-text)' }};">
                                     {{ $course->pivot->grade }}
                                 </span>
                             </td>
                             <td style="padding: 1rem;">
                                 @if($course->pivot->passed)
-                                    <span style="background: #dcfce7; color: #166534; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.875rem; font-weight: 600;">
+                                    <span style="background: var(--status-success-bg); color: var(--status-success-text); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.875rem; font-weight: 600;">
                                         ✓ Passed
                                     </span>
                                 @else
-                                    <span style="background: #fee2e2; color: #991b1b; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.875rem; font-weight: 600;">
+                                    <span style="background: var(--status-failed-bg); color: var(--status-failed-text); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.875rem; font-weight: 600;">
                                         ✗ Failed
                                     </span>
                                 @endif
                             </td>
-                            <td style="padding: 1rem; color: #64748b; font-size: 0.875rem;">
+                            <td style="padding: 1rem; color: var(--text-muted); font-size: 0.875rem;">
                                 {{ $course->pivot->semester }} {{ $course->pivot->academic_year }}
                             </td>
                         </tr>
@@ -160,16 +189,16 @@
     </div>
     @endif
 
-    <div style="background: white; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden;">
-        <div style="padding: 1.5rem; border-bottom: 1px solid #f1f5f9;">
-            <h2 style="font-size: 1.125rem; font-weight: 700; color: #0f172a; margin: 0;">
+    <div style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; overflow: hidden;">
+        <div style="padding: 1.5rem; border-bottom: 1px solid var(--card-border);">
+            <h2 style="font-size: 1.125rem; font-weight: 700; color: var(--text-main); margin: 0;">
                 {{ $student->school->name }} Curriculum
             </h2>
         </div>
         <div style="padding: 1.5rem;">
             @foreach($allCourses as $yearLevel => $courses)
                 <div style="margin-bottom: 2rem;">
-                    <h3 style="font-size: 1rem; font-weight: 700; color: #2563eb; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #dbeafe;">
+                    <h3 style="font-size: 1rem; font-weight: 700; color: var(--text-main); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--card-border);">
                         Year {{ $yearLevel }}
                     </h3>
                     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem;">
@@ -200,7 +229,7 @@
                                     </div>
                                 @endif
                                 
-                                <div style="font-weight: 700; color: {{ $isCompleted ? 'var(--status-success-text)' : ($isFailed ? 'var(--status-failed-text)' : ($isEnrolled ? 'var(--status-enrolled-text)' : 'var(--status-default-text)')) }}; margin-bottom: 0.25rem;">
+                                <div style="font-weight: 700; color: {{ $isCompleted ? 'var(--status-success-text)' : ($isFailed ? 'var(--status-failed-text)' : ($isEnrolled ? 'var(--status-enrolled-text)' : 'var(--text-main)')) }}; margin-bottom: 0.25rem;">
                                     {{ $course->course_code }}
                                 </div>
                                 <div style="color: {{ $isCompleted ? 'var(--status-success-text)' : ($isFailed ? 'var(--status-failed-text)' : ($isEnrolled ? 'var(--status-enrolled-text)' : 'var(--text-muted)')) }}; font-size: 0.875rem; margin-bottom: 0.5rem; line-height: 1.4;">

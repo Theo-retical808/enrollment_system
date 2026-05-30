@@ -217,7 +217,7 @@
 
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.25rem;">
     <div class="lms-stat-card">
-        <div class="lms-stat-icon" style="background: #eff6ff; color: #3b82f6;">
+        <div class="lms-stat-icon" style="background: rgba(59, 130, 246, 0.15); color: #3b82f6;">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         </div>
         <div class="lms-stat-content">
@@ -227,7 +227,7 @@
     </div>
 
     <div class="lms-stat-card">
-        <div class="lms-stat-icon" style="background: #fdf4ff; color: #d946ef;">
+        <div class="lms-stat-icon" style="background: rgba(217, 70, 239, 0.15); color: #d946ef;">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
         </div>
         <div class="lms-stat-content">
@@ -237,7 +237,7 @@
     </div>
 
     <div class="lms-stat-card">
-        <div class="lms-stat-icon" style="background: {{ $student->isRegular() ? '#f0fdf4' : '#fff7ed' }}; color: {{ $student->isRegular() ? '#22c55e' : '#f97316' }};">
+        <div class="lms-stat-icon" style="background: {{ $student->isRegular() ? 'rgba(34, 197, 94, 0.15)' : 'rgba(249, 115, 22, 0.15)' }}; color: {{ $student->isRegular() ? '#22c55e' : '#f97316' }};">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
         </div>
         <div class="lms-stat-content">
@@ -268,16 +268,26 @@
     <div class="card" style="display:flex; flex-direction:column; justify-content:center; background: var(--bg-white); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.25rem; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
         <h3 style="margin-bottom: 0.75rem; color: var(--text-primary); font-size: 1.15rem;">Payment Status</h3>
         @if($paymentStatus['status'] === 'paid')
-            <div style="background: var(--success-bg); border-radius:12px; padding: 1.2rem; border-left: 4px solid var(--success-border);">
-                <p style="color: var(--success-text); font-weight:700;">✓ Payment Completed</p>
-                <p style="font-size:0.9rem; color: var(--success-text);">Amount: ₱{{ number_format($paymentStatus['amount_paid'], 2) }}</p>
+            <div style="background: var(--success-bg); border-radius:12px; padding: 1.2rem; border: 1px solid var(--success-border); display: flex; gap: 12px; align-items: flex-start;">
+                <div style="background: white; color: var(--success-text); border-radius: 50%; padding: 6px; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    <i data-lucide="check-circle" style="width: 20px; height: 20px;"></i>
+                </div>
+                <div>
+                    <p style="color: var(--success-text); font-weight:700; margin-bottom: 0.25rem;">Payment Completed</p>
+                    <p style="font-size:0.85rem; color: var(--success-text); margin: 0;">Amount: ₱{{ number_format($paymentStatus['amount_paid'], 2) }}</p>
+                </div>
             </div>
         @else
-            <div style="background: var(--danger-bg); border-radius:12px; padding: 1.2rem; border-left: 4px solid var(--danger-border); margin-bottom:1rem;">
-                <p style="color: var(--danger-text); font-weight:700;">Payment Required</p>
-                <p style="font-size:0.85rem; color: var(--danger-text);">{{ $paymentStatus['message'] }}</p>
+            <div style="background: var(--danger-bg); border-radius:12px; padding: 1.2rem; border: 1px solid var(--danger-border); margin-bottom:1rem; display: flex; gap: 12px; align-items: flex-start;">
+                <div style="background: white; color: var(--danger-text); border-radius: 50%; padding: 6px; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    <i data-lucide="alert-circle" style="width: 20px; height: 20px;"></i>
+                </div>
+                <div>
+                    <p style="color: var(--danger-text); font-weight:800; margin-bottom: 0.25rem;">Payment Required</p>
+                    <p style="font-size:0.85rem; color: var(--danger-text); margin: 0;">{{ $paymentStatus['message'] }}</p>
+                </div>
             </div>
-            <a href="{{ route('student.payment.required') }}" style="background: var(--text-main); color: var(--card-bg); text-align:center; border-radius: 12px; padding: 0.8rem; text-decoration: none; font-weight: 700; display: block;" class="btn">Pay Now</a>
+            <a href="{{ route('student.payment.required') }}" style="background: var(--danger-text); color: white; text-align:center; border-radius: 12px; padding: 0.8rem; text-decoration: none; font-weight: 700; display: block;" class="btn">Pay Now</a>
         @endif
     </div>
 </div>
