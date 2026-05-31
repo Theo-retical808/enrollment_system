@@ -85,30 +85,37 @@ For Windows users, batch files are provided to automate the entire setup and sta
 
 ### First Time Setup
 
-Double-click **`setup.bat`** — it will:
-1. Detect if XAMPP, WAMP, or Laragon is installed (offers to install XAMPP if none found)
-2. Check PHP, Composer, and Node.js (installs missing ones automatically)
-3. Install all PHP and npm dependencies (skips if already installed)
-4. Configure the environment (.env, app key, database)
-5. Run migrations and seed the database with test data
-6. Window stays open so you can review the output
+Double-click **`setup_run.bat`** — it will:
+1. Scan for PHP 8.2+, Composer, Node.js, and Git on your system
+2. Attempt to auto-install missing dependencies via `winget` (falls back to direct download)
+3. Prompt you with clear instructions if manual installation is needed
+4. Install all PHP and npm dependencies (skips if already installed)
+5. Configure the environment (.env, app key, SQLite database)
+6. Run migrations and seed the database (checks if data already exists first)
+7. Clear caches, create storage link, verify directory structure
+8. Run a final verification check before declaring success
 
 ### Running the Application
 
 Double-click **`start.bat`** — it will:
-1. Run pre-flight checks (PHP, dependencies, database)
-2. Detect if a server is already running on port 8080 (informs you instead of starting a duplicate)
-3. Start the Laravel development server on port 8080
+1. Run pre-flight checks (PHP, dependencies, .env, database)
+2. Detect if a server is already running on port 8080
+3. Start MySQL/XAMPP services if using MySQL (SQLite needs nothing)
 4. Open the application in your default browser
+5. Start the Laravel development server on port 8080
+
+> **Note:** After running `setup_run.bat` once, you only ever need `start.bat` to launch the app.
 
 ---
 
 ## Manual Setup
 
+For detailed step-by-step manual setup instructions, see **[documentation/MANUAL_SETUP.md](documentation/MANUAL_SETUP.md)**.
+
 ### Prerequisites
 - PHP 8.2+ (included with XAMPP/WAMP/Laragon)
 - Composer (https://getcomposer.org)
-- Node.js & npm (https://nodejs.org)
+- Node.js & npm (https://nodejs.org) — optional, for frontend asset building
 
 ### Step-by-Step Installation
 
@@ -281,6 +288,19 @@ Irregular students see these real schedules when selecting courses during enroll
 
 ---
 
+## Documentation
+
+Detailed documentation is available in the `documentation/` directory:
+
+| File | Description |
+|------|-------------|
+| [TECH_STACK.md](documentation/TECH_STACK.md) | Full technology stack, architecture decisions, and infrastructure details |
+| [FEATURES.md](documentation/FEATURES.md) | Comprehensive feature documentation for all 12 system modules |
+| [MANUAL_SETUP.md](documentation/MANUAL_SETUP.md) | Step-by-step manual setup guide with troubleshooting |
+| [features_overview.sh](documentation/features_overview.sh) | Shell script that prints a formatted features overview (run with `bash documentation/features_overview.sh`) |
+
+---
+
 ## Project Structure
 
 ```
@@ -333,6 +353,12 @@ database/
 │   └── DatabaseSeeder.php
 └── factories/
 
+documentation/
+├── TECH_STACK.md              # Technology stack details
+├── FEATURES.md                # Full feature documentation
+├── MANUAL_SETUP.md            # Manual setup guide
+└── features_overview.sh       # Formatted features script
+
 resources/views/
 ├── admin/
 │   ├── curriculum/          # Curriculum template management
@@ -349,6 +375,9 @@ resources/views/
 │   └── review-schedule.blade.php
 ├── student/
 └── layouts/
+
+setup_run.bat                  # Automated first-time setup
+start.bat                      # Application launcher
 ```
 
 ---
