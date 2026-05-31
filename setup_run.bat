@@ -496,9 +496,13 @@ echo.
 :: ─── 4.3 SEED DATABASE ──────────────────────────────────────
 echo [4.3] Checking database seeding...
 
-:: Check if data already exists by counting students
+:: Check if data already exists by looking for students in the database
 set STUDENT_COUNT=0
-for /f "tokens=*" %%R in ('php artisan tinker --execute="echo App\Models\Student::count^(^);" 2^>nul') do set STUDENT_COUNT=%%R
+php artisan tinker --execute="echo App\Models\Student::count();" > "%TEMP%\student_count.txt" 2>nul
+if exist "%TEMP%\student_count.txt" (
+    for /f "tokens=*" %%R in (%TEMP%\student_count.txt) do set STUDENT_COUNT=%%R
+    del "%TEMP%\student_count.txt" 2>nul
+)
 set STUDENT_COUNT=%STUDENT_COUNT: =%
 
 if not defined STUDENT_COUNT set STUDENT_COUNT=0
