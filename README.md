@@ -85,7 +85,7 @@ For Windows users, batch files are provided to automate the entire setup and sta
 
 ### First Time Setup
 
-Double-click **`setup_run.bat`** — it will:
+Double-click **`setup.bat`** — it will:
 1. Scan for PHP 8.2+, Composer, Node.js, and Git on your system
 2. Attempt to auto-install missing dependencies via `winget` (falls back to direct download)
 3. Prompt you with clear instructions if manual installation is needed
@@ -104,7 +104,7 @@ Double-click **`start.bat`** — it will:
 4. Open the application in your default browser
 5. Start the Laravel development server on port 8080
 
-> **Note:** After running `setup_run.bat` once, you only ever need `start.bat` to launch the app.
+> **Note:** After running `setup.bat` once, you only ever need `start.bat` to launch the app.
 
 ---
 
@@ -376,7 +376,8 @@ resources/views/
 ├── student/
 └── layouts/
 
-setup_run.bat                  # Automated first-time setup
+setup.bat                      # Automated first-time setup (run this first)
+setup_run.bat                  # Setup logic (called by setup.bat)
 start.bat                      # Application launcher
 ```
 
