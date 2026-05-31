@@ -1,133 +1,137 @@
 @echo off
-title Enrollment System - Start
+setlocal enabledelayedexpansion
+title Enrollment System - Running
 color 0B
+
+echo.
 echo ============================================================
 echo        ENROLLMENT SYSTEM - STARTING
 echo ============================================================
 echo.
 
 :: ─── PRE-FLIGHT CHECKS ──────────────────────────────────────
-echo [1/3] Running pre-flight checks...
+echo [1/4] Running pre-flight checks...
 
 :: Check PHP
+set PHP_OK=0
 where php >nul 2>&1
-if %errorlevel% neq 0 (
-    :: Try XAMPP PHP
-    if exist "C:\xampp\php\php.exe" (
-        set "PATH=C:\xampp\php;%PATH%"
-    ) else if exist "D:\xampp\php\php.exe" (
-        set "PATH=D:\xampp\php;%PATH%"
-    ) else (
-        echo        [ERROR] PHP not found. Run setup.bat first.
-        pause
-        exit /b 1
+if %errorlevel% equ 0 (
+    set PHP_OK=1
+) else (
+    :: Try common locations
+    for %%P in ("C:\xampp\php" "D:\xampp\php" "C:\laragon\bin\php\php-8.2.12-Win32-vs16-x64" "C:\php") do (
+        if exist "%%~P\php.exe" (
+            set "PATH=%%~P;%PATH%"
+            set PHP_OK=1
+            goto :php_found
+        )
     )
 )
+:php_found
 
-:: Check vendor folder
-if not exist "vendor" (
-    echo        [ERROR] Dependencies not installed. Run setup.bat first.
+if %PHP_OK%==0 (
+    echo        [ERROR] PHP not found. Run setup_run.bat first.
+    echo.
     pause
     exit /b 1
 )
+echo        [OK] PHP available.
+
+:: Check vendor
+if not exist "vendor\autoload.php" (
+    echo        [ERROR] Dependencies not installed. Run setup_run.bat first.
+    pause
+    exit /b 1
+)
+echo        [OK] Dependencies installed.
 
 :: Check .env
 if not exist ".env" (
-    echo        [ERROR] .env file missing. Run setup.bat first.
+    echo        [ERROR] .env file missing. Run setup_run.bat first.
     pause
     exit /b 1
 )
+echo        [OK] Environment configured.
 
 :: Check database
 if not exist "database\database.sqlite" (
-    echo        [ERROR] Database not found. Run setup.bat first.
+    echo        [ERROR] Database not found. Run setup_run.bat first.
     pause
     exit /b 1
 )
-
-echo        [OK] All checks passed.
+echo        [OK] Database ready.
 echo.
 
-:: ─── CHECK IF SERVER IS ALREADY RUNNING ──────────────────────
-echo [2/3] Checking for existing server on port 8080...
-netstat -ano | findstr ":8080" | findstr "LISTENING" >nul 2>&1
+:: ─── CHECK PORT AVAILABILITY ─────────────────────────────────
+echo [2/4] Checking port 8080...
+netstat -ano 2>nul | findstr ":8080" | findstr "LISTENING" >nul 2>&1
 if %errorlevel% equ 0 (
     echo.
-    echo        ============================================
-    echo        [!] A server is ALREADY RUNNING on port 8080
-    echo        ============================================
+    echo        ┌─────────────────────────────────────────────────┐
+    echo        │  Port 8080 is already in use!                   │
+    echo        │                                                 │
+    echo        │  The app may already be running at:             │
+    echo        │  http://127.0.0.1:8080                          │
+    echo        │                                                 │
+    echo        │  Close the other server first, or the app       │
+    echo        │  is already accessible in your browser.         │
+    echo        └─────────────────────────────────────────────────┘
     echo.
-    echo        The application may already be accessible at:
-    echo        http://127.0.0.1:8080
-    echo.
-    echo        To stop the existing server, close its terminal
-    echo        window or press Ctrl+C in that window, then
-    echo        run this script again.
-    echo.
-    echo        Or open the app in your browser now:
     start "" "http://127.0.0.1:8080"
-    echo.
     pause
     exit /b 0
 )
-echo        [OK] Port 8080 is available.
+echo        [OK] Port 8080 available.
 echo.
 
-:: ─── START SERVICES IF USING MYSQL ───────────────────────────
-echo [3/3] Starting application...
+:: ─── START EXTERNAL SERVICES IF NEEDED ───────────────────────
+echo [3/4] Checking external services...
 
-:: Only start XAMPP/WAMP if using MySQL
 findstr /c:"DB_CONNECTION=mysql" .env >nul 2>&1
 if %errorlevel% equ 0 (
-    echo        MySQL mode detected. Starting local server...
-    
+    echo        [INFO] MySQL mode detected. Starting local server...
     if exist "C:\xampp\xampp_start.exe" (
-        echo        Starting XAMPP...
         start "" "C:\xampp\xampp_start.exe"
-        timeout /t 3 /nobreak >nul
-    ) else if exist "C:\xampp\apache_start.bat" (
-        start "" "C:\xampp\apache_start.bat"
-        start "" "C:\xampp\mysql_start.bat"
         timeout /t 3 /nobreak >nul
     ) else if exist "D:\xampp\xampp_start.exe" (
         start "" "D:\xampp\xampp_start.exe"
         timeout /t 3 /nobreak >nul
-    ) else if exist "C:\wamp64\wampmanager.exe" (
-        echo        Starting WAMP...
-        start "" "C:\wamp64\wampmanager.exe"
-        timeout /t 5 /nobreak >nul
     ) else if exist "C:\laragon\laragon.exe" (
-        echo        Starting Laragon...
         start "" "C:\laragon\laragon.exe"
         timeout /t 5 /nobreak >nul
     ) else (
-        echo        [WARN] No local server found. Make sure MySQL is running.
+        echo        [WARN] No local MySQL server found. Ensure MySQL is running.
     )
 ) else (
-    echo        Using SQLite - no external services needed.
+    echo        [OK] Using SQLite - no external services needed.
 )
+echo.
 
+:: ─── LAUNCH APPLICATION ──────────────────────────────────────
+echo [4/4] Launching application...
 echo.
 echo ============================================================
 echo.
-echo   Application starting at: http://127.0.0.1:8080
+echo   Application URL:  http://127.0.0.1:8080
 echo.
-echo   Login Credentials:
-echo   +-----------+----------+----------+
-echo   ^| Role      ^| ID       ^| Password ^|
-echo   +-----------+----------+----------+
-echo   ^| Admin     ^| ADMIN001 ^| password ^|
-echo   ^| Professor ^| PROF001  ^| password ^|
-echo   ^| Student   ^| 2024-001 ^| password ^|
-echo   +-----------+----------+----------+
+echo   ┌───────────┬──────────┬────────────┐
+echo   │  Role     │  ID      │  Password  │
+echo   ├───────────┼──────────┼────────────┤
+echo   │  Admin    │ ADMIN001 │  password  │
+echo   │  Professor│ PROF001  │  password  │
+echo   │  Student  │ 2024-001 │  password  │
+echo   └───────────┴──────────┴────────────┘
 echo.
 echo   Press Ctrl+C to stop the server.
 echo.
 echo ============================================================
 echo.
 
-:: Open browser after a short delay
+:: Open browser
+timeout /t 2 /nobreak >nul
 start "" "http://127.0.0.1:8080"
 
-:: Start Laravel server
+:: Start Laravel development server
 php artisan serve --port=8080
+
+endlocal
