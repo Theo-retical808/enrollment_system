@@ -69,38 +69,38 @@ for %%P in (
 )
 
 :: PHP not found anywhere
-if %PHP_FOUND%==0 (
-    echo        [NOT FOUND] PHP is not installed or not in PATH.
-    echo.
-    echo        Attempting to install PHP via winget...
-    where winget >nul 2>&1
-    if !errorlevel! equ 0 (
-        winget install --id ApacheFriends.Xampp.8.2 --accept-package-agreements --accept-source-agreements >nul 2>&1
-        if !errorlevel! equ 0 (
-            if exist "C:\xampp\php\php.exe" (
-                set PHP_FOUND=1
-                set "PHP_CMD=C:\xampp\php\php.exe"
-                set "PATH=C:\xampp\php;%PATH%"
-                echo        [OK] XAMPP installed via winget. PHP available.
-                goto :php_version_check
-            )
-        )
-        echo        [WARN] winget install did not succeed.
-    )
-    echo.
-    echo        ┌─────────────────────────────────────────────────────┐
-    echo        │  MANUAL ACTION REQUIRED:                            │
-    echo        │  Install PHP 8.2+ from one of:                      │
-    echo        │    - https://www.apachefriends.org (XAMPP)           │
-    echo        │    - https://windows.php.net/download               │
-    echo        │    - https://laragon.org                             │
-    echo        │  Then add PHP to your system PATH and re-run setup. │
-    echo        └─────────────────────────────────────────────────────┘
-    echo.
-    set MANUAL_REQUIRED=!MANUAL_REQUIRED! PHP
-    set /a SETUP_ERRORS+=1
-    goto :php_done
+if %PHP_FOUND%==1 goto :php_version_check
+
+echo        [NOT FOUND] PHP is not installed or not in PATH.
+echo.
+echo        Attempting to install PHP via winget...
+where winget >nul 2>&1
+if %errorlevel% neq 0 goto :php_no_winget
+
+winget install --id ApacheFriends.Xampp.8.2 --accept-package-agreements --accept-source-agreements >nul 2>&1
+if exist "C:\xampp\php\php.exe" (
+    set PHP_FOUND=1
+    set "PHP_CMD=C:\xampp\php\php.exe"
+    set "PATH=C:\xampp\php;%PATH%"
+    echo        [OK] XAMPP installed via winget. PHP available.
+    goto :php_version_check
 )
+echo        [WARN] winget install did not succeed.
+
+:php_no_winget
+echo.
+echo        ┌─────────────────────────────────────────────────────┐
+echo        │  MANUAL ACTION REQUIRED:                            │
+echo        │  Install PHP 8.2+ from one of:                      │
+echo        │    - https://www.apachefriends.org (XAMPP)           │
+echo        │    - https://windows.php.net/download               │
+echo        │    - https://laragon.org                             │
+echo        │  Then add PHP to your system PATH and re-run setup. │
+echo        └─────────────────────────────────────────────────────┘
+echo.
+set MANUAL_REQUIRED=!MANUAL_REQUIRED! PHP
+set /a SETUP_ERRORS+=1
+goto :php_done
 
 :php_version_check
 :: Verify PHP version is 8.2+
@@ -173,31 +173,32 @@ echo        [NOT FOUND] Installing Composer...
 
 :: Method 1: winget
 where winget >nul 2>&1
+if %errorlevel% neq 0 goto :composer_try_download
+
+echo        Trying winget...
+winget install --id Composer.Composer --accept-package-agreements --accept-source-agreements >nul 2>&1
+where composer >nul 2>&1
 if %errorlevel% equ 0 (
-    echo        Trying winget...
-    winget install --id Composer.Composer --accept-package-agreements --accept-source-agreements >nul 2>&1
-    where composer >nul 2>&1
-    if !errorlevel! equ 0 (
-        echo        [OK] Composer installed via winget.
-        set COMPOSER_CMD=composer
-        goto :composer_done
-    )
+    echo        [OK] Composer installed via winget.
+    set COMPOSER_CMD=composer
+    goto :composer_done
 )
 
+:composer_try_download
 :: Method 2: Download composer.phar directly
 echo        Downloading composer.phar...
 powershell -Command "& { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://getcomposer.org/installer' -OutFile '%TEMP%\composer-setup.php' -UseBasicParsing }" 2>nul
-if exist "%TEMP%\composer-setup.php" (
-    php "%TEMP%\composer-setup.php" --install-dir=. --filename=composer.phar 2>nul
-    del "%TEMP%\composer-setup.php" 2>nul
-    if exist "composer.phar" (
-        echo        [OK] Composer installed locally (composer.phar).
-        set COMPOSER_CMD=php composer.phar
-        goto :composer_done
-    )
+if not exist "%TEMP%\composer-setup.php" goto :composer_failed
+
+php "%TEMP%\composer-setup.php" --install-dir=. --filename=composer.phar 2>nul
+del "%TEMP%\composer-setup.php" 2>nul
+if exist "composer.phar" (
+    echo        [OK] Composer installed locally (composer.phar).
+    set COMPOSER_CMD=php composer.phar
+    goto :composer_done
 )
 
-:: Composer install failed
+:composer_failed
 echo        [ERROR] Could not install Composer automatically.
 echo        ┌─────────────────────────────────────────────────────┐
 echo        │  MANUAL ACTION REQUIRED:                            │
@@ -228,23 +229,24 @@ if %errorlevel% equ 0 (
 :: Try winget install
 echo        [NOT FOUND] Attempting to install Node.js...
 where winget >nul 2>&1
+if %errorlevel% neq 0 goto :node_not_available
+
+echo        Installing via winget (this may take a minute)...
+winget install --id OpenJS.NodeJS.LTS --accept-package-agreements --accept-source-agreements >nul 2>&1
+
+:: Refresh PATH to pick up new install
+for /f "tokens=2*" %%A in ('reg query "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v Path 2^>nul') do set "PATH=%%B;%PATH%"
+for /f "tokens=2*" %%A in ('reg query "HKCU\Environment" /v Path 2^>nul') do set "PATH=%%B;%PATH%"
+
+where node >nul 2>&1
 if %errorlevel% equ 0 (
-    echo        Installing via winget (this may take a minute)...
-    winget install --id OpenJS.NodeJS.LTS --accept-package-agreements --accept-source-agreements >nul 2>&1
-    
-    :: Refresh PATH to pick up new install
-    for /f "tokens=2*" %%A in ('reg query "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v Path 2^>nul') do set "PATH=%%B;%PATH%"
-    for /f "tokens=2*" %%A in ('reg query "HKCU\Environment" /v Path 2^>nul') do set "PATH=%%B;%PATH%"
-    
-    where node >nul 2>&1
-    if !errorlevel! equ 0 (
-        for /f "tokens=*" %%v in ('node -v 2^>nul') do set NODE_VER=%%v
-        echo        [OK] Node.js !NODE_VER! installed via winget.
-        set HAS_NPM=1
-        goto :node_done
-    )
+    for /f "tokens=*" %%v in ('node -v 2^>nul') do set NODE_VER=%%v
+    echo        [OK] Node.js !NODE_VER! installed via winget.
+    set HAS_NPM=1
+    goto :node_done
 )
 
+:node_not_available
 echo        [WARN] Could not install Node.js automatically.
 echo        ┌─────────────────────────────────────────────────────┐
 echo        │  OPTIONAL (for frontend assets):                    │
@@ -279,22 +281,18 @@ echo ─────────────────────────
 echo.
 
 :: Abort if critical dependencies missing
-if %SETUP_ERRORS% GTR 0 (
-    if not defined COMPOSER_CMD (
-        echo [ERROR] Critical dependencies missing. Cannot continue.
-        echo         Missing: %MANUAL_REQUIRED%
-        echo         Please install them manually and re-run this script.
-        echo.
-        goto :final_done
-    )
-    if %PHP_FOUND%==0 (
-        echo [ERROR] Critical dependencies missing. Cannot continue.
-        echo         Missing: %MANUAL_REQUIRED%
-        echo         Please install them manually and re-run this script.
-        echo.
-        goto :final_done
-    )
-)
+if not defined COMPOSER_CMD goto :critical_missing
+if %PHP_FOUND%==0 goto :critical_missing
+goto :deps_ok
+
+:critical_missing
+echo [ERROR] Critical dependencies missing. Cannot continue.
+echo         Missing: %MANUAL_REQUIRED%
+echo         Please install them manually and re-run this script.
+echo.
+goto :final_done
+
+:deps_ok
 
 :: ============================================================
 :: STEP 2: INSTALL PROJECT DEPENDENCIES
@@ -307,26 +305,32 @@ echo.
 
 :: ─── 2.1 PHP DEPENDENCIES (COMPOSER) ────────────────────────
 echo [2.1] Installing PHP dependencies...
-if exist "vendor\autoload.php" (
-    echo        [OK] vendor/ already exists. Verifying...
-    call %COMPOSER_CMD% install --no-interaction --prefer-dist --optimize-autoloader 2>nul
-    if !errorlevel! equ 0 (
-        echo        [OK] PHP dependencies verified and up to date.
-    ) else (
-        echo        [WARN] Composer install had issues. Trying fresh install...
-        call %COMPOSER_CMD% install --no-interaction --prefer-dist 2>nul
-    )
+if exist "vendor\autoload.php" goto :vendor_exists
+goto :vendor_missing
+
+:vendor_exists
+echo        [OK] vendor/ already exists. Verifying...
+call %COMPOSER_CMD% install --no-interaction --prefer-dist --optimize-autoloader 2>nul
+if %errorlevel% equ 0 (
+    echo        [OK] PHP dependencies verified and up to date.
 ) else (
-    echo        Running composer install (first time, may take a few minutes)...
-    call %COMPOSER_CMD% install --no-interaction --prefer-dist --optimize-autoloader
-    if !errorlevel! neq 0 (
-        echo        [ERROR] Composer install failed.
-        echo        Try running manually: %COMPOSER_CMD% install
-        set /a SETUP_ERRORS+=1
-        goto :skip_npm
-    )
-    echo        [OK] PHP dependencies installed.
+    echo        [WARN] Composer install had issues. Trying fresh install...
+    call %COMPOSER_CMD% install --no-interaction --prefer-dist 2>nul
 )
+goto :composer_install_done
+
+:vendor_missing
+echo        Running composer install (first time, may take a few minutes)...
+call %COMPOSER_CMD% install --no-interaction --prefer-dist --optimize-autoloader
+if %errorlevel% neq 0 (
+    echo        [ERROR] Composer install failed.
+    echo        Try running manually: %COMPOSER_CMD% install
+    set /a SETUP_ERRORS+=1
+    goto :skip_npm
+)
+echo        [OK] PHP dependencies installed.
+
+:composer_install_done
 echo.
 
 :: ─── 2.2 NPM DEPENDENCIES ───────────────────────────────────
@@ -337,29 +341,38 @@ if %HAS_NPM%==0 (
     goto :npm_done
 )
 
-if exist "node_modules\.package-lock.json" (
-    echo        [OK] node_modules/ already exists.
+if exist "node_modules\.package-lock.json" goto :node_modules_exist
+goto :node_modules_missing
+
+:node_modules_exist
+echo        [OK] node_modules/ already exists.
+goto :npm_build_check
+
+:node_modules_missing
+echo        Running npm install...
+call npm install 2>nul
+if %errorlevel% equ 0 (
+    echo        [OK] npm dependencies installed.
 ) else (
-    echo        Running npm install...
-    call npm install 2>nul
-    if !errorlevel! equ 0 (
-        echo        [OK] npm dependencies installed.
-    ) else (
-        echo        [WARN] npm install had issues. Frontend may not build.
-    )
+    echo        [WARN] npm install had issues. Frontend may not build.
 )
 
+:npm_build_check
 :: Build frontend assets
-if exist "public\build\manifest.json" (
-    echo        [OK] Frontend assets already built.
+if exist "public\build\manifest.json" goto :assets_exist
+goto :assets_missing
+
+:assets_exist
+echo        [OK] Frontend assets already built.
+goto :npm_done
+
+:assets_missing
+echo        Building frontend assets (npm run build)...
+call npm run build 2>nul
+if %errorlevel% equ 0 (
+    echo        [OK] Frontend assets built successfully.
 ) else (
-    echo        Building frontend assets (npm run build)...
-    call npm run build 2>nul
-    if !errorlevel! equ 0 (
-        echo        [OK] Frontend assets built successfully.
-    ) else (
-        echo        [WARN] Frontend build failed. App may still work with basic styles.
-    )
+    echo        [WARN] Frontend build failed. App may still work with basic styles.
 )
 
 :npm_done
@@ -447,56 +460,69 @@ echo [4.2] Running database migrations...
 
 :: Check if migrations table exists (indicates DB has been set up before)
 php artisan migrate:status >nul 2>&1
+if %errorlevel% neq 0 goto :fresh_migrate
+
+:: Check for pending migrations
+php artisan migrate:status 2>nul | findstr /c:"Pending" >nul 2>&1
+if %errorlevel% neq 0 goto :migrations_current
+
+:: Has pending migrations
+echo        [INFO] Pending migrations found. Running...
+php artisan migrate --force
 if %errorlevel% equ 0 (
-    :: Check for pending migrations
-    php artisan migrate:status 2>nul | findstr /c:"Pending" >nul 2>&1
-    if !errorlevel! equ 0 (
-        echo        [INFO] Pending migrations found. Running...
-        php artisan migrate --force
-        if !errorlevel! equ 0 (
-            echo        [OK] Migrations applied.
-        ) else (
-            echo        [WARN] Migration had issues. Trying fresh...
-            php artisan migrate:fresh --force
-        )
-    ) else (
-        echo        [OK] All migrations already applied.
-    )
+    echo        [OK] Migrations applied.
 ) else (
-    echo        [INFO] Fresh database. Running all migrations...
-    php artisan migrate --force
-    if !errorlevel! neq 0 (
-        echo        [WARN] Migration failed. Trying migrate:fresh...
-        php artisan migrate:fresh --force
-    )
-    echo        [OK] Migrations complete.
+    echo        [WARN] Migration had issues. Trying fresh...
+    php artisan migrate:fresh --force
 )
+goto :migrations_done
+
+:migrations_current
+echo        [OK] All migrations already applied.
+goto :migrations_done
+
+:fresh_migrate
+echo        [INFO] Fresh database. Running all migrations...
+php artisan migrate --force
+if %errorlevel% neq 0 (
+    echo        [WARN] Migration failed. Trying migrate:fresh...
+    php artisan migrate:fresh --force
+)
+echo        [OK] Migrations complete.
+
+:migrations_done
 echo.
 
 :: ─── 4.3 SEED DATABASE ──────────────────────────────────────
 echo [4.3] Checking database seeding...
 
 :: Check if data already exists by counting students
-for /f "tokens=*" %%R in ('php artisan tinker --execute="echo App\Models\Student::count();" 2^>nul') do set STUDENT_COUNT=%%R
-
-:: Clean the output (remove any extra whitespace)
+set STUDENT_COUNT=0
+for /f "tokens=*" %%R in ('php artisan tinker --execute="echo App\Models\Student::count^(^);" 2^>nul') do set STUDENT_COUNT=%%R
 set STUDENT_COUNT=%STUDENT_COUNT: =%
 
+if not defined STUDENT_COUNT set STUDENT_COUNT=0
 if "%STUDENT_COUNT%"=="" set STUDENT_COUNT=0
-if "%STUDENT_COUNT%"=="0" (
-    echo        [INFO] Database is empty. Running seeders...
-    php artisan db:seed --force
-    if !errorlevel! equ 0 (
-        echo        [OK] Database seeded successfully.
-    ) else (
-        echo        [WARN] Seeding had issues. Some data may be missing.
-        echo        [INFO] Try running: php artisan db:seed --force
-    )
+if "%STUDENT_COUNT%"=="0" goto :run_seeders
+goto :seeders_skip
+
+:run_seeders
+echo        [INFO] Database is empty. Running seeders...
+php artisan db:seed --force
+if %errorlevel% equ 0 (
+    echo        [OK] Database seeded successfully.
 ) else (
-    echo        [OK] Database already has data (%STUDENT_COUNT% students found).
-    echo        [INFO] Skipping seeders to preserve existing data.
-    echo        [INFO] To re-seed: php artisan migrate:fresh --seed --force
+    echo        [WARN] Seeding had issues. Some data may be missing.
+    echo        [INFO] Try running: php artisan db:seed --force
 )
+goto :seed_done
+
+:seeders_skip
+echo        [OK] Database already has data (%STUDENT_COUNT% students found).
+echo        [INFO] Skipping seeders to preserve existing data.
+echo        [INFO] To re-seed: php artisan migrate:fresh --seed --force
+
+:seed_done
 echo.
 
 :: ============================================================
