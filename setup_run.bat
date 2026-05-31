@@ -89,14 +89,14 @@ echo        [WARN] winget install did not succeed.
 
 :php_no_winget
 echo.
-echo        ┌─────────────────────────────────────────────────────┐
-echo        │  MANUAL ACTION REQUIRED:                            │
-echo        │  Install PHP 8.2+ from one of:                      │
-echo        │    - https://www.apachefriends.org (XAMPP)           │
-echo        │    - https://windows.php.net/download               │
-echo        │    - https://laragon.org                             │
-echo        │  Then add PHP to your system PATH and re-run setup. │
-echo        └─────────────────────────────────────────────────────┘
+echo        +-----------------------------------------------------+
+echo        ^|  MANUAL ACTION REQUIRED:                            ^|
+echo        ^|  Install PHP 8.2+ from one of:                      ^|
+echo        ^|    - https://www.apachefriends.org (XAMPP)           ^|
+echo        ^|    - https://windows.php.net/download               ^|
+echo        ^|    - https://laragon.org                             ^|
+echo        ^|  Then add PHP to your system PATH and re-run setup. ^|
+echo        +-----------------------------------------------------+
 echo.
 set MANUAL_REQUIRED=!MANUAL_REQUIRED! PHP
 set /a SETUP_ERRORS+=1
@@ -200,12 +200,12 @@ if exist "composer.phar" (
 
 :composer_failed
 echo        [ERROR] Could not install Composer automatically.
-echo        ┌─────────────────────────────────────────────────────┐
-echo        │  MANUAL ACTION REQUIRED:                            │
-echo        │  Download from https://getcomposer.org/download     │
-echo        │  Run the Windows installer or place composer.phar   │
-echo        │  in this project directory.                         │
-echo        └─────────────────────────────────────────────────────┘
+echo        +-----------------------------------------------------+
+echo        ^|  MANUAL ACTION REQUIRED:                            ^|
+echo        ^|  Download from https://getcomposer.org/download     ^|
+echo        ^|  Run the Windows installer or place composer.phar   ^|
+echo        ^|  in this project directory.                         ^|
+echo        +-----------------------------------------------------+
 set MANUAL_REQUIRED=!MANUAL_REQUIRED! COMPOSER
 set /a SETUP_ERRORS+=1
 
@@ -248,12 +248,12 @@ if %errorlevel% equ 0 (
 
 :node_not_available
 echo        [WARN] Could not install Node.js automatically.
-echo        ┌─────────────────────────────────────────────────────┐
-echo        │  OPTIONAL (for frontend assets):                    │
-echo        │  Download from https://nodejs.org (LTS version)     │
-echo        │  The app will still work without it, but frontend   │
-echo        │  assets won't be rebuilt.                           │
-echo        └─────────────────────────────────────────────────────┘
+echo        +-----------------------------------------------------+
+echo        ^|  OPTIONAL (for frontend assets):                    ^|
+echo        ^|  Download from https://nodejs.org (LTS version)     ^|
+echo        ^|  The app will still work without it, but frontend   ^|
+echo        ^|  assets won't be rebuilt.                           ^|
+echo        +-----------------------------------------------------+
 echo        [INFO] Continuing without npm...
 
 :node_done
@@ -271,13 +271,13 @@ if %errorlevel% equ 0 (
 echo.
 
 :: ─── DEPENDENCY SUMMARY ─────────────────────────────────────
-echo ────────────────────────────────────────────────────────────
+echo ------------------------------------------------------------
 echo   Dependency Scan Summary:
-echo ────────────────────────────────────────────────────────────
+echo ------------------------------------------------------------
 if %PHP_FOUND%==1 (echo        PHP:      [OK]) else (echo        PHP:      [MISSING])
 if defined COMPOSER_CMD (echo        Composer: [OK]) else (echo        Composer: [MISSING])
 if %HAS_NPM%==1 (echo        Node/npm: [OK]) else (echo        Node/npm: [SKIP - optional])
-echo ────────────────────────────────────────────────────────────
+echo ------------------------------------------------------------
 echo.
 
 :: Abort if critical dependencies missing
@@ -617,15 +617,14 @@ echo     2. Run:  php artisan serve --port=8080
 echo.
 echo   The app will be available at: http://127.0.0.1:8080
 echo.
-echo   ┌─────────────────────────────────────────────────────┐
-echo   │  Default Login Credentials                          │
-echo   ├───────────┬──────────┬──────────────────────────────┤
-echo   │  Role     │  ID      │  Password                    │
-echo   ├───────────┼──────────┼──────────────────────────────┤
-echo   │  Admin    │ ADMIN001 │  password                    │
-echo   │  Professor│ PROF001  │  password                    │
-echo   │  Student  │ 2024-001 │  password                    │
-echo   └───────────┴──────────┴──────────────────────────────┘
+echo   Default Login Credentials:
+echo   +-----------+----------+--------------+
+echo   ^| Role      ^| ID       ^| Password     ^|
+echo   +-----------+----------+--------------+
+echo   ^| Admin     ^| ADMIN001 ^| password     ^|
+echo   ^| Professor ^| PROF001  ^| password     ^|
+echo   ^| Student   ^| 2024-001 ^| password     ^|
+echo   +-----------+----------+--------------+
 echo.
 echo ============================================================
 echo.

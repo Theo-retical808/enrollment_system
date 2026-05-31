@@ -67,15 +67,15 @@ echo [2/4] Checking port 8080...
 netstat -ano 2>nul | findstr ":8080" | findstr "LISTENING" >nul 2>&1
 if %errorlevel% equ 0 (
     echo.
-    echo        ┌─────────────────────────────────────────────────┐
-    echo        │  Port 8080 is already in use!                   │
-    echo        │                                                 │
-    echo        │  The app may already be running at:             │
-    echo        │  http://127.0.0.1:8080                          │
-    echo        │                                                 │
-    echo        │  Close the other server first, or the app       │
-    echo        │  is already accessible in your browser.         │
-    echo        └─────────────────────────────────────────────────┘
+    echo        +---------------------------------------------------+
+    echo        ^|  Port 8080 is already in use!                     ^|
+    echo        ^|                                                   ^|
+    echo        ^|  The app may already be running at:               ^|
+    echo        ^|  http://127.0.0.1:8080                            ^|
+    echo        ^|                                                   ^|
+    echo        ^|  Close the other server first, or the app         ^|
+    echo        ^|  is already accessible in your browser.           ^|
+    echo        +---------------------------------------------------+
     echo.
     start "" "http://127.0.0.1:8080"
     pause
@@ -114,13 +114,14 @@ echo ============================================================
 echo.
 echo   Application URL:  http://127.0.0.1:8080
 echo.
-echo   ┌───────────┬──────────┬────────────┐
-echo   │  Role     │  ID      │  Password  │
-echo   ├───────────┼──────────┼────────────┤
-echo   │  Admin    │ ADMIN001 │  password  │
-echo   │  Professor│ PROF001  │  password  │
-echo   │  Student  │ 2024-001 │  password  │
-echo   └───────────┴──────────┴────────────┘
+echo   Login Credentials:
+echo   +-----------+----------+------------+
+echo   ^| Role      ^| ID       ^| Password   ^|
+echo   +-----------+----------+------------+
+echo   ^| Admin     ^| ADMIN001 ^| password   ^|
+echo   ^| Professor ^| PROF001  ^| password   ^|
+echo   ^| Student   ^| 2024-001 ^| password   ^|
+echo   +-----------+----------+------------+
 echo.
 echo   Press Ctrl+C to stop the server.
 echo.
